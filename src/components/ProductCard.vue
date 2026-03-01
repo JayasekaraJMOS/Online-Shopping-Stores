@@ -1,3 +1,14 @@
+
+<script setup lang="ts">
+// 1. Import the Type from your new folder
+import type { Product } from '../types/Product';
+
+// 2. Define the Props so App.vue can pass data to this card
+defineProps<{
+  product: Product
+}>();
+</script>
+
 <template>
   <div class="card">
     <div class="image-container">
