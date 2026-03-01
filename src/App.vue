@@ -9,12 +9,12 @@ const isLoading = ref(true);
 
 onMounted(async () => {
   try {
-    // We use 'smartphones' because it has plenty of electronic data
-    const response = await fetch('https://dummyjson.com/products/category/smartphones');
+    // This query pulls items that look more like electronic components/projects
+    const response = await fetch('https://dummyjson.com/products/search?q=lighting');
     const data = await response.json();
     products.value = data.products;
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error("Fetch failed:", error);
   } finally {
     isLoading.value = false;
   }
