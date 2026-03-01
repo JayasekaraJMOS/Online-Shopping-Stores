@@ -8,8 +8,11 @@ const products = ref<Product[]>([]);
 
 // 2. Fetch data from DummyJSON
 onMounted(async () => {
-  const response = await fetch('https://dummyjson.com/products/category/smartphones');
+  // We are searching for 'electronic' to get parts like modules and sensors
+  const response = await fetch('https://dummyjson.com/products/search?q=electronic');
   const data = await response.json();
+  
+  // Filtering for specific categories if needed, or just taking the search results
   products.value = data.products;
 });
 </script>
