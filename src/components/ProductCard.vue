@@ -1,129 +1,39 @@
 <script setup lang="ts">
-// 1. This connects to your custom folder to ensure 'Type Safety'
-import type { Product } from '../types/Product';
-
-// 2. This defines the 'Props' so App.vue can pass data into this card
+// Props setup
 defineProps<{
-  product: Product
+  product: any;
 }>();
 </script>
 
 <template>
   <div class="card">
-    <div class="image-container">
+    <div class="image-box">
       <img :src="product.thumbnail" :alt="product.title" />
-      <span class="category-tag">{{ product.category }}</span>
     </div>
-    
-    <div class="card-body">
-      <h3 class="product-title">{{ product.title }}</h3>
-      
-      <p class="manufacturer">By {{ product.brand || 'ElectroHub' }}</p>
-      
-      <div class="price-row">
-        <span class="price">${{ product.price }}</span>
-        <span :class="['stock-status', product.stock < 10 ? 'critical' : 'stable']">
-          {{ product.stock }} in stock
-        </span>
-      </div>
-
-      <button class="buy-button">
-        Add to Project
-      </button>
+    <div class="card-info">
+      <h3>{{ product.title }}</h3>
+      <p class="price">${{ product.price }}</p>
+      <button class="add-btn">Add to Project</button>
     </div>
   </div>
 </template>
 
 <style scoped>
-/* Professional Card Styling for ElectroHub */
 .card {
-  background: white;
-  border-radius: 12px;
-  /* CRUCIAL: Remove fixed widths. Let the grid decide the width. */
-  width: auto; 
-  min-width: 0; /* Prevents the card from pushing out of the grid cell */
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #eee;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  background: var(--card-bg);
+  color: var(--text-color);
+  border-radius: 15px;
+  padding: 15px;
+  text-align: center;
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  transition: transform 0.2s;
 }
 
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 20px rgba(0,0,0,0.1);
-}
+.card:hover { transform: translateY(-5px); }
 
-.image-container {
-  position: relative;
-  height: 200px;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.image-box { width: 100%; height: 180px; background: white; border-radius: 8px; margin-bottom: 10px; }
+.image-box img { width: 100%; height: 100%; object-fit: contain; }
 
-img { 
-  width: 100%; 
-  height: 100%; 
-  object-fit: contain; 
-  padding: 10px; 
-}
-
-.category-tag {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: rgba(44, 62, 80, 0.9);
-  color: white;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.card-body { padding: 20px; flex-grow: 1; }
-
-.product-title {
-  margin: 0 0 5px 0;
-  font-size: 1.1rem;
-  color: #2c3e50;
-}
-
-.manufacturer {
-  font-size: 0.85rem;
-  color: #7f8c8d;
-  margin-bottom: 15px;
-}
-
-.price-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.price {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #27ae60;
-}
-
-.stock-status { font-size: 0.75rem; padding: 4px 8px; border-radius: 6px; }
-.stable { background: #e8f5e9; color: #2e7d32; }
-.critical { background: #ffebee; color: #c62828; }
-
-.buy-button {
-  width: 100%;
-  background: #3498db;
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.buy-button:hover { background: #2980b9; }
+.price { font-size: 1.4rem; font-weight: bold; color: #2ecc71; margin: 10px 0; }
+.add-btn { width: 100%; padding: 10px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
 </style>
