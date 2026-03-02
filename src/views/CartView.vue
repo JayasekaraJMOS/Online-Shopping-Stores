@@ -33,9 +33,7 @@ const checkout = () => {
     alert('Please select at least one item to checkout')
     return
   }
-  alert(`Thank you for your purchase of ${cart.selectedCount} item(s)! This is a demo store.`)
-  cart.clear()
-  router.push('/')
+  router.push('/checkout')
 }
 </script>
 

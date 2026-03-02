@@ -11,7 +11,9 @@ const router = createRouter({
     { path: '/register', component: RegisterView, meta: { title: 'Register - ElectroHub' } },
     { path: '/', component: HomeView, meta: { title: 'Home - ElectroHub' } },
     { path: '/product/:id', component: ProductDetailView, meta: { title: 'Product Details - ElectroHub' } },
-    { path: '/cart', component: CartView, meta: { title: 'Shopping Cart - ElectroHub' } }
+    { path: '/cart', component: CartView, meta: { title: 'Shopping Cart - ElectroHub' } },
+    { path: '/checkout', component: () => import('../views/CheckoutView.vue'), meta: { title: 'Checkout - ElectroHub' } },
+    { path: '/profile', component: () => import('../views/ProfileView.vue'), meta: { title: 'Profile - ElectroHub' } }
   ]
 })
 

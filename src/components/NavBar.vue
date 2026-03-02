@@ -67,6 +67,14 @@ const login = () => {
           <span>({{ cart.count }})</span>
         </button>
 
+        <!-- Profile Button (visible when logged in) -->
+        <button
+          v-if="auth.isAuthenticated"
+          @click="router.push('/profile')"
+          class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-full font-bold transition duration-200 mr-2"
+        >
+          My Account
+        </button>
         <!-- Auth Button -->
         <button
           v-if="auth.isAuthenticated"
