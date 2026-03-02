@@ -7,15 +7,19 @@
     <title>ShopHub - Your Favorite Store</title>
     <script>
       // Load theme before app renders to prevent flashing
-      const saved = localStorage.getItem('theme')
-      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      const isDark = saved ? saved === 'dark' : systemDark
-      if (isDark) {
-        document.documentElement.classList.add('dark')
-      }
+      (function() {
+        const saved = localStorage.getItem('theme')
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        const isDark = saved ? saved === 'dark' : systemDark
+        if (isDark) {
+          document.documentElement.classList.add('dark')
+        } else {
+          document.documentElement.classList.remove('dark')
+        }
+      })()
     </script>
   </head>
-  <body class="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-50 transition-colors duration-300">
+  <body>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
