@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import ProductCard from '../components/ProductCard.vue'
+import ProductRow from '../components/ProductRow.vue'
 import NavBar from '../components/NavBar.vue'
 import type { Product } from '../types/Product'
 
@@ -36,7 +37,7 @@ watch(searchQuery, (val) => {
 
   <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
     <!-- Hero Section -->
-    <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 text-white py-16 px-6 shadow-xl transition-colors duration-300">
+    <div class="bg-electro-bg dark:bg-electro-bg text-white py-16 px-6 shadow-xl transition-colors duration-300">
       <div class="max-w-7xl mx-auto">
         <h1 class="text-5xl md:text-6xl font-black mb-3 leading-tight">Discover Amazing Products</h1>
         <p class="text-indigo-100 dark:text-indigo-200 text-xl md:text-2xl font-semibold">Find exactly what you're looking for with our massive collection</p>
@@ -50,7 +51,7 @@ watch(searchQuery, (val) => {
         <input
           v-model="searchQuery"
           placeholder="Search anything you want..."
-          class="w-full pl-12 pr-6 py-4 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-indigo-600 dark:focus:border-indigo-400 transition-all duration-300 text-lg shadow-md dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+          class="w-full pl-12 pr-6 py-4 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-electro-accent transition-all duration-300 text-lg shadow-md dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
         />
       </div>
     </div>
@@ -68,13 +69,20 @@ watch(searchQuery, (val) => {
         </div>
       </div>
 
-      <!-- Products Grid -->
-      <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <ProductCard
-          v-for="item in products"
-          :key="item.id"
-          :product="item"
-        />
+      <!-- Content when not loading -->
+      <div v-else>
+        <!-- Horizontal Rows -->
+        <ProductRow title="Featured Items" :products="products.slice(0, 10)" />
+        <ProductRow title="Trending" :products="products.slice(10, 20)" />
+
+        <!-- Products Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <ProductCard
+            v-for="item in products"
+            :key="item.id"
+            :product="item"
+          />
+        </div>
       </div>
 
       <!-- No Results -->

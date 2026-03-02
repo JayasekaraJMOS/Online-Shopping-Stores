@@ -30,7 +30,7 @@ const login = () => {
 </script>
 
 <template>
-  <nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-900 dark:to-blue-950 shadow-lg transition-colors duration-300">
+  <nav class="sticky top-0 z-50 bg-electro-bg dark:bg-electro-bg shadow-lg transition-colors duration-300">
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
       <!-- Logo -->
       <button @click="goToHome" class="flex items-center gap-2 hover:opacity-90 transition group">
@@ -52,7 +52,7 @@ const login = () => {
         <!-- Dark Mode Toggle -->
         <button
           @click="theme.toggleDarkMode"
-          class="p-2 bg-white/20 hover:bg-white/30 rounded-full transition text-white text-xl"
+          class="p-2 bg-electro-accent/20 hover:bg-electro-accent/30 rounded-full transition text-white text-xl"
           :title="theme.isDark ? 'Light mode' : 'Dark mode'"
         >
           {{ theme.isDark ? '☀️' : '🌙' }}
