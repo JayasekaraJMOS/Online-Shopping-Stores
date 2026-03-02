@@ -19,13 +19,16 @@ const handleLogin = async () => {
 
 // Demo accounts from DummyJSON
 const demoAccounts = [
-  { username: 'atuny0', password: '9uQFF12e' },
-  { username: 'hbingley1', password: 'CQutQ34Mz' }
+  // updated with credentials currently documented by DummyJSON
+  { username: 'kminchelle', password: '0lelplR' },
+  { username: 'claudette09', password: 'ewRjLYr' } // second example
 ]
 
-const useDemoAccount = (user: string, pass: string) => {
+const useDemoAccount = async (user: string, pass: string) => {
   username.value = user
   password.value = pass
+  // automatically attempt login after filling
+  await handleLogin()
 }
 </script>
 
