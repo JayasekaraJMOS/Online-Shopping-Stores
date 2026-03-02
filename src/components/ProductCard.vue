@@ -21,7 +21,7 @@ const getRating = (rating: number | undefined) => {
 
 <template>
   <div
-    class="bg-white dark:bg-gray-700 rounded-2xl shadow-lg dark:shadow-xl hover:shadow-2xl dark:hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer group hover:-translate-y-2 dark:hover:-translate-y-2"
+    class="bg-white dark:bg-electro-card rounded-2xl shadow-lg dark:shadow-xl hover:shadow-electro-glow transition-all duration-300 overflow-hidden cursor-pointer group hover:-translate-y-2"
     @click="goToDetail"
   >
     <!-- Image Container -->
@@ -61,7 +61,7 @@ const getRating = (rating: number | undefined) => {
       <!-- Price Section -->
       <div class="mt-4 mb-4 pb-4 border-b-2 border-gray-200 dark:border-gray-600">
         <div class="flex items-baseline gap-3">
-          <p class="text-3xl font-black text-green-600 dark:text-green-400">${{ product.price }}</p>
+          <p class="text-3xl font-black text-lab-state dark:text-electro-state hover:animate-flicker">${{ product.price }}</p>
           <p v-if="product.discountPercentage" class="text-lg text-red-600 dark:text-red-400 font-bold line-through opacity-70">-{{ product.discountPercentage }}%</p>
         </div>
       </div>
