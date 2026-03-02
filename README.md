@@ -1,4 +1,4 @@
-# ElectroHub - Premium Electronic Components Store
+# Online Shopping Stores - Premium E-commerce Demo
 
 A modern, fully-featured Single Page Application (SPA) built with Vue 3, TypeScript, and Tailwind CSS. This project consumes the DummyJSON API to display electronic components with a professional e-commerce interface.
 

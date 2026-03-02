@@ -55,7 +55,7 @@ const createDemoAccount = async () => {
       <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 space-y-6">
         <!-- Header -->
         <div class="text-center">
-          <h1 class="text-5xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">🛍️ ShopHub</h1>
+          <h1 class="text-5xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">🛍️ Online Shopping Stores</h1>
           <p class="text-gray-600 dark:text-gray-300 text-lg font-semibold">Premium Products Store</p>
         </div>
 
