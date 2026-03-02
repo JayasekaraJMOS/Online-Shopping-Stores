@@ -9,8 +9,8 @@
       // Load theme before app renders to prevent flashing
       (function() {
         const saved = localStorage.getItem('theme')
-        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-        const isDark = saved ? saved === 'dark' : systemDark
+        // default to dark when no preference stored
+        const isDark = saved ? saved === 'dark' : true
         if (isDark) {
           document.documentElement.classList.add('dark')
         } else {

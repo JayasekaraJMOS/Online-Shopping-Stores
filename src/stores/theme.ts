@@ -25,8 +25,8 @@ export const useThemeStore = defineStore('theme', {
       } else if (saved === 'light') {
         this.isDark = false
       } else {
-        // Check system preference
-        this.isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        // no user preference -> default to dark mode
+        this.isDark = true
       }
       this.updateDOM()
     },
