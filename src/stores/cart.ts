@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import type { Product } from '../types/Product'
+import { useNotificationStore } from './notification'
 
 export const useCartStore = defineStore('cart', {
   state: () => ({
@@ -21,6 +22,9 @@ export const useCartStore = defineStore('cart', {
       this.items.push(product)
       this.selectedIds.add(product.id)
       this.save()
+
+      const notification = useNotificationStore()
+      notification.add(`${product.title} added to cart!`, 'success')
     },
 
     remove(productId: number) {
@@ -52,6 +56,9 @@ export const useCartStore = defineStore('cart', {
       this.items = []
       this.selectedIds = new Set<number>()
       this.save()
+
+      const notification = useNotificationStore()
+      notification.add('Cart cleared!', 'info')
     },
 
     load() {

@@ -25,7 +25,6 @@ onMounted(async () => {
 const addToCart = () => {
   if (product.value) {
     cart.add(product.value)
-    alert('Product added to cart!')
   }
 }
 

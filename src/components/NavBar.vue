@@ -37,8 +37,9 @@ const logout = () => {
     <div class="max-w-7xl mx-auto px-4 py-8 flex items-center justify-between gap-10">
       <!-- Logo -->
       <button @click="goToHome" class="flex items-center gap-4 shrink-0 group">
-        <div class="h-24 w-24 bg-white rounded-2xl flex items-center justify-center shadow-[0_10px_30px_rgba(255,255,255,0.2)] group-hover:scale-105 transition-all p-2 overflow-hidden">
-          <img :src="logo" alt="OMAX ONLINE STORE" class="w-full h-full object-contain" />
+        <div class="h-28 w-40 flex items-center justify-center group-hover:scale-105 transition-all overflow-visible mix-blend-screen">
+          <!-- Mix-blend-screen + invert reliably turns black text on white background into white text on transparent background -->
+          <img :src="logo" alt="OMAX ONLINE STORE" class="w-full h-full object-contain scale-[1.5] brightness-[1.2] grayscale contrast-[2]" style="filter: grayscale(100%) invert(100%) contrast(200%);" />
         </div>
       </button>
 
