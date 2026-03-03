@@ -12,6 +12,8 @@ export interface Product {
   brand?: string
   reviews?: Review[]
   images?: string[]
+  oldPrice?: string
+  discount?: number
 }
 
 export interface Review {

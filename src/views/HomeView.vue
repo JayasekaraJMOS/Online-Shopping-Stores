@@ -1,31 +1,60 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import ProductCard from '../components/ProductCard.vue'
 import NavBar from '../components/NavBar.vue'
 import type { Product } from '../types/Product'
 import { useSearchStore } from '../stores/search'
 
 const products = ref<Product[]>([])
+const flashProducts = ref<Product[]>([])
 const categories = ref<string[]>(['All', 'Beauty', 'Fragrances', 'Furniture', 'Groceries', 'Laptops', 'Smartphones', 'Tops'])
 const currentCategory = ref('All')
 const isLoading = ref<boolean>(true)
 const search = useSearchStore()
+const isFlashExpanded = ref(false)
+
+const timeLeft = ref({ hours: 12, minutes: 45, seconds: 30 })
+
+const updateTimer = () => {
+  setInterval(() => {
+    if (timeLeft.value.seconds > 0) {
+      timeLeft.value.seconds--
+    } else {
+      timeLeft.value.seconds = 59
+      if (timeLeft.value.minutes > 0) {
+        timeLeft.value.minutes--
+      } else {
+        timeLeft.value.minutes = 59
+        if (timeLeft.value.hours > 0) timeLeft.value.hours--
+      }
+    }
+  }, 1000)
+}
 
 const fetchProducts = async () => {
   isLoading.value = true
   try {
+    // Regular Products
     let url = 'https://dummyjson.com/products?limit=50'
-    
     if (search.query) {
       url = `https://dummyjson.com/products/search?q=${search.query}`
     } else if (currentCategory.value !== 'All') {
-      // Map names if needed, but here simple lowercase works for these
       url = `https://dummyjson.com/products/category/${currentCategory.value.toLowerCase()}`
     }
-
-    const response = await fetch(url)
-    const data = await response.json()
+    const res = await fetch(url)
+    const data = await res.json()
     products.value = data.products
+
+    // Flash Sale Products (Specific IDs for better visuals)
+    if (!flashProducts.value.length) {
+      const flashRes = await fetch('https://dummyjson.com/products?limit=18&skip=10')
+      const flashData = await flashRes.json()
+      flashProducts.value = flashData.products.map((p: any) => ({
+        ...p,
+        oldPrice: (p.price * 1.5).toFixed(2),
+        discount: Math.floor(Math.random() * 20) + 30
+      }))
+    }
   } catch (error) {
     console.error('Fetch error:', error)
   } finally {
@@ -39,13 +68,25 @@ const selectCategory = (cat: string) => {
   fetchProducts()
 }
 
+const scrollToProducts = () => {
+  document.getElementById('products-grid')?.scrollIntoView({ behavior: 'smooth' })
+}
+
 onMounted(() => {
   fetchProducts()
+  updateTimer()
 })
 
 watch(() => search.query, () => {
   if (search.query) currentCategory.value = 'All'
   fetchProducts()
+})
+const toggleFlash = () => {
+  isFlashExpanded.value = !isFlashExpanded.value
+}
+
+const visibleFlashProducts = computed(() => {
+  return isFlashExpanded.value ? flashProducts.value : flashProducts.value.slice(0, 6)
 })
 </script>
 
@@ -67,22 +108,70 @@ watch(() => search.query, () => {
       </div>
     </div>
 
+    <!-- Flash Sale Section -->
+    <section v-if="!search.query && currentCategory === 'All'" class="max-w-7xl mx-auto px-4 mt-8">
+      <div class="bg-[var(--card-bg)] rounded-sm border border-[var(--border-color)] overflow-hidden shadow-sm">
+        <div class="flex items-center justify-between p-4 border-b border-[var(--border-color)]">
+          <div class="flex items-center gap-6">
+            <h2 class="text-[#ff6600] font-bold uppercase text-sm">Flash Sale</h2>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase text-[var(--text-muted)]">Ending in</span>
+              <div class="flex gap-1.5">
+                <span class="bg-[#ff6600] text-white px-1.5 py-0.5 rounded-sm font-bold text-xs">{{ String(timeLeft.hours).padStart(2, '0') }}</span>
+                <span class="text-[#ff6600] font-bold">:</span>
+                <span class="bg-[#ff6600] text-white px-1.5 py-0.5 rounded-sm font-bold text-xs">{{ String(timeLeft.minutes).padStart(2, '0') }}</span>
+                <span class="text-[#ff6600] font-bold">:</span>
+                <span class="bg-[#ff6600] text-white px-1.5 py-0.5 rounded-sm font-bold text-xs">{{ String(timeLeft.seconds).padStart(2, '0') }}</span>
+              </div>
+            </div>
+          </div>
+          <button 
+            @click="toggleFlash"
+            class="text-[#ff6600] text-xs font-bold uppercase border border-[#ff6600] px-4 py-1.5 rounded-sm transition-all hover:bg-[#ff6600] hover:text-white"
+          >
+            {{ isFlashExpanded ? 'Show Less' : 'Shop All' }}
+          </button>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-[1px] bg-[var(--border-color)] transition-all duration-500">
+          <div v-for="item in visibleFlashProducts" :key="item.id" class="bg-[var(--card-bg)] p-4 group cursor-pointer hover:shadow-xl transition-all relative animate-fade-in">
+            <div class="absolute top-2 left-2 bg-[#ff6600] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-sm z-10 shrink-0">
+              -{{ item.discount }}%
+            </div>
+            <div class="aspect-square mb-3 overflow-hidden rounded-sm bg-white p-2">
+              <img :src="item.thumbnail" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
+            </div>
+            <h4 class="text-xs font-bold text-gray-800 dark:text-gray-100 line-clamp-1 mb-1 truncate">{{ item.title }}</h4>
+            <div class="flex flex-col">
+              <span class="text-lg font-bold text-[#ff6600]">${{ item.price }}</span>
+              <span class="text-[10px] text-gray-400 line-through">${{ item.oldPrice }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Classic Banner -->
-    <section class="max-w-7xl mx-auto px-4 mt-6">
-      <div class="relative h-[280px] rounded-sm overflow-hidden bg-[#ff6600] shadow-sm">
-        <div class="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent z-10"></div>
+    <section class="max-w-7xl mx-auto px-4 mt-8">
+      <div class="relative h-[240px] rounded-sm overflow-hidden bg-[#ff6600] shadow-sm group">
+        <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent z-10"></div>
+        <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=2000" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
         <div class="relative z-20 h-full flex flex-col justify-center px-12 text-white">
-          <span class="text-xs font-bold uppercase tracking-widest mb-2 opacity-80">Flash Sale Live Now</span>
-          <h2 class="text-4xl md:text-5xl font-bold mb-4">The Real Sale <br/><span class="text-yellow-400">MEGA DEALS</span></h2>
-          <button class="w-fit px-8 py-2.5 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-sm transition shadow-lg">
+          <span class="text-xs font-bold uppercase tracking-widest mb-2 text-yellow-400">Limited Time Offer</span>
+          <h2 class="text-3xl md:text-5xl font-extrabold mb-4 leading-tight">THE REAL SALE <br/>IS FINALLY HERE</h2>
+          <button 
+            @click="scrollToProducts"
+            class="group/btn w-fit px-8 py-3 bg-[#ff6600] hover:bg-white hover:text-[#ff6600] text-white font-bold rounded-sm transition-all shadow-lg transform active:scale-95 flex items-center gap-2"
+          >
             SHOP NOW
+            <span class="transition-transform group-hover/btn:translate-x-1 font-black text-lg">→</span>
           </button>
         </div>
       </div>
     </section>
 
     <!-- Products Grid -->
-    <section class="max-w-7xl mx-auto px-4 py-8">
+    <section id="products-grid" class="max-w-7xl mx-auto px-4 py-8">
       <div class="flex items-center justify-between mb-6">
         <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 uppercase tracking-tight">
           {{ search.query ? `Results for "${search.query}"` : (currentCategory === 'All' ? 'Just For You' : currentCategory) }}
