@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import NavBar from '../components/NavBar.vue'
 
 const router = useRouter()
 const auth = useAuthStore()

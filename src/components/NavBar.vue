@@ -28,7 +28,7 @@ const logout = () => {
         <a href="#" class="hover:text-gray-200">Save More on App</a>
         <a href="#" class="hover:text-gray-200">Become a Seller</a>
         <a href="#" class="hover:text-gray-200">Help & Support</a>
-        <span class="opacity-80">Omindu Sanvida's Accou...</span>
+        <span class="opacity-80">JAYASEKARA J.M.O.S.</span>
       </div>
     </div>
 

@@ -50,7 +50,7 @@ export const useCartStore = defineStore('cart', {
 
     clear() {
       this.items = []
-      this.selectedIds.clear()
+      this.selectedIds = new Set<number>()
       this.save()
     },
 

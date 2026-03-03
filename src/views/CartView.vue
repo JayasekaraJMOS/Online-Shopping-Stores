@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '../stores/cart'
 import NavBar from '../components/NavBar.vue'
@@ -22,10 +22,19 @@ const removeItem = (id: number) => {
   cart.remove(id)
 }
 
-const clearCart = () => {
-  if (confirm('Are you sure you want to clear your cart?')) {
-    cart.clear()
-  }
+const showClearConfirm = ref(false)
+
+const handleClearCart = () => {
+  showClearConfirm.value = true
+}
+
+const cancelClear = () => {
+  showClearConfirm.value = false
+}
+
+const confirmClear = () => {
+  cart.clear()
+  showClearConfirm.value = false
 }
 
 const checkout = () => {
@@ -75,7 +84,12 @@ const checkout = () => {
                 <span class="text-[var(--border-color)]">|</span>
                 <button @click="cart.deselectAll" class="text-[var(--text-muted)] hover:underline">Deselect All</button>
                 <span class="text-[var(--border-color)]">|</span>
-                <button @click="clearCart" class="text-red-500 hover:underline">Clear All</button>
+                <button v-if="!showClearConfirm" @click="handleClearCart" class="text-red-500 hover:underline">Clear All</button>
+                <div v-else class="flex items-center gap-2 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded-sm border border-red-100 dark:border-red-900/40">
+                  <span class="text-red-600 dark:text-red-400 font-bold">Clear?</span>
+                  <button @click="confirmClear" class="bg-red-600 text-white px-2 py-0.5 rounded-sm hover:bg-red-700 transition">YES</button>
+                  <button @click="cancelClear" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">NO</button>
+                </div>
               </div>
             </div>
 
