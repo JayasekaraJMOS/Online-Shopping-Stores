@@ -44,7 +44,7 @@ const checkout = () => {
     <div class="max-w-7xl mx-auto">
       <!-- Breadcrumbs -->
       <div class="mb-6 flex items-center gap-2 text-xs text-[var(--text-muted)] font-bold uppercase">
-        <button @click="router.push('/')" class="hover:text-[#ff6600]">Home</button>
+        <button @click="goBack" class="hover:text-[#ff6600]">Home</button>
         <span>/</span>
         <span class="text-[var(--text-color)]">Shopping Cart</span>
       </div>
@@ -74,6 +74,8 @@ const checkout = () => {
                 <button @click="cart.selectAll" class="text-[#ff6600] hover:underline">Select All</button>
                 <span class="text-[var(--border-color)]">|</span>
                 <button @click="cart.deselectAll" class="text-[var(--text-muted)] hover:underline">Deselect All</button>
+                <span class="text-[var(--border-color)]">|</span>
+                <button @click="clearCart" class="text-red-500 hover:underline">Clear All</button>
               </div>
             </div>
 
