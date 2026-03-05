@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { useCartStore } from '../stores/cart'
 import { useThemeStore } from '../stores/theme'
 import { useSearchStore } from '../stores/search'
+import { useCurrencyStore } from '../stores/currency'
 import logo from '../assets/logo.png'
 
 const router = useRouter()
@@ -11,6 +13,9 @@ const auth = useAuthStore()
 const cart = useCartStore()
 const theme = useThemeStore()
 const search = useSearchStore()
+const currency = useCurrencyStore()
+
+const currencyOpen = ref(false)
 
 const goToHome = () => router.push('/')
 const goToCart = () => router.push('/cart')
@@ -19,6 +24,15 @@ const logout = () => {
   auth.logout()
   router.push('/')
 }
+
+const selectCurrency = (code: string) => {
+  currency.setCurrency(code)
+  currencyOpen.value = false
+}
+
+const closeOnOutside = () => { currencyOpen.value = false }
+onMounted(() => window.addEventListener('click', closeOnOutside))
+onUnmounted(() => window.removeEventListener('click', closeOnOutside))
 </script>
 
 <template>
@@ -43,11 +57,13 @@ const logout = () => {
         </div>
       </button>
 
-      <!-- Search Bar -->
-      <div class="flex-grow max-w-2xl">
-        <div class="flex bg-white dark:bg-gray-800 rounded-lg overflow-hidden h-11 shadow-inner border-2 border-transparent focus-within:border-blue-300 transition-all">
-          <input 
-            type="text" 
+      <!-- Search Bar + Currency -->
+      <div class="flex-grow max-w-2xl flex items-center gap-2">
+
+        <!-- Search Input -->
+        <div class="flex-grow flex bg-white dark:bg-gray-800 rounded-lg overflow-hidden h-11 shadow-inner border-2 border-transparent focus-within:border-blue-300 transition-all">
+          <input
+            type="text"
             v-model="search.query"
             placeholder="Search in OMAX..."
             class="w-full py-2 px-4 text-[14px] text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 focus:outline-none placeholder:text-gray-400 font-medium"
@@ -57,6 +73,46 @@ const logout = () => {
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </button>
+        </div>
+
+        <!-- Currency Selector (RIGHT of search) -->
+        <div class="relative shrink-0">
+          <button
+            @click.stop="currencyOpen = !currencyOpen"
+            class="flex items-center gap-1.5 bg-white/15 hover:bg-white/25 border border-white/30 text-white text-xs font-black px-3 h-11 rounded-lg transition-all whitespace-nowrap relative"
+          >
+            <!-- Live rate dot -->
+            <span
+              v-if="currency.ratesLoaded"
+              class="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full border border-white shadow"
+              title="Live rates"
+            ></span>
+            <span v-else class="absolute -top-1 -right-1 w-2 h-2 bg-yellow-300 rounded-full border border-white animate-pulse shadow" title="Loading rates..."></span>
+            <span class="text-base leading-none">{{ currency.selected.flag }}</span>
+            <span class="tracking-widest">{{ currency.selected.code }}</span>
+            <svg class="w-3 h-3 opacity-70 transition-transform" :class="{ 'rotate-180': currencyOpen }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+
+          <!-- Dropdown -->
+          <div
+            v-if="currencyOpen"
+            @click.stop
+            class="absolute top-[calc(100%+8px)] right-0 z-50 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden w-44 py-1"
+          >
+            <button
+              v-for="c in currency.CURRENCIES"
+              :key="c.code"
+              @click="selectCurrency(c.code)"
+              class="w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors"
+              :class="c.code === currency.selectedCode ? 'bg-blue-50 dark:bg-gray-700 font-black text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-200 font-medium'"
+            >
+              <span class="text-base">{{ c.flag }}</span>
+              <span class="flex-grow text-left">{{ c.code }}</span>
+              <span class="text-xs opacity-60">{{ c.symbol }}</span>
+            </button>
+          </div>
         </div>
       </div>
 

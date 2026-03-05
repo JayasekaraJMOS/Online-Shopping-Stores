@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useCartStore } from '../stores/cart'
+import { useCurrencyStore } from '../stores/currency'
 import type { Product } from '../types/Product'
 
 const props = defineProps<{
@@ -9,6 +10,7 @@ const props = defineProps<{
 
 const router = useRouter()
 const cart = useCartStore()
+const currency = useCurrencyStore()
 
 const goToDetail = () => {
   router.push(`/product/${props.product.id}`)
@@ -41,7 +43,7 @@ const goToDetail = () => {
       <div class="mt-auto space-y-3">
         <div class="flex items-center justify-between">
           <div class="flex flex-col">
-            <span class="text-xl font-black text-[var(--promo-color)] tracking-tight">${{ product.price }}</span>
+            <span class="text-xl font-black text-[var(--promo-color)] tracking-tight">{{ currency.format(product.price) }}</span>
             <div class="flex items-center gap-1 mt-0.5">
               <span class="text-amber-400 text-xs text-shadow-sm">★</span>
               <span class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-tighter">{{ product.rating?.toFixed(1) }} Rating</span>

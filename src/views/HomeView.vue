@@ -5,6 +5,7 @@ import ProductCard from '../components/ProductCard.vue'
 import NavBar from '../components/NavBar.vue'
 import type { Product } from '../types/Product'
 import { useSearchStore } from '../stores/search'
+import { useCurrencyStore } from '../stores/currency'
 
 const router = useRouter()
 
@@ -14,6 +15,7 @@ const categories = ref<string[]>(['All', 'Beauty', 'Fragrances', 'Furniture', 'G
 const currentCategory = ref('All')
 const isLoading = ref<boolean>(true)
 const search = useSearchStore()
+const currency = useCurrencyStore()
 const isFlashExpanded = ref(false)
 
 const timeLeft = ref({ hours: 12, minutes: 45, seconds: 30 })
@@ -153,8 +155,8 @@ const visibleFlashProducts = computed(() => {
             </div>
             <h4 class="text-xs font-bold text-[var(--text-color)] line-clamp-1 mb-1 truncate group-hover:text-[var(--accent-color)] transition-colors">{{ item.title }}</h4>
             <div class="flex items-baseline gap-2">
-              <span class="text-lg font-black text-[var(--promo-color)]">${{ item.price }}</span>
-              <span class="text-[10px] text-[var(--text-muted)] line-through opacity-60">${{ item.oldPrice }}</span>
+              <span class="text-lg font-black text-[var(--promo-color)]">{{ currency.format(item.price) }}</span>
+              <span class="text-[10px] text-[var(--text-muted)] line-through opacity-60">{{ currency.format(Number(item.oldPrice)) }}</span>
             </div>
           </div>
         </div>

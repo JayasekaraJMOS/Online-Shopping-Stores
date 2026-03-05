@@ -2,12 +2,14 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCartStore } from '../stores/cart'
+import { useCurrencyStore } from '../stores/currency'
 import NavBar from '../components/NavBar.vue'
 import type { Product } from '../types/Product'
 
 const route = useRoute()
 const router = useRouter()
 const cart = useCartStore()
+const currency = useCurrencyStore()
 const product = ref<Product | null>(null)
 const isLoading = ref(true)
 
@@ -87,9 +89,9 @@ const addToCart = () => {
 
           <div class="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl border border-[var(--border-color)] mb-8">
              <div class="flex items-center gap-4">
-                <span class="text-5xl font-black text-[var(--promo-color)] tracking-tighter">${{ product.price }}</span>
+                <span class="text-5xl font-black text-[var(--promo-color)] tracking-tighter">{{ currency.format(product.price) }}</span>
                 <div v-if="product.discountPercentage" class="flex flex-col">
-                  <span class="text-lg text-[var(--text-muted)] line-through opacity-50 font-bold">${{ (product.price * (1 + product.discountPercentage/100)).toFixed(2) }}</span>
+                  <span class="text-lg text-[var(--text-muted)] line-through opacity-50 font-bold">{{ currency.format(product.price * (1 + product.discountPercentage / 100)) }}</span>
                   <span class="text-xs text-white bg-[var(--promo-color)] px-2 py-0.5 font-black rounded w-fit">SAVE {{ Math.round(product.discountPercentage) }}%</span>
                 </div>
              </div>
