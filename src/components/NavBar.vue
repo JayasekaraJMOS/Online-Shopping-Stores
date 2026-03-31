@@ -16,6 +16,10 @@ const search = useSearchStore()
 const currency = useCurrencyStore()
 
 const currencyOpen = ref(false)
+const appDropOpen = ref(false)
+const toggleAppDrop = (e: Event) => { e.stopPropagation(); appDropOpen.value = !appDropOpen.value }
+const goToSeller = () => router.push('/become-a-seller')
+const goToHelp = () => router.push('/help')
 
 const goToHome = () => router.push('/')
 const goToCart = () => router.push('/cart')
@@ -30,7 +34,7 @@ const selectCurrency = (code: string) => {
   currencyOpen.value = false
 }
 
-const closeOnOutside = () => { currencyOpen.value = false }
+const closeOnOutside = () => { currencyOpen.value = false; appDropOpen.value = false }
 onMounted(() => window.addEventListener('click', closeOnOutside))
 onUnmounted(() => window.removeEventListener('click', closeOnOutside))
 </script>
@@ -40,9 +44,59 @@ onUnmounted(() => window.removeEventListener('click', closeOnOutside))
     <!-- Top Utility Bar -->
     <div class="bg-[#1E3A8A] text-[12px] py-1.5 hidden md:block border-b border-white/10">
       <div class="max-w-7xl mx-auto px-4 flex justify-end gap-6 uppercase font-bold tracking-wider opacity-90">
-        <a href="#" class="hover:text-blue-200 transition-colors">Save More on App</a>
-        <a href="#" class="hover:text-blue-200 transition-colors">Become a Seller</a>
-        <a href="#" class="hover:text-blue-200 transition-colors">Help & Support</a>
+
+        <!-- Save More on App — dropdown trigger -->
+        <div class="relative">
+          <button
+            @click.stop="toggleAppDrop"
+            class="hover:text-blue-200 transition-colors flex items-center gap-1"
+          >
+            Save More on App
+            <svg class="w-3 h-3 opacity-70 transition-transform" :class="appDropOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+
+          <!-- Dropdown -->
+          <div
+            v-if="appDropOpen"
+            @click.stop
+            class="absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 z-50 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden w-64 p-5"
+          >
+            <!-- Arrow notch -->
+            <div class="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-l border-t border-gray-100 rotate-45"></div>
+
+            <p class="text-gray-800 font-black text-sm mb-4">Download the App</p>
+
+            <!-- QR Code -->
+            <div class="flex justify-center mb-4">
+              <img
+                src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://omax.store/app&bgcolor=FFFFFF&color=000000&margin=2"
+                alt="Scan to download OMAX App"
+                class="w-36 h-36 rounded-lg border border-gray-200"
+              />
+            </div>
+
+            <!-- Store Badges -->
+            <div class="flex flex-col gap-2">
+              <a href="#" class="flex items-center gap-3 bg-black text-white rounded-xl px-4 py-2.5 hover:opacity-90 transition-opacity">
+                <span class="text-2xl leading-none">🍎</span>
+                <div>
+                  <p class="text-[9px] opacity-60 uppercase tracking-widest leading-tight">Available on the</p>
+                  <p class="text-sm font-black leading-tight">App Store</p>
+                </div>
+              </a>
+              <a href="#" class="flex items-center gap-3 bg-black text-white rounded-xl px-4 py-2.5 hover:opacity-90 transition-opacity">
+                <span class="text-2xl leading-none">▶️</span>
+                <div>
+                  <p class="text-[9px] opacity-60 uppercase tracking-widest leading-tight">Android App on</p>
+                  <p class="text-sm font-black leading-tight">Google Play</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <button @click="goToSeller" class="hover:text-blue-200 transition-colors">Become a Seller</button>
+        <button @click="goToHelp" class="hover:text-blue-200 transition-colors">Help &amp; Support</button>
         <span class="text-blue-200">JAYASEKARA J.M.O.S.</span>
       </div>
     </div>
