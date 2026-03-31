@@ -74,18 +74,18 @@ onUnmounted(() => window.removeEventListener('click', closeOnOutside))
     </div>
 
     <!-- Main Header -->
-    <div class="max-w-7xl mx-auto px-4 py-2 md:py-3">
+    <div class="max-w-7xl mx-auto px-4 py-0.5 md:py-1">
       <div class="flex items-center justify-between gap-4">
         <!-- Left: Logo + Burger -->
         <div class="flex items-center gap-4">
-          <button @click="toggleMenu" class="md:hidden p-2 -ml-2 text-white">
+          <button @click="toggleMenu" class="md:hidden p-1 -ml-2 text-white">
             <svg v-if="!isMenuOpen" class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
             <svg v-else class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
 
           <router-link to="/" class="flex items-center shrink-0 group relative z-10 transition-transform active:scale-95">
             <div 
-              class="h-20 w-64 md:h-22 md:w-72 bg-white"
+              class="h-14 w-44 md:h-32 md:w-[380px] bg-white"
               :style="{ 
                 'mask-image': `url(${logo})`,
                 '-webkit-mask-image': `url(${logo})`,
