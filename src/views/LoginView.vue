@@ -20,30 +20,15 @@ const handleLogin = async () => {
 
 
 
+// Use a known dummyjson test account — the /users/add endpoint is a mock
+// that does NOT persist users, so we log in with a real seeded account instead.
+const DEMO_USER = 'emilys'
+const DEMO_PASS = 'emilyspass'
+
 const createDemoAccount = async () => {
-  // generate simple random credentials
-  const rand = Math.floor(Math.random() * 100000)
-  const user = `demo${rand}`
-  const pass = `Pass${rand}`
-  try {
-    const response = await fetch('https://dummyjson.com/users/add', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: user,
-        password: pass,
-        email: `${user}@example.com`,
-        firstName: 'Demo',
-        lastName: rand.toString()
-      })
-    })
-    if (!response.ok) throw new Error('Failed to create demo account')
-    username.value = user
-    password.value = pass
-    await handleLogin()
-  } catch (e: any) {
-    auth.error = e.message || 'Demo creation failed'
-  }
+  username.value = DEMO_USER
+  password.value = DEMO_PASS
+  await handleLogin()
 }
 </script>
 

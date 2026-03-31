@@ -30,10 +30,24 @@ const handleRegister = async () => {
         lastName: lastName.value
       })
     })
-    if (!resp.ok) throw new Error('Registration failed')
-    
-    // after registration log them in
-    await auth.login(username.value, password.value)
+    if (!resp.ok) throw new Error('Registration failed. Please try again.')
+    const data = await resp.json()
+
+    // dummyjson /users/add is a mock — it returns a fake user but never persists it,
+    // so logging in afterwards always fails. Instead, we build the session directly
+    // from the form data + the returned id.
+    const fakeToken = btoa(`${username.value}:${Date.now()}`)
+    const newUser = {
+      id: data.id ?? Math.floor(Math.random() * 9000 + 1000),
+      username: username.value,
+      email: email.value,
+      firstName: firstName.value,
+      lastName: lastName.value,
+      token: fakeToken
+    }
+    auth.user = newUser
+    localStorage.setItem('auth_token', fakeToken)
+    localStorage.setItem('user', JSON.stringify(newUser))
     router.push('/')
   } catch (e: any) {
     error.value = e.message || 'Registration error'
