@@ -18,6 +18,21 @@ const search = useSearchStore()
 const currency = useCurrencyStore()
 const isFlashExpanded = ref(false)
 
+const saveMoreCoupons = [
+  { id: 1, off: '15%', label: 'ELECTRONICS', code: 'ELEC15', color: '#2563EB', bg: '#EFF6FF', min: 50 },
+  { id: 2, off: '20%', label: 'FASHION', code: 'STYLE20', color: '#7C3AED', bg: '#F5F3FF', min: 30 },
+  { id: 3, off: '10%', label: 'GROCERIES', code: 'FRESH10', color: '#059669', bg: '#ECFDF5', min: 20 },
+  { id: 4, off: '25%', label: 'BEAUTY', code: 'GLOW25', color: '#DB2777', bg: '#FDF2F8', min: 40 },
+  { id: 5, off: '30%', label: 'HOME & LIVING', code: 'HOME30', color: '#D97706', bg: '#FFFBEB', min: 80 },
+]
+
+const bundleDeals = [
+  { id: 1, icon: '📱', title: 'Phone + Case Bundle', save: 35, label: 'Tech Combo' },
+  { id: 2, icon: '👟', title: 'Buy 2 Get 1 Free', save: 33, label: 'Fashion' },
+  { id: 3, icon: '🧴', title: 'Skincare Trio Pack', save: 28, label: 'Beauty' },
+  { id: 4, icon: '🏠', title: 'Home Essentials Kit', save: 40, label: 'Home' },
+]
+
 const timeLeft = ref({ hours: 12, minutes: 45, seconds: 30 })
 
 const updateTimer = () => {
@@ -159,6 +174,83 @@ const visibleFlashProducts = computed(() => {
               <span class="text-[10px] text-[var(--text-muted)] line-through opacity-60">{{ currency.format(Number(item.oldPrice)) }}</span>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Save More Section -->
+    <section v-if="!search.query && currentCategory === 'All'" class="max-w-7xl mx-auto px-4 mt-8">
+      <!-- Section Header -->
+      <div class="flex items-center gap-4 mb-4">
+        <h2 class="text-sm font-black uppercase tracking-widest text-[var(--text-color)] flex items-center gap-2 shrink-0">
+          <span class="text-xl">🏷️</span> Save More
+        </h2>
+        <div class="h-px flex-grow bg-[var(--border-color)]"></div>
+        <span class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-widest shrink-0">Exclusive Deals</span>
+      </div>
+
+      <!-- Referral / Signup Bonus Strip -->
+      <div class="relative overflow-hidden rounded-xl mb-4 px-6 py-3 flex items-center justify-between gap-4 flex-wrap"
+        style="background: linear-gradient(135deg, var(--accent-color), #7C3AED);">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🎁</span>
+          <div>
+            <p class="text-white font-black text-sm uppercase tracking-wide">New User Bonus</p>
+            <p class="text-white/70 text-xs">Get <span class="text-white font-black">$10 OFF</span> your first order — no minimum spend!</p>
+          </div>
+        </div>
+        <button class="bg-white text-[var(--accent-color)] font-black text-xs uppercase tracking-widest px-5 py-2 rounded-lg shadow-md hover:scale-105 transition-transform shrink-0">
+          Claim Now
+        </button>
+        <!-- decorative circles -->
+        <div class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 pointer-events-none"></div>
+        <div class="absolute -right-2 top-8 w-12 h-12 rounded-full bg-white/10 pointer-events-none"></div>
+      </div>
+
+      <!-- Coupon Cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-4">
+        <div
+          v-for="c in saveMoreCoupons"
+          :key="c.id"
+          class="coupon-card group rounded-xl border-2 overflow-hidden cursor-pointer select-none hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+          :style="{ borderColor: c.color, backgroundColor: c.bg }"
+        >
+          <!-- Dashed divider notch -->
+          <div class="relative flex items-center gap-2 px-3 pt-3 pb-2" :style="{ borderBottom: `1.5px dashed ${c.color}40` }">
+            <span class="text-3xl font-black leading-none" :style="{ color: c.color }">{{ c.off }}</span>
+            <div>
+              <p class="text-[10px] font-black uppercase" :style="{ color: c.color }">{{ c.label }}</p>
+              <p class="text-[10px] text-[var(--text-muted)]">Min. spend ${{ c.min }}</p>
+            </div>
+            <!-- Notches -->
+            <div class="absolute -left-2 bottom-[-8px] w-4 h-4 rounded-full bg-[var(--bg-color)] border border-[var(--border-color)] z-10"></div>
+            <div class="absolute -right-2 bottom-[-8px] w-4 h-4 rounded-full bg-[var(--bg-color)] border border-[var(--border-color)] z-10"></div>
+          </div>
+          <div class="px-3 py-2 flex items-center justify-between">
+            <code class="text-[9px] font-black tracking-widest uppercase" :style="{ color: c.color }">{{ c.code }}</code>
+            <button 
+              class="text-[9px] font-black uppercase border rounded px-2 py-0.5 transition-all group-hover:text-white"
+              :style="{ borderColor: c.color, color: c.color }"
+              @mouseenter="(e) => { (e.target as HTMLElement).style.backgroundColor = c.color }"
+              @mouseleave="(e) => { (e.target as HTMLElement).style.backgroundColor = 'transparent'; (e.target as HTMLElement).style.color = c.color }"
+            >Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bundle Deals Strip -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div
+          v-for="deal in bundleDeals"
+          :key="deal.id"
+          class="flex items-center gap-3 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl px-4 py-3 cursor-pointer hover:border-[var(--accent-color)] hover:shadow-md transition-all duration-300 group"
+        >
+          <span class="text-2xl group-hover:scale-110 transition-transform duration-300">{{ deal.icon }}</span>
+          <div class="min-w-0">
+            <p class="text-xs font-black text-[var(--text-color)] truncate">{{ deal.title }}</p>
+            <p class="text-[10px] text-[var(--text-muted)]">{{ deal.label }} &bull; <span class="font-black text-[var(--cta-color)]">Save {{ deal.save }}%</span></p>
+          </div>
+          <span class="ml-auto text-[var(--accent-color)] text-xs font-black opacity-0 group-hover:opacity-100 transition-opacity shrink-0">→</span>
         </div>
       </div>
     </section>
