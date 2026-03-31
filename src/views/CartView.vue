@@ -53,21 +53,21 @@ const checkout = () => {
   <div class="min-h-screen bg-[var(--bg-color)] text-[var(--text-color)] transition-colors duration-500 py-8 px-4">
     <div class="max-w-7xl mx-auto">
       <!-- Breadcrumbs -->
-      <div class="mb-6 flex items-center gap-2 text-xs text-[var(--text-muted)] font-bold uppercase">
+      <div class="mb-4 md:mb-6 flex items-center gap-2 text-[10px] md:text-xs text-[var(--text-muted)] font-bold uppercase tracking-widest">
         <button @click="goBack" class="hover:text-[var(--accent-color)] transition-colors">Home</button>
-        <span>/</span>
+        <span class="opacity-30">/</span>
         <span class="text-[var(--text-color)]">Shopping Cart</span>
       </div>
 
       <div class="grid lg:grid-cols-3 gap-8">
         <!-- Left Side: Items -->
         <div class="lg:col-span-2 space-y-4">
-          <div v-if="cart.items.length === 0" class="bg-[var(--card-bg)] border border-[var(--border-color)] p-16 text-center rounded-2xl shadow-xl">
-            <div class="text-6xl mb-6 opacity-20">🛒</div>
-            <p class="text-[var(--text-muted)] font-black uppercase mb-8 tracking-widest">Your cart is empty</p>
+          <div v-if="cart.items.length === 0" class="bg-[var(--card-bg)] border border-[var(--border-color)] p-10 md:p-16 text-center rounded-2xl shadow-xl">
+            <div class="text-4xl md:text-6xl mb-6 opacity-20">🛒</div>
+            <p class="text-[var(--text-muted)] font-black uppercase mb-8 tracking-widest text-xs md:text-sm">Your cart is empty</p>
             <button
               @click="router.push('/')"
-              class="bg-[var(--accent-color)] text-white px-10 py-4 rounded-xl font-black uppercase text-xs hover:bg-[#1D4ED8] transition-all shadow-lg active:scale-95"
+              class="bg-[var(--accent-color)] text-white px-8 md:px-10 py-3 md:py-4 rounded-xl font-black uppercase text-[10px] md:text-xs hover:bg-[#1D4ED8] transition-all shadow-lg active:scale-95"
             >
               Start Shopping
             </button>
@@ -99,7 +99,7 @@ const checkout = () => {
             <div 
               v-for="item in cart.items" 
               :key="item.id"
-              class="bg-[var(--card-bg)] border border-[var(--border-color)] p-4 flex gap-4 rounded-sm relative group"
+              class="bg-[var(--card-bg)] border border-[var(--border-color)] p-3 md:p-4 flex gap-3 md:gap-4 rounded-xl relative group shadow-sm transition-all hover:shadow-md"
             >
               <div class="flex items-center">
                 <input
@@ -109,16 +109,16 @@ const checkout = () => {
                   class="w-5 h-5 accent-[var(--accent-color)] cursor-pointer"
                 />
               </div>
-              <div class="w-24 h-24 bg-white p-3 rounded-xl border border-[var(--border-color)] shrink-0 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
+              <div class="w-20 h-20 md:w-24 md:h-24 bg-white p-2 md:p-3 rounded-xl border border-[var(--border-color)] shrink-0 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
                 <img :src="item.thumbnail" class="max-w-full max-h-full object-contain" />
               </div>
               <div class="flex-grow min-w-0 flex flex-col justify-center">
-                <h3 class="font-black text-sm truncate uppercase mb-1 text-[var(--text-color)]">{{ item.title }}</h3>
-                <p class="text-[10px] text-[var(--text-muted)] line-clamp-1 mb-3 tracking-tight">{{ item.description }}</p>
-                <div class="flex items-center justify-between">
-                  <span class="text-[var(--promo-color)] font-black text-xl tracking-tighter">{{ currency.format(item.price) }}</span>
-                  <button @click="removeItem(item.id)" class="text-[10px] font-black text-[var(--text-muted)] hover:text-red-600 uppercase tracking-widest flex items-center gap-1 transition-colors">
-                    <span>🗑️</span> Remove
+                <h3 class="font-black text-xs md:text-sm truncate uppercase mb-1 text-[var(--text-color)] tracking-tight">{{ item.title }}</h3>
+                <p class="text-[9px] md:text-[10px] text-[var(--text-muted)] line-clamp-1 mb-2 md:mb-3 tracking-tighter">{{ item.description }}</p>
+                <div class="flex items-center justify-between mt-auto">
+                  <span class="text-[var(--promo-color)] font-black text-base md:text-xl tracking-tighter">{{ currency.format(item.price) }}</span>
+                  <button @click="removeItem(item.id)" class="text-[9px] font-black text-[var(--text-muted)] hover:text-red-600 uppercase tracking-widest flex items-center gap-1 transition-colors">
+                    <span>🗑️</span> <span class="hidden sm:inline">Remove</span>
                   </button>
                 </div>
               </div>
@@ -147,10 +147,10 @@ const checkout = () => {
 
             <div class="border-t border-[var(--border-color)] pt-6 mb-8">
               <div class="flex justify-between items-end">
-                <span class="text-xs font-black uppercase tracking-widest">Total Pay</span>
+                <span class="text-[10px] md:text-xs font-black uppercase tracking-widest opacity-60">Total Pay</span>
                 <div class="text-right">
-                  <p class="text-4xl font-black text-[var(--promo-color)] leading-none tracking-tighter">{{ currency.format(selectedTotal) }}</p>
-                  <p class="text-[10px] text-[var(--text-muted)] mt-2 italic font-medium">VAT included where applicable</p>
+                  <p class="text-3xl md:text-4xl font-black text-[var(--promo-color)] leading-none tracking-tighter">{{ currency.format(selectedTotal) }}</p>
+                  <p class="text-[9px] md:text-[10px] text-[var(--text-muted)] mt-2 italic font-medium uppercase tracking-tighter">VAT included where applicable</p>
                 </div>
               </div>
             </div>

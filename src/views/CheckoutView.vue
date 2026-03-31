@@ -72,7 +72,7 @@ const placeOrder = () => {
         ← Back to Store
       </button>
 
-      <h1 class="text-5xl font-black text-[var(--text-color)] mb-12 tracking-tighter">Secure Checkout</h1>
+      <h1 class="text-3xl md:text-5xl font-black text-[var(--text-color)] mb-8 md:mb-12 tracking-tighter">Secure Checkout</h1>
 
       <div class="grid md:grid-cols-2 gap-8">
         <!-- form -->
@@ -97,7 +97,7 @@ const placeOrder = () => {
               <label class="block text-xs font-black uppercase text-[var(--text-muted)] mb-2 tracking-widest">Shipping Address</label>
               <input v-model="address" type="text" class="w-full px-5 py-3 border-2 border-[var(--border-color)] bg-[var(--card-bg)] rounded-xl focus:outline-none focus:border-[var(--accent-color)] transition-all shadow-inner" placeholder="123 Street Name" required />
             </div>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="block text-xs font-black uppercase text-[var(--text-muted)] mb-2 tracking-widest">City</label>
                 <input v-model="city" type="text" class="w-full px-5 py-3 border-2 border-[var(--border-color)] bg-[var(--card-bg)] rounded-xl focus:outline-none focus:border-[var(--accent-color)] transition-all shadow-inner" placeholder="Colombo" />

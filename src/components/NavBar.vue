@@ -15,182 +15,168 @@ const theme = useThemeStore()
 const search = useSearchStore()
 const currency = useCurrencyStore()
 
+const isMenuOpen = ref(false)
 const currencyOpen = ref(false)
 const appDropOpen = ref(false)
-const toggleAppDrop = (e: Event) => { e.stopPropagation(); appDropOpen.value = !appDropOpen.value }
-const goToSeller = () => router.push('/become-a-seller')
-const goToHelp = () => router.push('/help')
 
-const goToHome = () => router.push('/')
-const goToCart = () => router.push('/cart')
-const login = () => router.push('/login')
-const logout = () => {
-  auth.logout()
-  router.push('/')
-}
-
+const toggleMenu = () => { isMenuOpen.value = !isMenuOpen.value }
 const selectCurrency = (code: string) => {
   currency.setCurrency(code)
   currencyOpen.value = false
 }
 
-const closeOnOutside = () => { currencyOpen.value = false; appDropOpen.value = false }
+const logout = () => {
+  auth.logout()
+  isMenuOpen.value = false
+  router.push('/')
+}
+
+const handleNav = (path: string) => {
+  router.push(path)
+  isMenuOpen.value = false
+}
+
+const closeOnOutside = () => { 
+  currencyOpen.value = false
+  appDropOpen.value = false 
+}
 onMounted(() => window.addEventListener('click', closeOnOutside))
 onUnmounted(() => window.removeEventListener('click', closeOnOutside))
 </script>
 
 <template>
   <header class="sticky top-0 z-50 bg-[#2563EB] text-white shadow-md font-sans">
-    <!-- Top Utility Bar -->
+    <!-- Top Utility Bar (Desktop Only) -->
     <div class="bg-[#1E3A8A] text-[12px] py-1.5 hidden md:block border-b border-white/10">
       <div class="max-w-7xl mx-auto px-4 flex justify-end gap-6 uppercase font-bold tracking-wider opacity-90">
-
-        <!-- Save More on App — dropdown trigger -->
+        <!-- Save More on App trigger -->
         <div class="relative">
-          <button
-            @click.stop="toggleAppDrop"
-            class="hover:text-blue-200 transition-colors flex items-center gap-1"
-          >
+          <button @click.stop="appDropOpen = !appDropOpen" class="hover:text-blue-200 transition-colors flex items-center gap-1">
             Save More on App
             <svg class="w-3 h-3 opacity-70 transition-transform" :class="appDropOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
           </button>
-
-          <!-- Dropdown -->
-          <div
-            v-if="appDropOpen"
-            @click.stop
-            class="absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 z-50 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden w-64 p-5"
-          >
-            <!-- Arrow notch -->
+          
+          <div v-if="appDropOpen" @click.stop class="absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 z-50 bg-white rounded-2xl shadow-2xl border border-gray-100 w-64 p-5">
             <div class="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-l border-t border-gray-100 rotate-45"></div>
-
             <p class="text-gray-800 font-black text-sm mb-4">Download the App</p>
-
-            <!-- QR Code -->
-            <div class="flex justify-center mb-4">
-              <img
-                src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://omax.store/app&bgcolor=FFFFFF&color=000000&margin=2"
-                alt="Scan to download OMAX App"
-                class="w-36 h-36 rounded-lg border border-gray-200"
-              />
-            </div>
-
-            <!-- Store Badges -->
+            <div class="flex justify-center mb-4"><img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://omax.store/app" class="w-36 h-36 rounded-lg" /></div>
             <div class="flex flex-col gap-2">
-              <a href="#" class="flex items-center gap-3 bg-black text-white rounded-xl px-4 py-2.5 hover:opacity-90 transition-opacity">
-                <span class="text-2xl leading-none">🍎</span>
-                <div>
-                  <p class="text-[9px] opacity-60 uppercase tracking-widest leading-tight">Available on the</p>
-                  <p class="text-sm font-black leading-tight">App Store</p>
-                </div>
-              </a>
-              <a href="#" class="flex items-center gap-3 bg-black text-white rounded-xl px-4 py-2.5 hover:opacity-90 transition-opacity">
-                <span class="text-2xl leading-none">▶️</span>
-                <div>
-                  <p class="text-[9px] opacity-60 uppercase tracking-widest leading-tight">Android App on</p>
-                  <p class="text-sm font-black leading-tight">Google Play</p>
-                </div>
-              </a>
+              <a href="#" class="flex items-center gap-3 bg-black text-white rounded-xl px-4 py-2 hover:opacity-90"><span>🍎</span><p class="text-sm font-black">App Store</p></a>
+              <a href="#" class="flex items-center gap-3 bg-black text-white rounded-xl px-4 py-2 hover:opacity-90"><span>▶️</span><p class="text-sm font-black">Google Play</p></a>
             </div>
           </div>
         </div>
 
-        <button @click="goToSeller" class="hover:text-blue-200 transition-colors">Become a Seller</button>
-        <button @click="goToHelp" class="hover:text-blue-200 transition-colors">Help &amp; Support</button>
-        <span class="text-blue-200">JAYASEKARA J.M.O.S.</span>
+        <button @click="handleNav('/become-a-seller')" class="hover:text-blue-200 transition-colors">Become a Seller</button>
+        <button @click="handleNav('/help')" class="hover:text-blue-200 transition-colors">Help & Support</button>
+        <span class="text-blue-200 uppercase">Jayasekara J.M.O.S.</span>
       </div>
     </div>
 
     <!-- Main Header -->
-    <div class="max-w-7xl mx-auto px-4 py-5 flex items-center justify-between gap-6">
+    <div class="max-w-7xl mx-auto px-4 py-3 md:py-5 flex items-center justify-between gap-3 md:gap-6">
+      
+      <!-- Mobile Menu Toggle -->
+      <button @click="toggleMenu" class="md:hidden p-2 -ml-2 text-white">
+        <svg v-if="!isMenuOpen" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+        <svg v-else class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
       <!-- Logo -->
-      <button @click="goToHome" class="flex items-center gap-4 shrink-0 group relative z-10">
-        <div class="h-20 w-36 flex items-center justify-center group-hover:scale-105 transition-all overflow-visible">
-          <!-- No background box. Using a fractional CSS drop-shadow matrix to create a very thin, subtle black outline that looks correct even when scaled up by 2.5x -->
-          <img :src="logo" alt="OMAX ONLINE STORE" class="w-full h-full object-contain scale-[2.5] pointer-events-none" style="filter: drop-shadow(0.4px 0.4px 0 rgba(0,0,0,0.8)) drop-shadow(-0.4px -0.4px 0 rgba(0,0,0,0.8)) drop-shadow(0.4px -0.4px 0 rgba(0,0,0,0.8)) drop-shadow(-0.4px 0.4px 0 rgba(0,0,0,0.8)) drop-shadow(0px 4px 5px rgba(0,0,0,0.4));" />
+      <button @click="handleNav('/')" class="flex items-center gap-2 shrink-0 group relative z-10">
+        <div class="h-10 w-20 md:h-20 md:w-36 flex items-center justify-center group-hover:scale-105 transition-all">
+          <img :src="logo" alt="OMAX" class="w-full h-full object-contain scale-[1.8] md:scale-[2.4]" style="filter: drop-shadow(0.4px 0.4px 0 rgba(0,0,0,0.8)) drop-shadow(-0.4px -0.4px 0 rgba(0,0,0,0.8)) drop-shadow(0px 4px 5px rgba(0,0,0,0.4));" />
         </div>
       </button>
 
-      <!-- Search Bar + Currency -->
+      <!-- Search Bar + Currency (Responsive) -->
       <div class="flex-grow max-w-2xl flex items-center gap-2">
-
         <!-- Search Input -->
-        <div class="flex-grow flex bg-white dark:bg-gray-800 rounded-lg overflow-hidden h-11 shadow-inner border-2 border-transparent focus-within:border-blue-300 transition-all">
-          <input
-            type="text"
-            v-model="search.query"
-            placeholder="Search in OMAX..."
-            class="w-full py-2 px-4 text-[14px] text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 focus:outline-none placeholder:text-gray-400 font-medium"
+        <div class="flex-grow flex bg-white dark:bg-gray-800 rounded-lg overflow-hidden h-10 md:h-11 shadow-inner border-2 border-transparent focus-within:border-blue-300 transition-all">
+          <input 
+            v-model="search.query" 
+            type="text" 
+            placeholder="Search..." 
+            class="w-full py-2 px-3 md:px-4 text-xs md:text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 focus:outline-none font-medium"
           >
-          <button class="bg-[#F1F5F9] dark:bg-gray-700 px-6 hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors border-l border-gray-100 dark:border-gray-600">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#2563EB]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+          <button class="bg-[#F1F5F9] dark:bg-gray-700 px-3 md:px-6 hover:bg-blue-50 transition-colors">
+            <svg class="h-5 w-5 text-[#2563EB]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
           </button>
         </div>
 
-        <!-- Currency Selector (RIGHT of search) -->
+        <!-- Currency Dropdown -->
         <div class="relative shrink-0">
-          <button
-            @click.stop="currencyOpen = !currencyOpen"
-            class="flex items-center gap-1.5 bg-white/15 hover:bg-white/25 border border-white/30 text-white text-xs font-black px-3 h-11 rounded-lg transition-all whitespace-nowrap relative"
-          >
-            <!-- Live rate dot -->
-            <span
-              v-if="currency.ratesLoaded"
-              class="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full border border-white shadow"
-              title="Live rates"
-            ></span>
-            <span v-else class="absolute -top-1 -right-1 w-2 h-2 bg-yellow-300 rounded-full border border-white animate-pulse shadow" title="Loading rates..."></span>
-            <span class="text-base leading-none">{{ currency.selected.flag }}</span>
-            <span class="tracking-widest">{{ currency.selected.code }}</span>
-            <svg class="w-3 h-3 opacity-70 transition-transform" :class="{ 'rotate-180': currencyOpen }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/>
-            </svg>
+          <button @click.stop="currencyOpen = !currencyOpen" class="flex items-center gap-1.5 bg-white/15 hover:bg-white/20 border border-white/30 text-white text-[10px] font-black px-2 md:px-3 h-10 md:h-11 rounded-lg transition-all tracking-widest uppercase">
+            <span class="text-base">{{ currency.selected.flag }}</span>
+            <span class="hidden lg:inline">{{ currency.selected.code }}</span>
+            <svg class="w-3 h-3 opacity-70 transition-transform" :class="{ 'rotate-180': currencyOpen }" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
           </button>
-
-          <!-- Dropdown -->
-          <div
-            v-if="currencyOpen"
-            @click.stop
-            class="absolute top-[calc(100%+8px)] right-0 z-50 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden w-44 py-1"
-          >
-            <button
-              v-for="c in currency.CURRENCIES"
-              :key="c.code"
-              @click="selectCurrency(c.code)"
-              class="w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors"
-              :class="c.code === currency.selectedCode ? 'bg-blue-50 dark:bg-gray-700 font-black text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-200 font-medium'"
-            >
-              <span class="text-base">{{ c.flag }}</span>
+          <div v-if="currencyOpen" @click.stop class="absolute top-[calc(100%+8px)] right-0 z-50 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden w-40 py-1">
+            <button v-for="c in currency.CURRENCIES" :key="c.code" @click="selectCurrency(c.code)" class="w-full flex items-center gap-3 px-4 py-2.5 text-xs hover:bg-blue-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold" :class="c.code === currency.selectedCode ? 'bg-blue-50 dark:bg-gray-700 text-blue-600' : ''">
+              <span>{{ c.flag }}</span>
               <span class="flex-grow text-left">{{ c.code }}</span>
-              <span class="text-xs opacity-60">{{ c.symbol }}</span>
+              <span class="text-[10px] opacity-40">{{ c.symbol }}</span>
             </button>
           </div>
         </div>
       </div>
 
       <!-- Actions -->
-      <div class="flex items-center gap-6 shrink-0">
-        <button @click="goToCart" class="relative group p-2 hover:bg-white/10 rounded-xl transition-all">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="flex items-center gap-2 md:gap-6 shrink-0">
+        <!-- Cart -->
+        <button @click="handleNav('/cart')" class="relative group p-2 hover:bg-white/10 rounded-xl transition-all">
+          <svg class="h-7 w-7 md:h-8 md:w-8 text-white group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
-          <span v-if="cart.count > 0" class="absolute -top-1.5 -right-2 bg-[#10B981] text-white text-[10px] font-black min-w-[22px] h-5.5 flex items-center justify-center rounded-full border-2 border-[#2563EB] shadow-lg animate-bounce">
+          <span v-if="cart.count > 0" class="absolute -top-1 -right-1 md:-top-1.5 md:-right-2 bg-[#10B981] text-white text-[9px] md:text-[10px] font-black min-w-[18px] md:min-w-[22px] h-4.5 md:h-5.5 flex items-center justify-center rounded-full border border-[#2563EB] shadow-lg">
             {{ cart.count }}
           </span>
         </button>
 
-        <button @click="theme.toggleDarkMode" class="p-2 hover:bg-white/10 rounded-xl transition-colors md:flex items-center gap-2 border border-white/20">
-           <span class="text-[10px] font-black uppercase tracking-widest">{{ theme.isDark ? 'Light' : 'Dark' }}</span>
-           <span class="text-sm scale-110">{{ theme.isDark ? '☀️' : '🌙' }}</span>
+        <!-- Theme Toggle (Icon only on mobile) -->
+        <button @click="theme.toggleDarkMode" class="p-2 hover:bg-white/10 rounded-xl transition-colors flex items-center gap-2 md:border border-white/20">
+           <span class="hidden md:inline text-[10px] font-black uppercase tracking-widest">{{ theme.isDark ? 'Light' : 'Dark' }}</span>
+           <span class="text-base">{{ theme.isDark ? '☀️' : '🌙' }}</span>
         </button>
 
+        <!-- Login/Logout (Desktop only) -->
         <div class="hidden md:flex items-center gap-4 border-l border-white/20 pl-6 ml-2">
-            <button v-if="!auth.isAuthenticated" @click="login" class="text-xs font-black tracking-widest hover:text-blue-200 transition-colors">LOGIN</button>
+            <button v-if="!auth.isAuthenticated" @click="handleNav('/login')" class="text-xs font-black tracking-widest hover:text-blue-200 transition-colors">LOGIN</button>
             <button v-else @click="logout" class="text-xs font-black tracking-widest hover:text-red-300 transition-colors">LOGOUT</button>
         </div>
       </div>
     </div>
+
+    <!-- Mobile Menu Overlay -->
+    <transition
+      enter-active-class="transition duration-300 ease-out"
+      enter-from-class="opacity-0 -translate-x-full"
+      enter-to-class="opacity-100 translate-x-0"
+      leave-active-class="transition duration-200 ease-in"
+      leave-from-class="opacity-100 translate-x-0"
+      leave-to-class="opacity-0 -translate-x-full"
+    >
+      <div v-if="isMenuOpen" class="fixed inset-0 z-[60] bg-[#1E3A8A] md:hidden flex flex-col p-8 pt-24 gap-6">
+        <button @click="toggleMenu" class="absolute top-6 right-6 text-white p-2">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+
+        <nav class="flex flex-col gap-8 text-2xl font-black tracking-tighter uppercase">
+          <button @click="handleNav('/')" class="hover:text-blue-300 text-left">Home</button>
+          <button @click="handleNav('/become-a-seller')" class="hover:text-blue-300 text-left">Become a Seller</button>
+          <button @click="handleNav('/help')" class="hover:text-blue-300 text-left">Help & Support</button>
+          <button @click="handleNav('/cart')" class="hover:text-blue-300 text-left">My Cart ({{ cart.count }})</button>
+          
+          <div class="h-px bg-white/10 w-full my-4"></div>
+          
+          <button v-if="!auth.isAuthenticated" @click="handleNav('/login')" class="text-blue-300 text-left">Login / Register</button>
+          <button v-else @click="logout" class="text-red-400 text-left">Logout</button>
+        </nav>
+
+        <div class="mt-auto opacity-40 text-xs font-bold tracking-widest uppercase">
+          Jayasekara J.M.O.S. &bull; OMAX Online Store
+        </div>
+      </div>
+    </transition>
   </header>
 </template>

@@ -257,18 +257,18 @@ const visibleFlashProducts = computed(() => {
 
     <!-- Classic Banner -->
     <section class="max-w-7xl mx-auto px-4 mt-8">
-      <div class="relative h-[280px] rounded-2xl overflow-hidden shadow-2xl group border-4 border-white/10">
+      <div class="relative h-[180px] md:h-[280px] rounded-2xl overflow-hidden shadow-2xl group border-4 border-white/10">
         <div class="absolute inset-0 bg-gradient-to-r from-[var(--bg-color)] via-[var(--bg-color)]/40 to-transparent z-10"></div>
         <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=2000" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
-        <div class="relative z-20 h-full flex flex-col justify-center px-16 text-[var(--text-color)]">
-          <span class="text-xs font-black uppercase tracking-[0.2em] mb-3 text-[var(--promo-color)] bg-[var(--promo-color)]/20 w-fit px-3 py-1 rounded-full">Limited Time Offer</span>
-          <h2 class="text-4xl md:text-6xl font-black mb-6 leading-none tracking-tight">THE REAL SALE <br/><span class="text-[var(--accent-color)]">IS FINALLY HERE</span></h2>
+        <div class="relative z-20 h-full flex flex-col justify-center px-6 md:px-16 text-[var(--text-color)]">
+          <span class="text-[9px] md:text-xs font-black uppercase tracking-[0.2em] mb-2 md:mb-3 text-[var(--promo-color)] bg-[var(--promo-color)]/20 w-fit px-3 py-1 rounded-full">Limited Time Offer</span>
+          <h2 class="text-2xl md:text-6xl font-black mb-4 md:mb-6 leading-none tracking-tight">THE REAL SALE <br/><span class="text-[var(--accent-color)]">IS FINALLY HERE</span></h2>
           <button 
             @click="scrollToProducts"
-            class="group/btn w-fit px-10 py-4 bg-[var(--cta-color)] hover:bg-[var(--cta-hover)] text-white font-black rounded-xl transition-all shadow-xl transform active:scale-95 flex items-center gap-3 uppercase tracking-widest text-sm"
+            class="group/btn w-fit px-6 md:px-10 py-3 md:py-4 bg-[var(--cta-color)] hover:bg-[var(--cta-hover)] text-white font-black rounded-lg md:rounded-xl transition-all shadow-xl transform active:scale-95 flex items-center gap-3 uppercase tracking-widest text-[10px] md:text-sm"
           >
             SHOP NOW
-            <span class="transition-transform group-hover/btn:translate-x-2 text-xl">→</span>
+            <span class="transition-transform group-hover/btn:translate-x-2 text-base md:text-xl">→</span>
           </button>
         </div>
       </div>
