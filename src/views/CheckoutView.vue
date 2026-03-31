@@ -2,10 +2,12 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '../stores/cart'
+import { useCurrencyStore } from '../stores/currency'
 import NavBar from '../components/NavBar.vue'
 
 const cart = useCartStore()
 const router = useRouter()
+const currency = useCurrencyStore()
 
 const name = ref('')
 const address = ref('')
@@ -30,8 +32,8 @@ const countries = [
 
 const selectedItems = computed(() => cart.items.filter(i => cart.selectedIds.has(i.id)))
 const subtotal = computed(() => selectedItems.value.reduce((s, i) => s + i.price, 0))
-const tax = computed(() => +(subtotal.value * 0.1).toFixed(2))
-const total = computed(() => +(subtotal.value + tax.value).toFixed(2))
+const tax = computed(() => (subtotal.value * 0.1))
+const total = computed(() => (subtotal.value + tax.value))
 
 const nextStep = () => {
   if (currentStep.value === 1) {
@@ -52,7 +54,7 @@ const placeOrder = () => {
     alert('Please select a payment method')
     return
   }
-  alert(`Thank you, ${name.value}! Your order of $${total.value} has been placed via ${paymentMethod.value}.`)
+  alert(`Thank you, ${name.value}! Your order of ${currency.format(total.value)} has been placed via ${paymentMethod.value}.`)
   cart.clear()
   router.push('/')
 }
@@ -166,7 +168,7 @@ const placeOrder = () => {
                 @click="placeOrder"
                 class="flex-[2] bg-[var(--cta-color)] hover:bg-[var(--cta-hover)] text-white py-4 rounded-xl font-black uppercase tracking-[0.2em] text-xs transition-all duration-500 shadow-2xl shadow-[var(--cta-color)]/40 hover:scale-[1.05] active:scale-95"
               >
-                Complete Payment (${{ total }})
+                Complete Payment ({{ currency.format(total) }})
               </button>
             </div>
           </div>
@@ -184,22 +186,22 @@ const placeOrder = () => {
                 </div>
                 <span class="text-xs font-bold text-[var(--text-color)] truncate uppercase tracking-tighter">{{ item.title }}</span>
               </div>
-              <span class="text-sm font-black text-[var(--promo-color)] shrink-0">${{ item.price.toFixed(2) }}</span>
+              <span class="text-sm font-black text-[var(--promo-color)] shrink-0">{{ currency.format(item.price) }}</span>
             </li>
           </ul>
           <div class="mt-8 border-t border-[var(--border-color)] pt-6 space-y-4">
             <div class="flex justify-between text-xs font-bold uppercase text-[var(--text-muted)]">
               <span>Subtotal</span>
-              <span class="text-[var(--text-color)]">${{ subtotal.toFixed(2) }}</span>
+              <span class="text-[var(--text-color)]">{{ currency.format(subtotal) }}</span>
             </div>
             <div class="flex justify-between text-xs font-bold uppercase text-[var(--text-muted)]">
               <span>Service Tax</span>
-              <span class="text-[var(--text-color)]">${{ tax.toFixed(2) }}</span>
+              <span class="text-[var(--text-color)]">{{ currency.format(tax) }}</span>
             </div>
             <div class="h-1 bg-dashed border-t-2 border-dashed border-[var(--border-color)] my-2"></div>
             <div class="flex justify-between font-black text-2xl tracking-tighter text-[var(--promo-color)]">
               <span class="uppercase text-xs self-center text-[var(--text-color)] tracking-widest">Total Pay</span>
-              <span>${{ total.toFixed(2) }}</span>
+              <span>{{ currency.format(total) }}</span>
             </div>
           </div>
         </div>

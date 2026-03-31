@@ -2,16 +2,17 @@
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '../stores/cart'
+import { useCurrencyStore } from '../stores/currency'
 import NavBar from '../components/NavBar.vue'
 
 const router = useRouter()
 const cart = useCartStore()
+const currency = useCurrencyStore()
 
 const selectedTotal = computed(() => {
   return cart.items
     .filter(item => cart.selectedIds.has(item.id))
     .reduce((sum, item) => sum + item.price, 0)
-    .toFixed(2)
 })
 
 const goBack = () => {
@@ -115,7 +116,7 @@ const checkout = () => {
                 <h3 class="font-black text-sm truncate uppercase mb-1 text-[var(--text-color)]">{{ item.title }}</h3>
                 <p class="text-[10px] text-[var(--text-muted)] line-clamp-1 mb-3 tracking-tight">{{ item.description }}</p>
                 <div class="flex items-center justify-between">
-                  <span class="text-[var(--promo-color)] font-black text-xl tracking-tighter">${{ item.price }}</span>
+                  <span class="text-[var(--promo-color)] font-black text-xl tracking-tighter">{{ currency.format(item.price) }}</span>
                   <button @click="removeItem(item.id)" class="text-[10px] font-black text-[var(--text-muted)] hover:text-red-600 uppercase tracking-widest flex items-center gap-1 transition-colors">
                     <span>🗑️</span> Remove
                   </button>
@@ -134,7 +135,7 @@ const checkout = () => {
             <div class="space-y-4 mb-8">
               <div class="flex justify-between text-xs font-bold">
                 <span class="text-[var(--text-muted)]">Subtotal</span>
-                <span>${{ selectedTotal }}</span>
+                <span>{{ currency.format(selectedTotal) }}</span>
               </div>
               <div class="flex justify-between text-xs font-bold">
                 <span class="text-[var(--text-muted)]">Shipping</span>
@@ -148,7 +149,7 @@ const checkout = () => {
               <div class="flex justify-between items-end">
                 <span class="text-xs font-black uppercase tracking-widest">Total Pay</span>
                 <div class="text-right">
-                  <p class="text-4xl font-black text-[var(--promo-color)] leading-none tracking-tighter">${{ selectedTotal }}</p>
+                  <p class="text-4xl font-black text-[var(--promo-color)] leading-none tracking-tighter">{{ currency.format(selectedTotal) }}</p>
                   <p class="text-[10px] text-[var(--text-muted)] mt-2 italic font-medium">VAT included where applicable</p>
                 </div>
               </div>
