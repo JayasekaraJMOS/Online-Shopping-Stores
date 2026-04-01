@@ -86,19 +86,7 @@ onUnmounted(() => window.removeEventListener('click', closeOnOutside))
           <router-link to="/" class="flex items-center shrink-0 group relative z-10 transition-transform active:scale-95">
             <div 
               class="h-14 w-44 md:h-32 md:w-[380px] bg-white"
-              :style="{ 
-                'mask-image': `url(${logo})`,
-                '-webkit-mask-image': `url(${logo})`,
-                'mask-size': 'contain',
-                '-webkit-mask-size': 'contain',
-                'mask-repeat': 'no-repeat',
-                '-webkit-mask-repeat': 'no-repeat',
-                'mask-position': 'center',
-                '-webkit-mask-position': 'center',
-                'mask-mode': 'luminance',
-                '-webkit-mask-mode': 'luminance',
-                'pointer-events': 'none'
-              }"
+              :style="`mask-image: url(${logo}); -webkit-mask-image: url(${logo}); mask-size: contain; -webkit-mask-size: contain; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat; mask-position: center; -webkit-mask-position: center; mask-mode: luminance; -webkit-mask-mode: luminance; pointer-events: none;`"
             ></div>
           </router-link>
         </div>
