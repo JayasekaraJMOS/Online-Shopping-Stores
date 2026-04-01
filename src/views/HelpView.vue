@@ -73,11 +73,11 @@ const channels = [
         >
           <span class="text-4xl group-hover:scale-110 transition-transform duration-300">{{ c.icon }}</span>
           <div>
-            <h3 class="font-black text-sm mb-1">{{ c.title }}</h3>
-            <p class="text-xs text-[var(--text-muted)] leading-relaxed">{{ c.desc }}</p>
+            <h3 class="font-black text-sm mb-1">{{ language.translateDynamic(c.title) }}</h3>
+            <p class="text-xs text-[var(--text-muted)] leading-relaxed">{{ language.translateDynamic(c.desc) }}</p>
           </div>
           <button class="mt-auto w-full bg-[var(--accent-color)] text-white font-black text-xs uppercase tracking-widest py-2.5 rounded-xl hover:opacity-90 transition-opacity">
-            {{ c.action }}
+            {{ language.translateDynamic(c.action) }}
           </button>
         </div>
       </div>
@@ -100,12 +100,12 @@ const channels = [
               @click="toggleFaq(i)"
               class="w-full flex items-center justify-between px-5 py-4 text-left gap-4"
             >
-              <span class="font-black text-sm">{{ faq.q }}</span>
+              <span class="font-black text-sm">{{ language.translateDynamic(faq.q) }}</span>
               <span class="text-[var(--accent-color)] font-black text-lg shrink-0 transition-transform duration-300"
                 :class="openFaq === i ? 'rotate-45' : ''">+</span>
             </button>
             <div v-if="openFaq === i" class="px-5 pb-5">
-              <p class="text-sm text-[var(--text-muted)] leading-relaxed border-t border-[var(--border-color)] pt-4">{{ faq.a }}</p>
+              <p class="text-sm text-[var(--text-muted)] leading-relaxed border-t border-[var(--border-color)] pt-4">{{ language.translateDynamic(faq.a) }}</p>
             </div>
           </div>
         </div>
@@ -122,11 +122,11 @@ const channels = [
       <!-- Success state -->
       <div v-if="submitted" class="bg-[#ECFDF5] border-2 border-[#059669] rounded-2xl p-10 text-center">
         <span class="text-5xl mb-4 block">✅</span>
-        <h3 class="font-black text-lg text-[#059669] mb-2">Message Sent!</h3>
-        <p class="text-sm text-[var(--text-muted)]">Our support team will get back to you within 24 hours.</p>
+        <h3 class="font-black text-lg text-[#059669] mb-2">{{ language.translateDynamic('Message Sent!') }}</h3>
+        <p class="text-sm text-[var(--text-muted)]">{{ language.translateDynamic('Our support team will get back to you within 24 hours.') }}</p>
         <button @click="submitted = false; contactForm.name=''; contactForm.email=''; contactForm.subject=''; contactForm.message=''"
           class="mt-6 bg-[#059669] text-white font-black text-xs uppercase tracking-widest px-8 py-3 rounded-xl hover:opacity-90 transition-opacity">
-          Send Another
+          {{ language.translateDynamic('Send Another') }}
         </button>
       </div>
 
