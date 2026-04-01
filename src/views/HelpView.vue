@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useLanguageStore } from '../stores/language'
 import NavBar from '../components/NavBar.vue'
+
+const language = useLanguageStore()
 
 const faqs = [
   { q: 'How do I track my order?', a: 'Go to your profile and click "My Orders". Each order shows a real-time tracking status. You\'ll also receive email updates at each stage of delivery.' },
@@ -43,10 +46,10 @@ const channels = [
       <div class="absolute inset-0 pointer-events-none opacity-10"
         style="background-image: radial-gradient(circle at 50% 50%, white 1px, transparent 1px); background-size: 40px 40px;"></div>
       <div class="max-w-7xl mx-auto px-4 py-20 text-center relative z-10 text-white">
-        <span class="text-xs font-black uppercase tracking-[0.2em] bg-white/15 px-3 py-1 rounded-full mb-4 inline-block">🛎️ Support Center</span>
+        <span class="text-xs font-black uppercase tracking-[0.2em] bg-white/15 px-3 py-1 rounded-full mb-4 inline-block">🛎️ {{ language.translateDynamic('Support Center') }}</span>
         <h1 class="text-4xl md:text-6xl font-black mt-5 mb-5 leading-tight">
-          How Can We<br/>
-          <span class="text-[#F59E0B]">Help You?</span>
+          {{ language.translateDynamic('How Can We') }}<br/>
+          <span class="text-[#F59E0B]">{{ language.translateDynamic('Help You?') }}</span>
         </h1>
         <p class="text-white/70 text-lg max-w-lg mx-auto mb-8">Our team is here 24/7 to make sure your OMAX experience is seamless.</p>
         <!-- Quick search -->
@@ -60,7 +63,7 @@ const channels = [
     <!-- Contact Channels -->
     <section class="max-w-7xl mx-auto px-4 py-12">
       <div class="flex items-center gap-4 mb-6">
-        <h2 class="text-sm font-black uppercase tracking-widest shrink-0">🛎️ Contact Us</h2>
+        <h2 class="text-sm font-black uppercase tracking-widest shrink-0">🛎️ {{ language.translateDynamic('Contact Us') }}</h2>
         <div class="h-px flex-grow bg-[var(--border-color)]"></div>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -84,7 +87,7 @@ const channels = [
     <section class="bg-[var(--card-bg)] border-y border-[var(--border-color)]">
       <div class="max-w-3xl mx-auto px-4 py-14">
         <div class="flex items-center gap-4 mb-8">
-          <h2 class="text-sm font-black uppercase tracking-widest shrink-0">❓ Frequently Asked Questions</h2>
+          <h2 class="text-sm font-black uppercase tracking-widest shrink-0">❓ {{ language.translateDynamic('Frequently Asked Questions') }}</h2>
           <div class="h-px flex-grow bg-[var(--border-color)]"></div>
         </div>
         <div class="space-y-3">
@@ -112,7 +115,7 @@ const channels = [
     <!-- Contact Form -->
     <section class="max-w-3xl mx-auto px-4 py-14">
       <div class="flex items-center gap-4 mb-8">
-        <h2 class="text-sm font-black uppercase tracking-widest shrink-0">✉️ Send a Message</h2>
+        <h2 class="text-sm font-black uppercase tracking-widest shrink-0">✉️ {{ language.translateDynamic('Send a Message') }}</h2>
         <div class="h-px flex-grow bg-[var(--border-color)]"></div>
       </div>
 
@@ -130,23 +133,23 @@ const channels = [
       <form v-else @submit.prevent="submitForm" class="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-8 space-y-5">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
-            <label class="text-xs font-black uppercase tracking-widest text-[var(--text-muted)] block mb-2">Name *</label>
+            <label class="text-xs font-black uppercase tracking-widest text-[var(--text-muted)] block mb-2">{{ language.translateDynamic('Name *') }}</label>
             <input v-model="contactForm.name" type="text" required placeholder="Your full name"
               class="w-full bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[var(--accent-color)] transition-colors" />
           </div>
           <div>
-            <label class="text-xs font-black uppercase tracking-widest text-[var(--text-muted)] block mb-2">Email *</label>
+            <label class="text-xs font-black uppercase tracking-widest text-[var(--text-muted)] block mb-2">{{ language.translateDynamic('Email *') }}</label>
             <input v-model="contactForm.email" type="email" required placeholder="you@email.com"
               class="w-full bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[var(--accent-color)] transition-colors" />
           </div>
         </div>
         <div>
-          <label class="text-xs font-black uppercase tracking-widest text-[var(--text-muted)] block mb-2">Subject</label>
+          <label class="text-xs font-black uppercase tracking-widest text-[var(--text-muted)] block mb-2">{{ language.translateDynamic('Subject') }}</label>
           <input v-model="contactForm.subject" type="text" placeholder="What's this about?"
             class="w-full bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[var(--accent-color)] transition-colors" />
         </div>
         <div>
-          <label class="text-xs font-black uppercase tracking-widest text-[var(--text-muted)] block mb-2">Message *</label>
+          <label class="text-xs font-black uppercase tracking-widest text-[var(--text-muted)] block mb-2">{{ language.translateDynamic('Message *') }}</label>
           <textarea v-model="contactForm.message" required rows="5" placeholder="Describe your issue in detail..."
             class="w-full bg-[var(--bg-color)] border border-[var(--border-color)] rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[var(--accent-color)] transition-colors resize-none"></textarea>
         </div>
@@ -155,7 +158,7 @@ const channels = [
           :disabled="submitting"
         >
           <span v-if="submitting" class="animate-spin">⏳</span>
-          <span>{{ submitting ? 'Sending...' : 'Send Message' }}</span>
+          <span>{{ submitting ? 'Sending...' : language.translateDynamic('Send Message') }}</span>
         </button>
       </form>
     </section>

@@ -6,6 +6,7 @@ import NavBar from '../components/NavBar.vue'
 import type { Product } from '../types/Product'
 import { useSearchStore } from '../stores/search'
 import { useCurrencyStore } from '../stores/currency'
+import { useLanguageStore } from '../stores/language'
 
 const router = useRouter()
 
@@ -16,6 +17,7 @@ const currentCategory = ref('All')
 const isLoading = ref<boolean>(true)
 const search = useSearchStore()
 const currency = useCurrencyStore()
+const language = useLanguageStore()
 const isFlashExpanded = ref(false)
 
 const saveMoreCoupons = [
@@ -123,7 +125,7 @@ const visibleFlashProducts = computed(() => {
           @click="selectCategory(cat)"
           :class="['px-4 py-1 text-xs font-bold rounded-full transition-all border shrink-0', currentCategory === cat ? 'bg-[var(--accent-color)] border-[var(--accent-color)] text-white shadow-md' : 'bg-transparent border-transparent text-[var(--text-muted)] hover:text-[var(--accent-color)]']"
         >
-          {{ cat.toUpperCase() }}
+          {{ language.translateDynamic(cat).toUpperCase() }}
         </button>
       </div>
     </div>
@@ -134,10 +136,10 @@ const visibleFlashProducts = computed(() => {
         <div class="flex items-center justify-between p-4 border-b border-[var(--border-color)]">
           <div class="flex items-center gap-6">
             <h2 class="text-[var(--promo-color)] font-black uppercase text-sm tracking-widest flex items-center gap-2">
-              <span class="animate-pulse">🔥</span> Flash Sale
+              <span class="animate-pulse">🔥</span> {{ language.t.flashSale }}
             </h2>
             <div class="flex items-center gap-2">
-              <span class="text-[10px] font-black uppercase text-[var(--text-muted)] tracking-tighter">Ending in</span>
+              <span class="text-[10px] font-black uppercase text-[var(--text-muted)] tracking-tighter">{{ language.t.endingIn }}</span>
               <div class="flex gap-1">
                 <span class="bg-[var(--promo-color)] text-white px-1.5 py-0.5 rounded shadow-sm font-black text-xs">{{ String(timeLeft.hours).padStart(2, '0') }}</span>
                 <span class="text-[var(--promo-color)] font-black">:</span>
@@ -151,7 +153,7 @@ const visibleFlashProducts = computed(() => {
             @click="toggleFlash"
             class="text-[var(--accent-color)] text-xs font-black uppercase border-2 border-[var(--accent-color)] px-5 py-1.5 rounded-lg transition-all hover:bg-[var(--accent-color)] hover:text-white shadow-sm hover:shadow-md"
           >
-            {{ isFlashExpanded ? 'Show Less' : 'Shop All' }}
+            {{ isFlashExpanded ? language.t.showLess : language.t.shopAll }}
           </button>
         </div>
         
@@ -163,12 +165,12 @@ const visibleFlashProducts = computed(() => {
             class="bg-[var(--card-bg)] p-4 group cursor-pointer hover:shadow-xl transition-all relative animate-fade-in"
           >
             <div class="absolute top-2 left-2 bg-[var(--promo-color)] text-white text-[10px] font-black px-2 py-0.5 rounded shadow-lg z-10 shrink-0">
-              -{{ item.discount }}% OFF
+              -{{ item.discount }}% {{ language.t.off }}
             </div>
             <div class="aspect-square mb-3 overflow-hidden rounded-xl bg-white p-3 shadow-inner">
               <img :src="item.thumbnail" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
             </div>
-            <h4 class="text-xs font-bold text-[var(--text-color)] line-clamp-1 mb-1 truncate group-hover:text-[var(--accent-color)] transition-colors">{{ item.title }}</h4>
+            <h4 class="text-xs font-bold text-[var(--text-color)] line-clamp-1 mb-1 truncate group-hover:text-[var(--accent-color)] transition-colors">{{ language.translateDynamic(item.title) }}</h4>
             <div class="flex items-baseline gap-2">
               <span class="text-lg font-black text-[var(--promo-color)]">{{ currency.format(item.price) }}</span>
               <span class="text-[10px] text-[var(--text-muted)] line-through opacity-60">{{ currency.format(Number(item.oldPrice)) }}</span>
@@ -183,10 +185,10 @@ const visibleFlashProducts = computed(() => {
       <!-- Section Header -->
       <div class="flex items-center gap-4 mb-4">
         <h2 class="text-sm font-black uppercase tracking-widest text-[var(--text-color)] flex items-center gap-2 shrink-0">
-          <span class="text-xl">🏷️</span> Save More
+          <span class="text-xl">🏷️</span> {{ language.t.saveMore }}
         </h2>
         <div class="h-px flex-grow bg-[var(--border-color)]"></div>
-        <span class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-widest shrink-0">Exclusive Deals</span>
+        <span class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-widest shrink-0">{{ language.t.exclusiveDeals }}</span>
       </div>
 
       <!-- Referral / Signup Bonus Strip -->
@@ -195,12 +197,12 @@ const visibleFlashProducts = computed(() => {
         <div class="flex items-center gap-3">
           <span class="text-2xl">🎁</span>
           <div>
-            <p class="text-white font-black text-sm uppercase tracking-wide">New User Bonus</p>
-            <p class="text-white/70 text-xs">Get <span class="text-white font-black">$10 OFF</span> your first order — no minimum spend!</p>
+            <p class="text-white font-black text-sm uppercase tracking-wide">{{ language.t.newUserBonus }}</p>
+            <p class="text-white/70 text-xs font-bold">{{ language.t.firstOrderDiscount }}</p>
           </div>
         </div>
         <button class="bg-white text-[var(--accent-color)] font-black text-xs uppercase tracking-widest px-5 py-2 rounded-lg shadow-md hover:scale-105 transition-transform shrink-0">
-          Claim Now
+          {{ language.t.claimNow }}
         </button>
         <!-- decorative circles -->
         <div class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 pointer-events-none"></div>
@@ -220,7 +222,7 @@ const visibleFlashProducts = computed(() => {
             <span class="text-3xl font-black leading-none" :style="{ color: c.color }">{{ c.off }}</span>
             <div>
               <p class="text-[10px] font-black uppercase" :style="{ color: c.color }">{{ c.label }}</p>
-              <p class="text-[10px] text-[var(--text-muted)]">Min. spend ${{ c.min }}</p>
+              <p class="text-[10px] text-[var(--text-muted)]">{{ language.t.minSpend }} ${{ c.min }}</p>
             </div>
             <!-- Notches -->
             <div class="absolute -left-2 bottom-[-8px] w-4 h-4 rounded-full bg-[var(--bg-color)] border border-[var(--border-color)] z-10"></div>
@@ -233,7 +235,7 @@ const visibleFlashProducts = computed(() => {
               :style="{ borderColor: c.color, color: c.color }"
               @mouseenter="(e) => { (e.target as HTMLElement).style.backgroundColor = c.color }"
               @mouseleave="(e) => { (e.target as HTMLElement).style.backgroundColor = 'transparent'; (e.target as HTMLElement).style.color = c.color }"
-            >Copy</button>
+            >{{ language.t.copy }}</button>
           </div>
         </div>
       </div>
@@ -261,13 +263,13 @@ const visibleFlashProducts = computed(() => {
         <div class="absolute inset-0 bg-gradient-to-r from-[var(--bg-color)] via-[var(--bg-color)]/40 to-transparent z-10"></div>
         <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=2000" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
         <div class="relative z-20 h-full flex flex-col justify-center px-6 md:px-16 text-[var(--text-color)]">
-          <span class="text-[9px] md:text-xs font-black uppercase tracking-[0.2em] mb-2 md:mb-3 text-[var(--promo-color)] bg-[var(--promo-color)]/20 w-fit px-3 py-1 rounded-full">Limited Time Offer</span>
-          <h2 class="text-2xl md:text-6xl font-black mb-4 md:mb-6 leading-none tracking-tight">THE REAL SALE <br/><span class="text-[var(--accent-color)]">IS FINALLY HERE</span></h2>
+          <span class="text-[9px] md:text-xs font-black uppercase tracking-[0.2em] mb-2 md:mb-3 text-[var(--promo-color)] bg-[var(--promo-color)]/20 w-fit px-3 py-1 rounded-full">{{ language.t.limitedTimeOffer }}</span>
+          <h2 class="text-2xl md:text-6xl font-black mb-4 md:mb-6 leading-none tracking-tight">{{ language.t.realSale }} <br/><span class="text-[var(--accent-color)]">{{ language.t.isFinallyHere }}</span></h2>
           <button 
             @click="scrollToProducts"
             class="group/btn w-fit px-6 md:px-10 py-3 md:py-4 bg-[var(--cta-color)] hover:bg-[var(--cta-hover)] text-white font-black rounded-lg md:rounded-xl transition-all shadow-xl transform active:scale-95 flex items-center gap-3 uppercase tracking-widest text-[10px] md:text-sm"
           >
-            SHOP NOW
+            {{ language.t.shopNow }}
             <span class="transition-transform group-hover/btn:translate-x-2 text-base md:text-xl">→</span>
           </button>
         </div>
@@ -278,7 +280,7 @@ const visibleFlashProducts = computed(() => {
     <section id="products-grid" class="max-w-7xl mx-auto px-4 py-8">
       <div class="flex items-center justify-between mb-6">
         <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 uppercase tracking-tight">
-          {{ search.query ? `Results for "${search.query}"` : (currentCategory === 'All' ? 'Just For You' : currentCategory) }}
+          {{ search.query ? `${language.t.resultsFor} "${search.query}"` : (currentCategory === 'All' ? language.t.justForYou : language.translateDynamic(currentCategory)) }}
         </h3>
         <div class="h-0.5 flex-grow mx-4 bg-gray-200 dark:bg-gray-800"></div>
       </div>
@@ -297,7 +299,7 @@ const visibleFlashProducts = computed(() => {
 
       <!-- Empty State -->
       <div v-if="!isLoading && products.length === 0" class="text-center py-24 bg-[var(--card-bg)] rounded border border-[var(--border-color)] mt-8">
-        <p class="text-gray-500 font-bold uppercase">No products found</p>
+        <p class="text-gray-500 font-bold uppercase">{{ language.t.noProductsFound }}</p>
       </div>
     </section>
   </main>

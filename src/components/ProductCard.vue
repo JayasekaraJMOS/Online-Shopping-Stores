@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router'
 import { useCartStore } from '../stores/cart'
 import { useCurrencyStore } from '../stores/currency'
+import { useLanguageStore } from '../stores/language'
 import type { Product } from '../types/Product'
 
 const props = defineProps<{
@@ -11,6 +12,7 @@ const props = defineProps<{
 const router = useRouter()
 const cart = useCartStore()
 const currency = useCurrencyStore()
+const language = useLanguageStore()
 
 const goToDetail = () => {
   router.push(`/product/${props.product.id}`)
@@ -37,7 +39,7 @@ const goToDetail = () => {
     <!-- Info -->
     <div class="p-5 flex flex-col flex-grow bg-gradient-to-b from-white to-slate-50 dark:from-slate-800 dark:to-slate-900">
       <h4 class="text-sm font-bold text-[var(--text-color)] line-clamp-2 min-h-[40px] mb-2 group-hover:text-[var(--accent-color)] transition-colors">
-        {{ product.title }}
+        {{ language.translateDynamic(product.title) }}
       </h4>
       
       <div class="mt-auto space-y-3">
@@ -46,7 +48,7 @@ const goToDetail = () => {
             <span class="text-xl font-black text-[var(--promo-color)] tracking-tight">{{ currency.format(product.price) }}</span>
             <div class="flex items-center gap-1 mt-0.5">
               <span class="text-amber-400 text-xs text-shadow-sm">★</span>
-              <span class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-tighter">{{ product.rating?.toFixed(1) }} Rating</span>
+              <span class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-tighter">{{ product.rating?.toFixed(1) }} {{ language.t.rating }}</span>
             </div>
           </div>
         </div>
@@ -55,7 +57,7 @@ const goToDetail = () => {
           @click.stop="cart.add(product)"
           class="w-full py-3 bg-[var(--cta-color)] hover:bg-[var(--cta-hover)] text-white text-xs font-black rounded-xl transition-all uppercase tracking-widest shadow-lg hover:shadow-[var(--cta-color)]/20 transform active:scale-95"
         >
-          Add to Cart
+          {{ language.t.addToCart }}
         </button>
       </div>
     </div>
