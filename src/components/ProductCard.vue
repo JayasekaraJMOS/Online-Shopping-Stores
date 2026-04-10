@@ -30,33 +30,53 @@ const goToDetail = () => {
         :src="product.thumbnail"
         class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700"
         :alt="product.title"
+        loading="lazy"
       />
-      <div v-if="product.discountPercentage" class="absolute top-3 right-3 bg-[var(--promo-color)] text-white text-[10px] font-black px-2 py-1 rounded-lg shadow-lg">
+      <!-- Discount badge -->
+      <div
+        v-if="product.discountPercentage && product.discountPercentage >= 5"
+        class="absolute top-2 right-2 bg-[var(--promo-color)] text-white text-[10px] font-black px-2 py-1 rounded-lg shadow-lg"
+      >
         -{{ Math.round(product.discountPercentage) }}%
+      </div>
+      <!-- Quick view on hover -->
+      <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+        <span class="text-white text-[10px] font-black uppercase tracking-widest bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/30">
+          Quick View
+        </span>
       </div>
     </div>
 
     <!-- Info -->
-    <div class="p-5 flex flex-col flex-grow bg-gradient-to-b from-white to-slate-50 dark:from-slate-800 dark:to-slate-900">
-      <h4 class="text-sm font-bold text-[var(--text-color)] line-clamp-2 min-h-[40px] mb-2 group-hover:text-[var(--accent-color)] transition-colors">
+    <div class="p-4 flex flex-col flex-grow">
+      <!-- Rating bar -->
+      <div class="flex items-center gap-1.5 mb-2">
+        <div class="flex gap-0.5">
+          <span v-for="s in 5" :key="s" class="text-[10px]" :class="s <= Math.round(product.rating || 0) ? 'text-amber-400' : 'text-slate-300 dark:text-slate-600'">★</span>
+        </div>
+        <span class="text-[9px] text-[var(--text-muted)] font-bold">{{ product.rating?.toFixed(1) }}</span>
+      </div>
+
+      <h4 class="text-sm font-bold text-[var(--text-color)] line-clamp-2 min-h-[40px] mb-3 group-hover:text-[var(--accent-color)] transition-colors leading-snug">
         {{ language.translateDynamic(product.title) }}
       </h4>
-      
+
       <div class="mt-auto space-y-3">
-        <div class="flex items-center justify-between">
+        <div class="flex items-end justify-between">
           <div class="flex flex-col">
             <span class="text-xl font-black text-[var(--promo-color)] tracking-tight">{{ currency.format(product.price) }}</span>
-            <div class="flex items-center gap-1 mt-0.5">
-              <span class="text-amber-400 text-xs text-shadow-sm">★</span>
-              <span class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-tighter">{{ product.rating?.toFixed(1) }} {{ language.t.rating }}</span>
-            </div>
+            <span v-if="product.discountPercentage && product.discountPercentage >= 5" class="text-[10px] text-[var(--text-muted)] line-through">
+              {{ currency.format(product.price / (1 - product.discountPercentage / 100)) }}
+            </span>
           </div>
+          <span class="text-[9px] text-[var(--text-muted)] font-bold uppercase tracking-tighter">{{ language.t.rating }}</span>
         </div>
 
-        <button 
+        <button
           @click.stop="cart.add(product)"
-          class="w-full py-3 bg-[var(--cta-color)] hover:bg-[var(--cta-hover)] text-white text-xs font-black rounded-xl transition-all uppercase tracking-widest shadow-lg hover:shadow-[var(--cta-color)]/20 transform active:scale-95"
+          class="w-full py-3 bg-[var(--cta-color)] hover:bg-[var(--cta-hover)] text-white text-xs font-black rounded-xl transition-all uppercase tracking-widest shadow-lg hover:shadow-[var(--cta-color)]/30 transform active:scale-95 flex items-center justify-center gap-2"
         >
+          <span>🛒</span>
           {{ language.t.addToCart }}
         </button>
       </div>

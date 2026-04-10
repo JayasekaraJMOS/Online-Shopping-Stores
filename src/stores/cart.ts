@@ -2,11 +2,20 @@ import { defineStore } from 'pinia'
 import type { Product } from '../types/Product'
 import { useNotificationStore } from './notification'
 
-// Available coupons (matches SaveMoreView display)
+// Available coupons (covers SaveMoreView + HomePage coupon cards + bonus)
 export const COUPONS: Record<string, { off: number; type: 'percent' | 'fixed'; min: number; label: string }> = {
-  'APP10':     { off: 10,  type: 'percent', min: 0,  label: '10% OFF' },
-  'APPDEAL20': { off: 20,  type: 'percent', min: 50, label: '20% OFF (min $50)' },
-  'APPCASH15': { off: 15,  type: 'fixed',   min: 80, label: '$15 OFF (min $80)' },
+  // App-only coupons (SaveMoreView)
+  'APP10':     { off: 10,  type: 'percent', min: 0,   label: '10% OFF' },
+  'APPDEAL20': { off: 20,  type: 'percent', min: 50,  label: '20% OFF (min $50)' },
+  'APPCASH15': { off: 15,  type: 'fixed',   min: 80,  label: '$15 OFF (min $80)' },
+  // Home-page category coupons
+  'ELEC15':    { off: 15,  type: 'percent', min: 50,  label: '15% OFF Electronics' },
+  'STYLE20':   { off: 20,  type: 'percent', min: 30,  label: '20% OFF Fashion' },
+  'FRESH10':   { off: 10,  type: 'percent', min: 20,  label: '10% OFF Groceries' },
+  'GLOW25':    { off: 25,  type: 'percent', min: 40,  label: '25% OFF Beauty' },
+  'HOME30':    { off: 30,  type: 'percent', min: 80,  label: '30% OFF Home & Living' },
+  // New user bonus
+  'NEWUSER10': { off: 10,  type: 'fixed',   min: 0,   label: '$10 OFF (New User Bonus)' },
 }
 
 export const useCartStore = defineStore('cart', {

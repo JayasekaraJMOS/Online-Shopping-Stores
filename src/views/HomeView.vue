@@ -7,6 +7,7 @@ import type { Product } from '../types/Product'
 import { useSearchStore } from '../stores/search'
 import { useCurrencyStore } from '../stores/currency'
 import { useLanguageStore } from '../stores/language'
+import { useNotificationStore } from '../stores/notification'
 
 const router = useRouter()
 
@@ -18,25 +19,57 @@ const isLoading = ref<boolean>(true)
 const search = useSearchStore()
 const currency = useCurrencyStore()
 const language = useLanguageStore()
+const notification = useNotificationStore()
 const isFlashExpanded = ref(false)
 
+// ─── Bonus state ────────────────────────────────────────────────────────────
+const bonusClaimed = ref(localStorage.getItem('bonus_claimed') === 'true')
+const copiedCoupon = ref<string | null>(null)
+
+async function copyToClipboard(code: string) {
+  try {
+    await navigator.clipboard.writeText(code)
+  } catch {
+    const el = document.createElement('textarea')
+    el.value = code
+    document.body.appendChild(el)
+    el.select()
+    document.execCommand('copy')
+    document.body.removeChild(el)
+  }
+  copiedCoupon.value = code
+  setTimeout(() => { copiedCoupon.value = null }, 2500)
+}
+
+const claimBonus = async () => {
+  if (bonusClaimed.value) {
+    notification.add('You have already claimed your new-user bonus!', 'warning')
+    return
+  }
+  await copyToClipboard('NEWUSER10')
+  bonusClaimed.value = true
+  localStorage.setItem('bonus_claimed', 'true')
+  notification.add('🎉 Bonus claimed! Code NEWUSER10 copied — $10 OFF your first order!', 'success', 5000)
+}
+
+// ─── Coupons ─────────────────────────────────────────────────────────────────
 const saveMoreCoupons = [
-  { id: 1, off: '15%', label: 'ELECTRONICS', code: 'ELEC15', color: '#2563EB', bg: '#EFF6FF', min: 50 },
-  { id: 2, off: '20%', label: 'FASHION', code: 'STYLE20', color: '#7C3AED', bg: '#F5F3FF', min: 30 },
-  { id: 3, off: '10%', label: 'GROCERIES', code: 'FRESH10', color: '#059669', bg: '#ECFDF5', min: 20 },
-  { id: 4, off: '25%', label: 'BEAUTY', code: 'GLOW25', color: '#DB2777', bg: '#FDF2F8', min: 40 },
-  { id: 5, off: '30%', label: 'HOME & LIVING', code: 'HOME30', color: '#D97706', bg: '#FFFBEB', min: 80 },
+  { id: 1, off: '15%', label: 'ELECTRONICS', code: 'ELEC15',  color: '#2563EB', bg: '#EFF6FF', min: 50 },
+  { id: 2, off: '20%', label: 'FASHION',     code: 'STYLE20', color: '#7C3AED', bg: '#F5F3FF', min: 30 },
+  { id: 3, off: '10%', label: 'GROCERIES',   code: 'FRESH10', color: '#059669', bg: '#ECFDF5', min: 20 },
+  { id: 4, off: '25%', label: 'BEAUTY',      code: 'GLOW25',  color: '#DB2777', bg: '#FDF2F8', min: 40 },
+  { id: 5, off: '30%', label: 'HOME & LIVING',code: 'HOME30', color: '#D97706', bg: '#FFFBEB', min: 80 },
 ]
 
 const bundleDeals = [
   { id: 1, icon: '📱', title: 'Phone + Case Bundle', save: 35, label: 'Tech Combo' },
-  { id: 2, icon: '👟', title: 'Buy 2 Get 1 Free', save: 33, label: 'Fashion' },
-  { id: 3, icon: '🧴', title: 'Skincare Trio Pack', save: 28, label: 'Beauty' },
+  { id: 2, icon: '👟', title: 'Buy 2 Get 1 Free',   save: 33, label: 'Fashion' },
+  { id: 3, icon: '🧴', title: 'Skincare Trio Pack',  save: 28, label: 'Beauty' },
   { id: 4, icon: '🏠', title: 'Home Essentials Kit', save: 40, label: 'Home' },
 ]
 
+// ─── Flash Sale Timer ─────────────────────────────────────────────────────────
 const timeLeft = ref({ hours: 12, minutes: 45, seconds: 30 })
-
 const updateTimer = () => {
   setInterval(() => {
     if (timeLeft.value.seconds > 0) {
@@ -53,10 +86,10 @@ const updateTimer = () => {
   }, 1000)
 }
 
+// ─── Products ─────────────────────────────────────────────────────────────────
 const fetchProducts = async () => {
   isLoading.value = true
   try {
-    // Regular Products
     let url = 'https://dummyjson.com/products?limit=50'
     if (search.query) {
       url = `https://dummyjson.com/products/search?q=${search.query}`
@@ -67,7 +100,6 @@ const fetchProducts = async () => {
     const data = await res.json()
     products.value = data.products
 
-    // Flash Sale Products (Specific IDs for better visuals)
     if (!flashProducts.value.length) {
       const flashRes = await fetch('https://dummyjson.com/products?limit=18&skip=10')
       const flashData = await flashRes.json()
@@ -86,13 +118,19 @@ const fetchProducts = async () => {
 
 const selectCategory = (cat: string) => {
   currentCategory.value = cat
-  if (cat !== 'All') search.query = '' // Clear search if a specific category is chosen
+  if (cat !== 'All') search.query = ''
   fetchProducts()
 }
 
 const scrollToProducts = () => {
   document.getElementById('products-grid')?.scrollIntoView({ behavior: 'smooth' })
 }
+
+const toggleFlash = () => { isFlashExpanded.value = !isFlashExpanded.value }
+
+const visibleFlashProducts = computed(() =>
+  isFlashExpanded.value ? flashProducts.value : flashProducts.value.slice(0, 6)
+)
 
 onMounted(() => {
   fetchProducts()
@@ -103,76 +141,76 @@ watch(() => search.query, () => {
   if (search.query) currentCategory.value = 'All'
   fetchProducts()
 })
-const toggleFlash = () => {
-  isFlashExpanded.value = !isFlashExpanded.value
-}
-
-const visibleFlashProducts = computed(() => {
-  return isFlashExpanded.value ? flashProducts.value : flashProducts.value.slice(0, 6)
-})
 </script>
 
 <template>
   <NavBar />
 
   <main class="min-h-screen bg-[var(--bg-color)] text-[var(--text-color)] transition-colors duration-500">
-    <!-- Categories / Promo Bar -->
-    <div class="bg-[var(--card-bg)] border-b border-[var(--border-color)]">
-      <div class="max-w-7xl mx-auto px-4 flex items-center gap-2 overflow-x-auto py-2 scrollbar-none">
-        <button 
-          v-for="cat in categories" 
-          :key="cat" 
+
+    <!-- ── Categories Bar ───────────────────────────────────────── -->
+    <div class="bg-[var(--card-bg)] border-b border-[var(--border-color)] shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 flex items-center gap-2 overflow-x-auto py-2.5 scrollbar-none">
+        <button
+          v-for="cat in categories"
+          :key="cat"
           @click="selectCategory(cat)"
-          :class="['px-4 py-1 text-xs font-bold rounded-full transition-all border shrink-0', currentCategory === cat ? 'bg-[var(--accent-color)] border-[var(--accent-color)] text-white shadow-md' : 'bg-transparent border-transparent text-[var(--text-muted)] hover:text-[var(--accent-color)]']"
+          :class="['px-4 py-1.5 text-[10px] font-black rounded-full transition-all border shrink-0 uppercase tracking-widest',
+            currentCategory === cat
+              ? 'bg-[var(--accent-color)] border-[var(--accent-color)] text-white shadow-md scale-105'
+              : 'bg-transparent border-[var(--border-color)] text-[var(--text-muted)] hover:text-[var(--accent-color)] hover:border-[var(--accent-color)]/40']"
         >
           {{ language.translateDynamic(cat).toUpperCase() }}
         </button>
       </div>
     </div>
 
-    <!-- Flash Sale Section -->
+    <!-- ── Flash Sale ───────────────────────────────────────────── -->
     <section v-if="!search.query && currentCategory === 'All'" class="max-w-7xl mx-auto px-4 mt-8">
-      <div class="bg-[var(--card-bg)] rounded-sm border border-[var(--border-color)] overflow-hidden shadow-sm">
-        <div class="flex items-center justify-between p-4 border-b border-[var(--border-color)]">
-          <div class="flex items-center gap-6">
+      <div class="bg-[var(--card-bg)] rounded-2xl border border-[var(--border-color)] overflow-hidden shadow-lg">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-5 py-3.5 border-b border-[var(--border-color)] bg-gradient-to-r from-[var(--promo-color)]/5 to-transparent">
+          <div class="flex items-center gap-5">
             <h2 class="text-[var(--promo-color)] font-black uppercase text-sm tracking-widest flex items-center gap-2">
               <span class="animate-pulse">🔥</span> {{ language.t.flashSale }}
             </h2>
             <div class="flex items-center gap-2">
               <span class="text-[10px] font-black uppercase text-[var(--text-muted)] tracking-tighter">{{ language.t.endingIn }}</span>
               <div class="flex gap-1">
-                <span class="bg-[var(--promo-color)] text-white px-1.5 py-0.5 rounded shadow-sm font-black text-xs">{{ String(timeLeft.hours).padStart(2, '0') }}</span>
-                <span class="text-[var(--promo-color)] font-black">:</span>
-                <span class="bg-[var(--promo-color)] text-white px-1.5 py-0.5 rounded shadow-sm font-black text-xs">{{ String(timeLeft.minutes).padStart(2, '0') }}</span>
-                <span class="text-[var(--promo-color)] font-black">:</span>
-                <span class="bg-[var(--promo-color)] text-white px-1.5 py-0.5 rounded shadow-sm font-black text-xs">{{ String(timeLeft.seconds).padStart(2, '0') }}</span>
+                <span class="bg-[var(--promo-color)] text-white px-2 py-0.5 rounded-md shadow font-black text-xs tabular-nums">{{ String(timeLeft.hours).padStart(2, '0') }}</span>
+                <span class="text-[var(--promo-color)] font-black self-center">:</span>
+                <span class="bg-[var(--promo-color)] text-white px-2 py-0.5 rounded-md shadow font-black text-xs tabular-nums">{{ String(timeLeft.minutes).padStart(2, '0') }}</span>
+                <span class="text-[var(--promo-color)] font-black self-center">:</span>
+                <span class="bg-[var(--promo-color)] text-white px-2 py-0.5 rounded-md shadow font-black text-xs tabular-nums">{{ String(timeLeft.seconds).padStart(2, '0') }}</span>
               </div>
             </div>
           </div>
-          <button 
+          <button
             @click="toggleFlash"
             class="text-[var(--accent-color)] text-xs font-black uppercase border-2 border-[var(--accent-color)] px-5 py-1.5 rounded-lg transition-all hover:bg-[var(--accent-color)] hover:text-white shadow-sm hover:shadow-md"
           >
             {{ isFlashExpanded ? language.t.showLess : language.t.shopAll }}
           </button>
         </div>
-        
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-[1px] bg-[var(--border-color)] transition-all duration-500">
-          <div 
-            v-for="item in visibleFlashProducts" 
-            :key="item.id" 
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-[var(--border-color)]">
+          <div
+            v-for="item in visibleFlashProducts"
+            :key="item.id"
             @click="router.push(`/product/${item.id}`)"
-            class="bg-[var(--card-bg)] p-4 group cursor-pointer hover:shadow-xl transition-all relative animate-fade-in"
+            class="bg-[var(--card-bg)] p-4 group cursor-pointer hover:shadow-xl transition-all relative animate-fade-in hover:z-10"
           >
-            <div class="absolute top-2 left-2 bg-[var(--promo-color)] text-white text-[10px] font-black px-2 py-0.5 rounded shadow-lg z-10 shrink-0">
+            <div class="absolute top-2 left-2 bg-[var(--promo-color)] text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow z-10">
               -{{ item.discount }}% {{ language.t.off }}
             </div>
             <div class="aspect-square mb-3 overflow-hidden rounded-xl bg-white p-3 shadow-inner">
               <img :src="item.thumbnail" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
             </div>
-            <h4 class="text-xs font-bold text-[var(--text-color)] line-clamp-1 mb-1 truncate group-hover:text-[var(--accent-color)] transition-colors">{{ language.translateDynamic(item.title) }}</h4>
+            <h4 class="text-xs font-bold text-[var(--text-color)] line-clamp-1 mb-1 truncate group-hover:text-[var(--accent-color)] transition-colors">
+              {{ language.translateDynamic(item.title) }}
+            </h4>
             <div class="flex items-baseline gap-2">
-              <span class="text-lg font-black text-[var(--promo-color)]">{{ currency.format(item.price) }}</span>
+              <span class="text-base font-black text-[var(--promo-color)]">{{ currency.format(item.price) }}</span>
               <span class="text-[10px] text-[var(--text-muted)] line-through opacity-60">{{ currency.format(Number(item.oldPrice)) }}</span>
             </div>
           </div>
@@ -180,10 +218,10 @@ const visibleFlashProducts = computed(() => {
       </div>
     </section>
 
-    <!-- Save More Section -->
+    <!-- ── Save More + Coupons ─────────────────────────────────── -->
     <section v-if="!search.query && currentCategory === 'All'" class="max-w-7xl mx-auto px-4 mt-8">
-      <!-- Section Header -->
-      <div class="flex items-center gap-4 mb-4">
+      <!-- Header -->
+      <div class="flex items-center gap-4 mb-5">
         <h2 class="text-sm font-black uppercase tracking-widest text-[var(--text-color)] flex items-center gap-2 shrink-0">
           <span class="text-xl">🏷️</span> {{ language.t.saveMore }}
         </h2>
@@ -191,33 +229,45 @@ const visibleFlashProducts = computed(() => {
         <span class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-widest shrink-0">{{ language.t.exclusiveDeals }}</span>
       </div>
 
-      <!-- Referral / Signup Bonus Strip -->
-      <div class="relative overflow-hidden rounded-xl mb-4 px-6 py-3 flex items-center justify-between gap-4 flex-wrap"
-        style="background: linear-gradient(135deg, var(--accent-color), #7C3AED);">
-        <div class="flex items-center gap-3">
-          <span class="text-2xl">🎁</span>
+      <!-- ── New User Bonus Banner ──────────────────────────────── -->
+      <div
+        class="relative overflow-hidden rounded-2xl mb-5 px-6 py-4 flex items-center justify-between gap-4 flex-wrap shadow-xl"
+        style="background: linear-gradient(135deg, #2563EB 0%, #7C3AED 60%, #DB2777 100%);"
+      >
+        <!-- shimmer -->
+        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_infinite] pointer-events-none"></div>
+        <!-- decorative circles -->
+        <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-white/10 pointer-events-none"></div>
+        <div class="absolute -right-2 top-10 w-16 h-16 rounded-full bg-white/10 pointer-events-none"></div>
+        <div class="absolute left-1/2 -bottom-6 w-24 h-24 rounded-full bg-white/5 pointer-events-none"></div>
+
+        <div class="flex items-center gap-4 relative">
+          <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-2xl shadow-inner shrink-0">🎁</div>
           <div>
             <p class="text-white font-black text-sm uppercase tracking-wide">{{ language.t.newUserBonus }}</p>
-            <p class="text-white/70 text-xs font-bold">{{ language.t.firstOrderDiscount }}</p>
+            <p class="text-white/80 text-xs font-semibold mt-0.5">{{ language.t.firstOrderDiscount }}</p>
+            <p v-if="bonusClaimed" class="text-green-300 text-[10px] font-black mt-1 uppercase tracking-widest">✅ Use code: NEWUSER10 at checkout</p>
           </div>
         </div>
-        <button class="bg-white text-[var(--accent-color)] font-black text-xs uppercase tracking-widest px-5 py-2 rounded-lg shadow-md hover:scale-105 transition-transform shrink-0">
-          {{ language.t.claimNow }}
+
+        <button
+          @click="claimBonus"
+          :disabled="bonusClaimed"
+          class="relative bg-white font-black text-xs uppercase tracking-widest px-6 py-2.5 rounded-xl shadow-lg transition-all shrink-0 disabled:opacity-70 disabled:cursor-not-allowed"
+          :class="bonusClaimed ? 'text-green-600' : 'text-[#2563EB] hover:scale-105 active:scale-95'"
+        >
+          {{ bonusClaimed ? '✅ Claimed!' : language.t.claimNow }}
         </button>
-        <!-- decorative circles -->
-        <div class="absolute -right-6 -top-6 w-24 h-24 rounded-full bg-white/10 pointer-events-none"></div>
-        <div class="absolute -right-2 top-8 w-12 h-12 rounded-full bg-white/10 pointer-events-none"></div>
       </div>
 
-      <!-- Coupon Cards -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-4">
+      <!-- ── Coupon Cards ───────────────────────────────────────── -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-5">
         <div
           v-for="c in saveMoreCoupons"
           :key="c.id"
-          class="coupon-card group rounded-xl border-2 overflow-hidden cursor-pointer select-none hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+          class="coupon-card group rounded-xl border-2 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
           :style="{ borderColor: c.color, backgroundColor: c.bg }"
         >
-          <!-- Dashed divider notch -->
           <div class="relative flex items-center gap-2 px-3 pt-3 pb-2" :style="{ borderBottom: `1.5px dashed ${c.color}40` }">
             <span class="text-3xl font-black leading-none" :style="{ color: c.color }">{{ c.off }}</span>
             <div>
@@ -230,17 +280,20 @@ const visibleFlashProducts = computed(() => {
           </div>
           <div class="px-3 py-2 flex items-center justify-between">
             <code class="text-[9px] font-black tracking-widest uppercase" :style="{ color: c.color }">{{ c.code }}</code>
-            <button 
-              class="text-[9px] font-black uppercase border rounded px-2 py-0.5 transition-all group-hover:text-white"
-              :style="{ borderColor: c.color, color: c.color }"
-              @mouseenter="(e) => { (e.target as HTMLElement).style.backgroundColor = c.color }"
-              @mouseleave="(e) => { (e.target as HTMLElement).style.backgroundColor = 'transparent'; (e.target as HTMLElement).style.color = c.color }"
-            >{{ language.t.copy }}</button>
+            <button
+              @click="copyToClipboard(c.code)"
+              class="text-[9px] font-black uppercase border rounded-md px-2 py-1 transition-all"
+              :style="copiedCoupon === c.code
+                ? { backgroundColor: '#16a34a', borderColor: '#16a34a', color: 'white' }
+                : { borderColor: c.color, color: c.color }"
+            >
+              {{ copiedCoupon === c.code ? '✓ Copied' : language.t.copy }}
+            </button>
           </div>
         </div>
       </div>
 
-      <!-- Bundle Deals Strip -->
+      <!-- ── Bundle Deals ───────────────────────────────────────── -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div
           v-for="deal in bundleDeals"
@@ -250,98 +303,147 @@ const visibleFlashProducts = computed(() => {
           <span class="text-2xl group-hover:scale-110 transition-transform duration-300">{{ deal.icon }}</span>
           <div class="min-w-0">
             <p class="text-xs font-black text-[var(--text-color)] truncate">{{ deal.title }}</p>
-            <p class="text-[10px] text-[var(--text-muted)]">{{ deal.label }} &bull; <span class="font-black text-[var(--cta-color)]">Save {{ deal.save }}%</span></p>
+            <p class="text-[10px] text-[var(--text-muted)]">{{ deal.label }} · <span class="font-black text-[var(--cta-color)]">Save {{ deal.save }}%</span></p>
           </div>
           <span class="ml-auto text-[var(--accent-color)] text-xs font-black opacity-0 group-hover:opacity-100 transition-opacity shrink-0">→</span>
         </div>
       </div>
     </section>
 
-    <!-- Classic Banner -->
+    <!-- ── Hero Banner ────────────────────────────────────────── -->
     <section class="max-w-7xl mx-auto px-4 mt-8">
-      <div class="relative h-[180px] md:h-[280px] rounded-2xl overflow-hidden shadow-2xl group border-4 border-white/10">
-        <div class="absolute inset-0 bg-gradient-to-r from-[var(--bg-color)] via-[var(--bg-color)]/40 to-transparent z-10"></div>
-        <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=2000" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
-        <div class="relative z-20 h-full flex flex-col justify-center px-6 md:px-16 text-[var(--text-color)]">
-          <span class="text-[9px] md:text-xs font-black uppercase tracking-[0.2em] mb-2 md:mb-3 text-[var(--promo-color)] bg-[var(--promo-color)]/20 w-fit px-3 py-1 rounded-full">{{ language.t.limitedTimeOffer }}</span>
-          <h2 class="text-2xl md:text-6xl font-black mb-4 md:mb-6 leading-none tracking-tight">{{ language.t.realSale }} <br/><span class="text-[var(--accent-color)]">{{ language.t.isFinallyHere }}</span></h2>
-          <button 
+      <div class="relative h-[200px] md:h-[300px] rounded-2xl overflow-hidden shadow-2xl group border border-[var(--border-color)]">
+        <div class="absolute inset-0 bg-gradient-to-r from-[#0F172A] via-[#0F172A]/50 to-transparent z-10"></div>
+        <img
+          src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=2000"
+          class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+        />
+        <div class="relative z-20 h-full flex flex-col justify-center px-6 md:px-16 text-white">
+          <span class="text-[9px] md:text-xs font-black uppercase tracking-[0.25em] mb-2 text-[var(--promo-color)] bg-[var(--promo-color)]/20 w-fit px-3 py-1 rounded-full">
+            {{ language.t.limitedTimeOffer }}
+          </span>
+          <h2 class="text-2xl md:text-6xl font-black mb-4 leading-none tracking-tight">
+            {{ language.t.realSale }}<br/>
+            <span class="text-[var(--promo-color)]">{{ language.t.isFinallyHere }}</span>
+          </h2>
+          <button
             @click="scrollToProducts"
-            class="group/btn w-fit px-6 md:px-10 py-3 md:py-4 bg-[var(--cta-color)] hover:bg-[var(--cta-hover)] text-white font-black rounded-lg md:rounded-xl transition-all shadow-xl transform active:scale-95 flex items-center gap-3 uppercase tracking-widest text-[10px] md:text-sm"
+            class="group/btn w-fit px-6 md:px-10 py-3 bg-[var(--cta-color)] hover:bg-[var(--cta-hover)] text-white font-black rounded-xl transition-all shadow-xl transform active:scale-95 flex items-center gap-3 uppercase tracking-widest text-[10px] md:text-sm"
           >
             {{ language.t.shopNow }}
-            <span class="transition-transform group-hover/btn:translate-x-2 text-base md:text-xl">→</span>
+            <span class="transition-transform group-hover/btn:translate-x-2 text-xl">→</span>
           </button>
+        </div>
+        <!-- floating badge -->
+        <div class="absolute top-4 right-4 z-20 bg-red-500 text-white text-[10px] font-black px-3 py-1.5 rounded-full shadow-lg animate-bounce">
+          UP TO 50% OFF
         </div>
       </div>
     </section>
 
-    <!-- Products Grid -->
-    <section id="products-grid" class="max-w-7xl mx-auto px-4 py-8">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 uppercase tracking-tight">
-          {{ search.query ? `${language.t.resultsFor} "${search.query}"` : (currentCategory === 'All' ? language.t.justForYou : language.translateDynamic(currentCategory)) }}
-        </h3>
-        <div class="h-0.5 flex-grow mx-4 bg-gray-200 dark:bg-gray-800"></div>
+    <!-- ── Products Grid ──────────────────────────────────────── -->
+    <section id="products-grid" class="max-w-7xl mx-auto px-4 py-10">
+      <div class="flex items-center gap-4 mb-8">
+        <div class="flex flex-col">
+          <h3 class="text-2xl font-black text-[var(--text-color)] uppercase tracking-tight leading-tight">
+            {{ search.query
+              ? `${language.t.resultsFor} "${search.query}"`
+              : currentCategory === 'All'
+                ? language.t.justForYou
+                : language.translateDynamic(currentCategory) }}
+          </h3>
+          <div v-if="!isLoading" class="text-[10px] text-[var(--text-muted)] font-bold uppercase tracking-widest mt-0.5">
+            {{ products.length }} products found
+          </div>
+        </div>
+        <div class="h-0.5 flex-grow bg-gradient-to-r from-[var(--accent-color)]/30 to-transparent rounded-full"></div>
       </div>
 
-      <div v-if="isLoading" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        <div v-for="i in 12" :key="i" class="aspect-[3/4] bg-[var(--card-bg)] rounded-md animate-pulse"></div>
+      <!-- Skeleton -->
+      <div v-if="isLoading" class="products-grid">
+        <div v-for="i in 12" :key="i" class="aspect-[3/4] bg-[var(--card-bg)] rounded-2xl animate-pulse border border-[var(--border-color)]"></div>
       </div>
 
       <div v-else class="products-grid">
-        <ProductCard
-          v-for="item in products"
-          :key="item.id"
-          :product="item"
-        />
+        <ProductCard v-for="item in products" :key="item.id" :product="item" />
       </div>
 
       <!-- Empty State -->
-      <div v-if="!isLoading && products.length === 0" class="text-center py-24 bg-[var(--card-bg)] rounded border border-[var(--border-color)] mt-8">
-        <p class="text-gray-500 font-bold uppercase">{{ language.t.noProductsFound }}</p>
+      <div v-if="!isLoading && products.length === 0" class="text-center py-24 bg-[var(--card-bg)] rounded-2xl border border-[var(--border-color)] mt-4">
+        <div class="text-6xl mb-4 opacity-20">🔍</div>
+        <p class="text-[var(--text-muted)] font-black uppercase tracking-widest text-sm">{{ language.t.noProductsFound }}</p>
       </div>
     </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="bg-[var(--bg-color)] text-[var(--text-color)] py-16 mt-16 border-t-8 border-[var(--accent-color)]">
-    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 text-sm">
-      <div class="space-y-4">
-        <h4 class="text-white font-bold uppercase">Customer Care</h4>
-        <ul class="space-y-2 opacity-80">
-          <li>Handshake</li>
-          <li>Help Center</li>
-          <li>How to Buy</li>
-          <li>Corporate & Bulk Purchasing</li>
-        </ul>
-      </div>
-      <div class="space-y-4">
-        <h4 class="text-white font-bold uppercase">OnlineStore</h4>
-        <ul class="space-y-2 opacity-80">
-          <li>About Us</li>
-          <li>Digital Payments</li>
-          <li>OnlineStore Cares</li>
-          <li>Privacy Policy</li>
-        </ul>
-      </div>
-      <div class="space-y-4">
-        <h4 class="text-white font-bold uppercase">Contact Us</h4>
-        <p class="opacity-80 leading-relaxed">
-          123 Commerce Way, Tech City<br/>
-          support@onlinestore.com<br/>
-          +1 234 567 890
+  <!-- ── Footer ────────────────────────────────────────────────── -->
+  <footer class="bg-[#0F172A] text-slate-300 mt-4">
+    <!-- Top accent line -->
+    <div class="h-1 w-full bg-gradient-to-r from-[#2563EB] via-[#7C3AED] to-[#DB2777]"></div>
+
+    <div class="max-w-7xl mx-auto px-6 pt-14 pb-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 text-sm">
+      <!-- Brand -->
+      <div class="space-y-4 lg:col-span-1">
+        <h3 class="text-white font-black text-2xl tracking-tight">OMAX</h3>
+        <p class="text-slate-400 text-xs leading-relaxed max-w-[200px]">
+          The smarter way to shop. Millions of products, unbeatable prices, delivered fast.
         </p>
+        <div class="flex gap-3">
+          <a href="#" class="w-9 h-9 bg-white/10 hover:bg-[#2563EB] rounded-lg flex items-center justify-center text-sm transition-colors">🔵</a>
+          <a href="#" class="w-9 h-9 bg-white/10 hover:bg-sky-500 rounded-lg flex items-center justify-center text-sm transition-colors">🐦</a>
+          <a href="#" class="w-9 h-9 bg-white/10 hover:bg-pink-600 rounded-lg flex items-center justify-center text-sm transition-colors">📸</a>
+          <a href="#" class="w-9 h-9 bg-white/10 hover:bg-red-600 rounded-lg flex items-center justify-center text-sm transition-colors">📺</a>
+        </div>
       </div>
+
+      <!-- Customer Care -->
       <div class="space-y-4">
-         <h4 class="text-white font-bold uppercase">Follow Us</h4>
-         <div class="flex gap-4 grayscale opacity-60">
-            <span>🔵</span> <span>🐦</span> <span>📸</span> <span>📺</span>
-         </div>
+        <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">Customer Care</h4>
+        <ul class="space-y-2.5 text-xs">
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2"><span class="text-[var(--accent-color)]">›</span> Help Center</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2"><span class="text-[var(--accent-color)]">›</span> How to Buy</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2"><span class="text-[var(--accent-color)]">›</span> Returns & Refunds</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2"><span class="text-[var(--accent-color)]">›</span> Track Your Order</a></li>
+        </ul>
+      </div>
+
+      <!-- OMAX -->
+      <div class="space-y-4">
+        <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">About OMAX</h4>
+        <ul class="space-y-2.5 text-xs">
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2"><span class="text-[var(--accent-color)]">›</span> About Us</a></li>
+          <li><a @click="router.push('/become-a-seller')" href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2"><span class="text-[var(--accent-color)]">›</span> Become a Seller</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2"><span class="text-[var(--accent-color)]">›</span> Privacy Policy</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2"><span class="text-[var(--accent-color)]">›</span> Terms of Use</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div class="space-y-4">
+        <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">Get in Touch</h4>
+        <div class="space-y-3 text-xs text-slate-400">
+          <div class="flex items-start gap-2"><span>📍</span><span>123 Commerce Way, Tech City</span></div>
+          <div class="flex items-start gap-2"><span>✉️</span><a href="mailto:support@omax.store" class="hover:text-white transition-colors">support@omax.store</a></div>
+          <div class="flex items-start gap-2"><span>📞</span><a href="tel:+1234567890" class="hover:text-white transition-colors">+1 234 567 890</a></div>
+        </div>
+        <!-- Newsletter mini -->
+        <div class="flex gap-2 mt-3">
+          <input type="email" placeholder="Your email" class="flex-1 bg-white/10 border border-white/20 text-white text-xs px-3 py-2 rounded-lg focus:outline-none focus:border-[var(--accent-color)] placeholder:text-slate-500 transition-colors" />
+          <button class="bg-[var(--accent-color)] text-white text-xs font-black px-3 py-2 rounded-lg hover:opacity-90 transition-opacity shrink-0">→</button>
+        </div>
       </div>
     </div>
-    <div class="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-white/10 text-center opacity-40 text-xs">
-      &copy; 2024 OnlineStore. All rights reserved.
+
+    <!-- Bottom bar -->
+    <div class="border-t border-white/10">
+      <div class="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+        <span>© {{ new Date().getFullYear() }} OMAX Online Store · Jayasekara J.M.O.S.</span>
+        <div class="flex items-center gap-3">
+          <span class="bg-white/10 px-2 py-1 rounded text-[10px]">💳 Visa</span>
+          <span class="bg-white/10 px-2 py-1 rounded text-[10px]">💳 Mastercard</span>
+          <span class="bg-white/10 px-2 py-1 rounded text-[10px]">🌍 PayPal</span>
+        </div>
+      </div>
     </div>
   </footer>
 </template>
