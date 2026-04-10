@@ -4,18 +4,22 @@ import { useRouter } from 'vue-router'
 import { useCartStore } from '../stores/cart'
 import { useCurrencyStore } from '../stores/currency'
 import { useLanguageStore } from '../stores/language'
+import { useNotificationStore } from '../stores/notification'
 import NavBar from '../components/NavBar.vue'
 
 const router = useRouter()
 const cart = useCartStore()
 const currency = useCurrencyStore()
 const language = useLanguageStore()
+const notification = useNotificationStore()
 
 const selectedTotal = computed(() => {
   return cart.items
     .filter(item => cart.selectedIds.has(item.id))
     .reduce((sum, item) => sum + item.price, 0)
 })
+
+const finalTotal = computed(() => Math.max(0, selectedTotal.value - cart.couponDiscount))
 
 const goBack = () => {
   router.back()
@@ -46,6 +50,31 @@ const checkout = () => {
     return
   }
   router.push('/checkout')
+}
+
+// Coupon logic
+const couponInput = ref('')
+const couponError = ref('')
+const couponShake = ref(false)
+
+const applyCoupon = () => {
+  if (!couponInput.value.trim()) return
+  const result = cart.applyCoupon(couponInput.value)
+  if (result.success) {
+    couponInput.value = ''
+    couponError.value = ''
+    notification.add(result.message, 'success')
+  } else {
+    couponError.value = result.message
+    couponShake.value = true
+    setTimeout(() => { couponShake.value = false }, 600)
+  }
+}
+
+const removeCoupon = () => {
+  cart.removeCoupon()
+  couponError.value = ''
+  notification.add('Coupon removed', 'info')
 }
 </script>
 
@@ -134,7 +163,7 @@ const checkout = () => {
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[var(--accent-color)] via-[var(--promo-color)] to-[var(--cta-color)]"></div>
             <h2 class="text-xs font-black uppercase border-b border-[var(--border-color)] pb-4 mb-6 tracking-[0.2em] text-[var(--text-muted)]">{{ language.translateDynamic('Order Summary') }}</h2>
             
-            <div class="space-y-4 mb-8">
+            <div class="space-y-4 mb-6">
               <div class="flex justify-between text-xs font-bold">
                 <span class="text-[var(--text-muted)]">{{ language.translateDynamic('Subtotal') }}</span>
                 <span>{{ currency.format(selectedTotal) }}</span>
@@ -145,13 +174,49 @@ const checkout = () => {
                   <span>🚚</span> {{ language.translateDynamic('Free') }}
                 </span>
               </div>
+              <!-- Coupon discount row -->
+              <div v-if="cart.couponDiscount > 0" class="flex justify-between text-xs font-bold animate-fade-in">
+                <span class="text-green-500 flex items-center gap-1">
+                  🎟️ {{ language.translateDynamic('Coupon') }} ({{ cart.appliedCoupon }})
+                </span>
+                <span class="text-green-500">- {{ currency.format(cart.couponDiscount) }}</span>
+              </div>
+            </div>
+
+            <!-- Coupon Input -->
+            <div class="mb-6">
+              <div v-if="!cart.appliedCoupon" class="space-y-2">
+                <p class="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)]">🎟️ {{ language.translateDynamic('Have a coupon?') }}</p>
+                <div :class="['flex gap-2 transition-all', couponShake ? 'animate-shake' : '']">
+                  <input
+                    v-model="couponInput"
+                    @keyup.enter="applyCoupon"
+                    type="text"
+                    placeholder="e.g. APP10"
+                    class="flex-1 px-3 py-2.5 border-2 border-[var(--border-color)] bg-[var(--card-bg)] text-[var(--text-color)] rounded-xl text-xs font-black uppercase tracking-widest focus:outline-none focus:border-[var(--accent-color)] transition-all placeholder:normal-case placeholder:font-medium placeholder:tracking-normal placeholder:opacity-50"
+                  />
+                  <button
+                    @click="applyCoupon"
+                    class="px-4 py-2.5 bg-[var(--accent-color)] text-white rounded-xl text-xs font-black uppercase tracking-tight hover:opacity-90 active:scale-95 transition-all shadow-md"
+                  >Apply</button>
+                </div>
+                <p v-if="couponError" class="text-[10px] text-red-500 font-bold">{{ couponError }}</p>
+              </div>
+              <!-- Applied coupon badge -->
+              <div v-else class="flex items-center justify-between bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/40 rounded-xl px-4 py-2.5 animate-fade-in">
+                <span class="text-xs font-black text-green-600 dark:text-green-400 uppercase tracking-widest flex items-center gap-2">
+                  ✅ {{ cart.appliedCoupon }}
+                </span>
+                <button @click="removeCoupon" class="text-[10px] text-red-400 hover:text-red-600 font-black uppercase tracking-tight transition-colors">Remove</button>
+              </div>
             </div>
 
             <div class="border-t border-[var(--border-color)] pt-6 mb-8">
               <div class="flex justify-between items-end">
                 <span class="text-[10px] md:text-xs font-black uppercase tracking-widest opacity-60">{{ language.translateDynamic('Total Pay') }}</span>
                 <div class="text-right">
-                  <p class="text-3xl md:text-4xl font-black text-[var(--promo-color)] leading-none tracking-tighter">{{ currency.format(selectedTotal) }}</p>
+                  <p v-if="cart.couponDiscount > 0" class="text-xs line-through text-[var(--text-muted)] mb-1">{{ currency.format(selectedTotal) }}</p>
+                  <p class="text-3xl md:text-4xl font-black text-[var(--promo-color)] leading-none tracking-tighter">{{ currency.format(finalTotal) }}</p>
                   <p class="text-[9px] md:text-[10px] text-[var(--text-muted)] mt-2 italic font-medium uppercase tracking-tighter">{{ language.translateDynamic('VAT included where applicable') }}</p>
                 </div>
               </div>

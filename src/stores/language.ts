@@ -76,6 +76,92 @@ const WORDS_DICT: Record<string, Record<string, string>> = {
   'Watch': { SI: 'ඔරලෝසුව', TA: 'கடிகாரம்' },
   'Sunglasses': { SI: 'අව් කණ්ණාඩි', TA: 'சூரிய கண்ணாடி' },
   'Sneakers': { SI: 'ස්නීකර්ස්', TA: 'ஸ்னீக்கர்கள்' },
+  // Seller & Support Phrases
+  'Seller Programme': { SI: 'විකුණුම්කරු වැඩසටහන', TA: 'விற்பனையாளர் திட்டம்' },
+  'Grow Your Business': { SI: 'ඔබේ ව්‍යාපාරය දියුණු කරන්න', TA: 'உங்கள் வணிகத்தை வளர்க்கவும்' },
+  'With OMAX': { SI: 'OMAX සමඟ', TA: 'OMAX உடன்' },
+  'Join thousands of sellers already earning on OMAX. Zero setup costs, powerful tools, and millions of waiting customers.': { SI: 'OMAX හි දැනටමත් උපයන දහස් ගණනක් විකුණුම්කරුවන් සමඟ එක්වන්න.', TA: 'OMAX இல் ஏற்கனவே சம்பாதிக்கும் ஆயிரக்கணக்கான விற்பனையாளர்களுடன் சேரவும்.' },
+  'Register as Seller': { SI: 'විකුණුම්කරුවෙකු ලෙස ලියාපදිංචි වන්න', TA: 'விற்பனையாளராக பதிவு செய்யவும்' },
+  'Learn More': { SI: 'තවත් දැනගන්න', TA: 'மேலும் அறிய' },
+  'Active Sellers': { SI: 'සක්‍රිය විකුණුම්කරුවන්', TA: 'செயலில் உள்ள விற்பனையாளர்கள்' },
+  'Customers': { SI: 'ගනුදෙනුකරුවන්', TA: 'வாடிக்கையாளர்கள்' },
+  'Paid Out': { SI: 'ගෙවා ඇත', TA: 'செலுத்தப்பட்டது' },
+  'How It Works': { SI: 'එය ක්‍රියා කරන ආකාරය', TA: 'இது எப்படி வேலை செய்கிறது' },
+  'Register': { SI: 'ලියාපදිංචි වන්න', TA: 'பதிவு செய்' },
+  'List Products': { SI: 'නිෂ්පාදන ලැයිස්තුගත කරන්න', TA: 'தயாரிப்புகளை பட்டியலிடவும்' },
+  'Start Selling': { SI: 'විකිණීම ආරම්භ කරන්න', TA: 'விற்பனையைத் தொடங்கு' },
+  'Get Paid': { SI: 'මුදල් ලබා ගන්න', TA: 'பணம் பெறுங்கள்' },
+  'Create your seller account with basic business details in minutes.': { SI: 'මිනිත්තු කිහිපයකින් ඔබේ වෙළඳ ගිණුම සාදන්න.', TA: 'சில நிமிடங்களில் உங்கள் கணக்கை உருவாக்கவும்.' },
+  'Upload your inventory with photos, descriptions, and pricing.': { SI: 'ඡායාරූප, විස්තර සහ මිල ගණන් සමඟ ඔබේ ඉන්වෙන්ටරි උඩුගත කරන්න.', TA: 'புகைப்படங்கள், விளக்கங்கள் மற்றும் விலையுடன் ஏற்றவும்.' },
+  'Go live and start receiving orders from customers nationwide.': { SI: 'සජීවීව ගොස් දිවයින පුරා පාරිභෝගිකයින්ගෙන් ඇණවුම් ලබා ගැනීම ආරම්භ කරන්න.', TA: 'வாடிக்கையாளர்களிடம் இருந்து ஆர்டர்களைப் பெறத் தொடங்குங்கள்.' },
+  'Receive weekly automated payouts directly to your bank account.': { SI: 'ඔබේ බැංකු ගිණුමට සෘජුවම සතිපතා ස්වයංක්‍රීය ගෙවීම් ලබා ගන්න.', TA: 'உங்கள் வங்கிக் கணக்கில் நேரடியாக தானியங்கி பேஅவுட்களைப் பெறுங்கள்.' },
+  'Seller Benefits': { SI: 'විකුණුම්කරුවන්ගේ ප්‍රතිලාභ', TA: 'விற்பனையாளர் நன்மைகள்' },
+  'Zero Listing Fees': { SI: 'ලැයිස්තුගත කිරීමේ ගාස්තු නොමැත', TA: 'பட்டியலிடல் கட்டணம் இல்லை' },
+  'Reach Millions': { SI: 'මිලියන ගණනක් වෙත ළඟා වන්න', TA: 'மில்லியன் கணக்கானவர்களை அடையுங்கள்' },
+  'Seller Dashboard': { SI: 'විකුණුම්කරු උපකරණ පුවරුව', TA: 'விற்பனையாளர் டேஷ்போர்டு' },
+  'Seller Protection': { SI: 'විකුණුම්කරු ආරක්ෂාව', TA: 'விற்பனையாளர் பாதுகாப்பு' },
+  'Logistics Support': { SI: 'ලොජිස්ටික්ස් සහාය', TA: 'தளவாடங்கள் ஆதரவு' },
+  'Marketing Tools': { SI: 'අලෙවිකරණ මෙවලම්', TA: 'சந்தைப்படுத்தல் கருவிகள்' },
+  'List your first 100 products for free. No upfront costs, no hidden charges.': { SI: 'ඔබේ පළමු නිෂ්පාදන 100 නොමිලේ ලැයිස්තුගත කරන්න.', TA: 'உங்கள் முதல் 100 தயாரிப்புகளை இலவசமாக பட்டியலிடுங்கள்.' },
+  'Tap into OMAX\'s growing customer base across the country.': { SI: 'OMAX හි වර්ධනය වන පාරිභෝගික පදනමට තට්ටු කරන්න.', TA: 'OMAX இன் வளர்ந்து வரும் வாடிக்கையாளர் தளத்தைப் பயன்படுத்தவும்.' },
+  'Real-time analytics, inventory management, and revenue tracking in one place.': { SI: 'තත්‍ය කාලීන විශ්ලේෂණ, ඉන්වෙන්ටරි කළමනාකරණය.', TA: 'நிகழ்நேர பகுப்பாய்வு, சரக்கு மேலாண்மை.' },
+  'Secure payouts, fraud prevention, and dedicated dispute resolution support.': { SI: 'ආරක්ෂිත ගෙවීම්, වංචා වැළැක්වීම.', TA: 'பாதுகாப்பான பணம் செலுத்துதல், மோசடி தடுப்பு.' },
+  'Integrated shipping partners with discounted rates for OMAX sellers.': { SI: 'OMAX විකුණුම්කරුවන් සඳහා වට්ටම් සහිත ඒකාබද්ධ නැව් හවුල්කරුවන්.', TA: 'ஒருங்கிணைந்த கப்பல் கூட்டாளர்கள்.' },
+  'Run voucher campaigns, sponsored listings, and flash sale slots.': { SI: 'වවුචර් ව්‍යාපාර, අනුග්‍රහය දක්වන ලැයිස්තු කිරීම් ධාවනය කරන්න.', TA: 'வவுச்சர் பிரச்சாரங்களை இயக்கவும்.' },
+  'Seller Plans': { SI: 'විකුණුම්කරු සැලසුම්', TA: 'விற்பனையாளர் திட்டங்கள்' },
+  'Free': { SI: 'නොමිලේ', TA: 'இலவசம்' },
+  'Custom': { SI: 'අභිරුචි', TA: 'தனிப்பயன்' },
+  'Popular': { SI: 'ජනප්‍රිය', TA: 'பிரபலமான' },
+  'Get Started': { SI: 'ආරම්භ කරන්න', TA: 'தொடங்கவும்' },
+  'Starter': { SI: 'ආරම්භක', TA: 'ஸ்டார்டர்' },
+  'Pro': { SI: 'ප්‍රෝ', TA: 'ப்ரோ' },
+  'Enterprise': { SI: 'ව්‍යවසාය', TA: 'நிறுவன' },
+  'Live Chat': { SI: 'සජීවී කතාබස්', TA: 'நேரடி அரட்டை' },
+  'Start Chat': { SI: 'කතාබස් ආරම්භ කරන්න', TA: 'அரட்டையைத் தொடங்கு' },
+  'Email Support': { SI: 'විද්‍යුත් තැපෑල සහාය', TA: 'மின்னஞ்சல் ஆதரவு' },
+  'Send Email': { SI: 'විද්‍යුත් තැපෑල යවන්න', TA: 'மின்னஞ்சல் அனுப்பவும்' },
+  'Ask Bot': { SI: 'බොට්ගෙන් අසන්න', TA: 'பாட்டிடம் கேளுங்கள்' },
+  'Message Sent!': { SI: 'පණිවිඩය යවන ලදි!', TA: 'செய்தி அனுப்பப்பட்டது!' },
+  'Our support team will get back to you within 24 hours.': { SI: 'අපගේ සහායක කණ්ඩායම පැය 24ක් ඇතුළත ඔබව සම්බන්ධ කර ගනු ඇත.', TA: '24 மணி நேரத்திற்குள் உங்களை தொடர்புகொள்வார்கள்.' },
+  'Send Another': { SI: 'තවත් එකක් යවන්න', TA: 'இன்னொன்றை அனுப்பு' },
+  'How do I track my order?': { SI: 'මගේ ඇණවුම නිරීක්ෂණය කරන්නේ කෙසේද?', TA: 'என் ஆர்டரை எப்படி கண்காணிப்பது?' },
+  'What is the return policy?': { SI: 'ආපසු ගෙවීමේ ප්‍රතිපත්තිය කුමක්ද?', TA: 'திரும்பப் பெறும் கொள்கை என்ன?' },
+  'How long does delivery take?': { SI: 'බෙදා හැරීමට කොපමණ කාලයක් ගතවේද?', TA: 'டெலிவரிக்கு எவ்வளவு நேரம் ஆகும்?' },
+  'Can I change or cancel my order?': { SI: 'මට මගේ ඇණවුම වෙනස් කිරීමට හෝ අවලංගු කිරීමට හැකිද?', TA: 'ஆர்டரை மாற்ற அல்லது ரத்து செய்ய முடியுமா?' },
+  'What payment methods are accepted?': { SI: 'මොනවාද පිළිගන්නා ගෙවීම් ක්‍රම?', TA: 'எந்த கட்டண முறைகள் ஏற்றுக்கொள்ளப்படுகின்றன?' },
+  'How do I contact a seller directly?': { SI: 'විකුණුම්කරුවෙකු සෘජුවම සම්බන්ධ කර ගන්නේ කෙසේද?', TA: 'விற்பனையாளரை நேரடியாக தொடர்புகொள்வது எப்படி?' },
+  'Chat with a support agent in real time.': { SI: 'සජීවීව සහාය නියෝජිතයෙකු සමඟ කතාබස් කරන්න.', TA: 'நிகழ்நேரத்தில் ஒரு ஆதரவு முகவருடன் அரட்டையடிக்கவும்.' },
+  'support@omax.store · Reply within 24h': { SI: 'support@omax.store · පැය 24ක් ඇතුළත පිළිතුර', TA: 'support@omax.store · 24 மணி நேரத்திற்குள் பதிலளிக்கவும்' },
+  '+1 234 567 890 · Mon–Fri, 9am–6pm': { SI: '+1 234 567 890 · සඳුදා-සිකුරාදා', TA: '+1 234 567 890 · திங்கள்-வெள்ளி' },
+  'Get instant answers 24/7 from our bot.': { SI: 'අපගේ බොට් වෙතින් 24/7 ක්ෂණික පිළිතුරු ලබා ගන්න.', TA: 'எங்கள் போட்டில் இருந்து 24/7 உடனடி பதில்களைப் பெறுங்கள்.' },
+
+  // Extra generic words to catch more product names
+  'Laptop': { SI: 'ලැප්ටොප්', TA: 'மடிக்கணினி' },
+  'Shirt': { SI: 'කමිසය', TA: 'சட்டை' },
+  'Shoes': { SI: 'සපත්තු', TA: 'காலணிகள்' },
+  'Bag': { SI: 'බෑගය', TA: 'பை' },
+  'Dress': { SI: 'ඇඳුම', TA: 'உடை' },
+  'Ring': { SI: 'මුද්ද', TA: 'மோதிரம்' },
+  'Food': { SI: 'ආහාර', TA: 'உணவு' },
+  'Toy': { SI: 'සෙල්ලම් බඩු', TA: 'பொம்மை' },
+  'Game': { SI: 'ක්‍රීඩාව', TA: 'விளையாட்டு' },
+  'Console': { SI: 'කොන්සෝලය', TA: 'கன்சோல்' },
+  'Camera': { SI: 'කැමරාව', TA: 'கேமரா' },
+  'Mouse': { SI: 'මූසිකය', TA: 'சுட்டி' },
+  'Keyboard': { SI: 'යතුරු පුවරුව', TA: 'விசைப்பலகை' },
+  'Monitor': { SI: 'මොනිටරය', TA: 'மானிட்டர்' },
+  'Desk': { SI: 'මේසය', TA: 'மேஜை' },
+  'Chair': { SI: 'පුටුව', TA: 'நாற்காலி' },
+  'Bike': { SI: 'බයිසිකලය', TA: 'பைக்' },
+  'Motor': { SI: 'මෝටර්', TA: 'மோட்டார்' },
+  'Car': { SI: 'මෝටර් රථය', TA: 'கார்' },
+  'Oil': { SI: 'තෙල්', TA: 'எண்ணெய்' },
+  'Steak': { SI: 'ස්ටීක්', TA: 'ஸ்டீக்' },
+  'Beef': { SI: 'හරක් මස්', TA: 'மாட்டிறைச்சி' },
+  'Chicken': { SI: 'කුකුළු මස්', TA: 'கோழி இறைச்சி' },
+  'Fish': { SI: 'මාළු', TA: 'மீன்' },
+  'Apple': { SI: 'ඇපල්', TA: 'ஆப்பிள்' },
+
   // Exact Dump API Product Titles
   'Essence Mascara Lash Princess': { SI: 'එසෙන්ස් මස්කාරා', TA: 'எசன்ஸ் மஸ்காரா லாஷ் பிரின்சஸ்' },
   'Eyeshadow Palette with Mirror': { SI: 'කැඩපත සහිත අයිෂැඩෝ', TA: 'கண்ணாடி மூலம் ஐ ஷேடோ' },
@@ -176,27 +262,29 @@ export const useLanguageStore = defineStore('language', () => {
     }
   }
 
-  function translateDynamic(text: string): string {
-    if (!text) return text;
-    if (selectedCode.value === 'EN') return text;
-    
-    // First try an exact match (useful for single word categories)
-    for (const [enWord, translations] of Object.entries(WORDS_DICT)) {
-      if (text.toLowerCase() === enWord.toLowerCase()) {
-        return (translations as Record<string, string>)[selectedCode.value] || text;
+  const translateDynamic = computed(() => {
+    return (text: string): string => {
+      if (!text) return text;
+      if (selectedCode.value === 'EN') return text;
+      
+      // First try an exact match (useful for single word categories)
+      for (const [enWord, translations] of Object.entries(WORDS_DICT)) {
+        if (text.toLowerCase() === enWord.toLowerCase()) {
+          return (translations as Record<string, string>)[selectedCode.value] || text;
+        }
       }
-    }
 
-    // Then try partial replacement for product titles (case-insensitive replace)
-    let translated = text;
-    for (const [enWord, translations] of Object.entries(WORDS_DICT)) {
-      const transStr = (translations as Record<string, string>)[selectedCode.value];
-      if (transStr) {
-        translated = translated.replace(new RegExp(`\\b${enWord}\\b`, 'gi'), transStr);
+      // Then try partial replacement for product titles (case-insensitive replace)
+      let translated = text;
+      for (const [enWord, translations] of Object.entries(WORDS_DICT)) {
+        const transStr = (translations as Record<string, string>)[selectedCode.value];
+        if (transStr) {
+          translated = translated.replace(new RegExp(`\\b${enWord}\\b`, 'gi'), transStr);
+        }
       }
-    }
-    return translated;
-  }
+      return translated;
+    };
+  });
 
   const t = computed(() => (DICTIONARY[selectedCode.value] || DICTIONARY['EN']) as TranslationMap)
 

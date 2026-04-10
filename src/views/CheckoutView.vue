@@ -35,7 +35,8 @@ const countries = [
 const selectedItems = computed(() => cart.items.filter(i => cart.selectedIds.has(i.id)))
 const subtotal = computed(() => selectedItems.value.reduce((s, i) => s + i.price, 0))
 const tax = computed(() => (subtotal.value * 0.1))
-const total = computed(() => (subtotal.value + tax.value))
+const discount = computed(() => cart.couponDiscount)
+const total = computed(() => Math.max(0, subtotal.value + tax.value - discount.value))
 
 const nextStep = () => {
   if (currentStep.value === 1) {
@@ -199,6 +200,10 @@ const placeOrder = () => {
             <div class="flex justify-between text-xs font-bold uppercase text-[var(--text-muted)]">
               <span>{{ language.translateDynamic('Service Tax') }}</span>
               <span class="text-[var(--text-color)]">{{ currency.format(tax) }}</span>
+            </div>
+            <div v-if="discount > 0" class="flex justify-between text-xs font-bold uppercase animate-fade-in">
+              <span class="text-green-500 flex items-center gap-1">🎟️ {{ language.translateDynamic('Coupon') }} ({{ cart.appliedCoupon }})</span>
+              <span class="text-green-500">- {{ currency.format(discount) }}</span>
             </div>
             <div class="h-1 bg-dashed border-t-2 border-dashed border-[var(--border-color)] my-2"></div>
             <div class="flex justify-between font-black text-2xl tracking-tighter text-[var(--promo-color)]">

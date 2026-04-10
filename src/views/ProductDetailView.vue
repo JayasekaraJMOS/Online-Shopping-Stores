@@ -32,7 +32,12 @@ const addToCart = () => {
   }
 }
 
-
+const buyNow = () => {
+  if (product.value) {
+    cart.add(product.value)
+    router.push('/checkout')
+  }
+}
 </script>
 
 <template>
@@ -108,7 +113,7 @@ const addToCart = () => {
                {{ language.t.addToCart }}
                <span class="opacity-0 group-hover:opacity-100 transition-opacity">🛒</span>
              </button>
-             <button class="bg-[var(--cta-color)] hover:bg-[var(--cta-hover)] text-white py-5 font-black rounded-xl shadow-lg transition-all active:scale-95 uppercase tracking-widest text-sm flex items-center justify-center gap-2 group">
+             <button @click="buyNow" class="bg-[var(--cta-color)] hover:bg-[var(--cta-hover)] text-white py-5 font-black rounded-xl shadow-lg transition-all active:scale-95 uppercase tracking-widest text-sm flex items-center justify-center gap-2 group">
                {{ language.translateDynamic('Buy Now') }}
                <span class="animate-bounce">⚡</span>
              </button>

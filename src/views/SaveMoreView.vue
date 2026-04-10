@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import NavBar from '../components/NavBar.vue'
 
 const appFeatures = [
@@ -15,6 +16,27 @@ const appCoupons = [
   { code: 'APPDEAL20', off: '20%', min: 50, color: '#7C3AED' },
   { code: 'APPCASH15', off: '$15', min: 80, color: '#DB2777' },
 ]
+
+// Track which coupon code was just copied for feedback
+const copiedCode = ref<string | null>(null)
+
+const copyCode = async (code: string) => {
+  try {
+    await navigator.clipboard.writeText(code)
+    copiedCode.value = code
+    setTimeout(() => { copiedCode.value = null }, 2000)
+  } catch {
+    // Fallback for older browsers
+    const el = document.createElement('textarea')
+    el.value = code
+    document.body.appendChild(el)
+    el.select()
+    document.execCommand('copy')
+    document.body.removeChild(el)
+    copiedCode.value = code
+    setTimeout(() => { copiedCode.value = null }, 2000)
+  }
+}
 </script>
 
 <template>
@@ -86,11 +108,15 @@ const appCoupons = [
           </div>
           <div class="px-5 py-3 flex items-center justify-between border-t-2 border-dashed" :style="{ borderColor: c.color + '40' }">
             <code class="text-xs font-black uppercase tracking-widest" :style="{ color: c.color }">{{ c.code }}</code>
-            <button class="text-xs font-black border-2 rounded-lg px-4 py-1.5 transition-all hover:text-white"
-              :style="{ borderColor: c.color, color: c.color }"
-              @mouseenter="(e) => { (e.target as HTMLElement).style.backgroundColor = c.color }"
-              @mouseleave="(e) => { (e.target as HTMLElement).style.backgroundColor = 'transparent'; (e.target as HTMLElement).style.color = c.color }"
-            >Copy Code</button>
+            <button
+              class="text-xs font-black border-2 rounded-lg px-4 py-1.5 transition-all"
+              :style="copiedCode === c.code
+                ? { backgroundColor: '#16a34a', borderColor: '#16a34a', color: 'white' }
+                : { borderColor: c.color, color: c.color }"
+              @click="copyCode(c.code)"
+            >
+              {{ copiedCode === c.code ? '✓ Copied!' : 'Copy Code' }}
+            </button>
           </div>
         </div>
       </div>
