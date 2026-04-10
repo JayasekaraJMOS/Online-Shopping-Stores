@@ -34,7 +34,7 @@ const addToCart = () => {
 
 const buyNow = () => {
   if (product.value) {
-    cart.add(product.value)
+    cart.setBuyNow(product.value)
     router.push('/checkout')
   }
 }

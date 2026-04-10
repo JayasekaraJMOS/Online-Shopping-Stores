@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import NavBar from '../components/NavBar.vue'
+import { useCartStore } from '../stores/cart'
+import { useNotificationStore } from '../stores/notification'
+
+const cart = useCartStore()
+const notification = useNotificationStore()
 
 const appFeatures = [
   { icon: '⚡', title: 'Flash Deals First', desc: 'App users get 30-min early access to all Flash Sale items before anyone else.' },
@@ -12,30 +17,42 @@ const appFeatures = [
 ]
 
 const appCoupons = [
-  { code: 'APP10', off: '10%', min: 0, color: '#2563EB' },
+  { code: 'APP10',     off: '10%', min: 0,  color: '#2563EB' },
   { code: 'APPDEAL20', off: '20%', min: 50, color: '#7C3AED' },
   { code: 'APPCASH15', off: '$15', min: 80, color: '#DB2777' },
 ]
 
-// Track which coupon code was just copied for feedback
+// Track which coupon code was just copied/applied for feedback
 const copiedCode = ref<string | null>(null)
 
-const copyCode = async (code: string) => {
+const copyAndApply = async (code: string) => {
+  // 1. Copy to clipboard
   try {
     await navigator.clipboard.writeText(code)
-    copiedCode.value = code
-    setTimeout(() => { copiedCode.value = null }, 2000)
   } catch {
-    // Fallback for older browsers
     const el = document.createElement('textarea')
     el.value = code
     document.body.appendChild(el)
     el.select()
     document.execCommand('copy')
     document.body.removeChild(el)
-    copiedCode.value = code
-    setTimeout(() => { copiedCode.value = null }, 2000)
   }
+
+  // 2. Auto-apply to cart
+  if (cart.appliedCoupon === code) {
+    notification.add(`✅ Coupon ${code} is already applied to your cart!`, 'info')
+  } else {
+    const result = cart.applyCoupon(code)
+    if (result.success) {
+      notification.add(`🎉 Coupon ${code} applied! ${result.message}`, 'success', 5000)
+    } else {
+      notification.add(`📋 Copied ${code} — ${result.message}`, 'warning', 4000)
+    }
+  }
+
+  // 3. Flash feedback on button
+  copiedCode.value = code
+  setTimeout(() => { copiedCode.value = null }, 2500)
 }
 </script>
 
@@ -108,15 +125,17 @@ const copyCode = async (code: string) => {
           </div>
           <div class="px-5 py-3 flex items-center justify-between border-t-2 border-dashed" :style="{ borderColor: c.color + '40' }">
             <code class="text-xs font-black uppercase tracking-widest" :style="{ color: c.color }">{{ c.code }}</code>
-            <button
-              class="text-xs font-black border-2 rounded-lg px-4 py-1.5 transition-all"
-              :style="copiedCode === c.code
-                ? { backgroundColor: '#16a34a', borderColor: '#16a34a', color: 'white' }
-                : { borderColor: c.color, color: c.color }"
-              @click="copyCode(c.code)"
-            >
-              {{ copiedCode === c.code ? '✓ Copied!' : 'Copy Code' }}
-            </button>
+            <div class="flex items-center gap-2">
+              <button
+                class="text-xs font-black border-2 rounded-lg px-4 py-1.5 transition-all"
+                :style="copiedCode === c.code
+                  ? { backgroundColor: '#16a34a', borderColor: '#16a34a', color: 'white' }
+                  : { borderColor: c.color, color: c.color }"
+                @click="copyAndApply(c.code)"
+              >
+                {{ copiedCode === c.code ? '✓ Applied!' : 'Copy & Apply' }}
+              </button>
+            </div>
           </div>
         </div>
       </div>

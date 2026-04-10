@@ -23,6 +23,7 @@ export const useCartStore = defineStore('cart', {
     items: [] as Product[],
     selectedIds: new Set<number>(),
     appliedCoupon: null as string | null,
+    buyNowItem: null as Product | null,   // express buy — bypasses the cart
   }),
 
   getters: {
@@ -109,6 +110,14 @@ export const useCartStore = defineStore('cart', {
 
     removeCoupon() {
       this.appliedCoupon = null
+    },
+
+    setBuyNow(product: Product) {
+      this.buyNowItem = product
+    },
+
+    clearBuyNow() {
+      this.buyNowItem = null
     },
 
     load() {

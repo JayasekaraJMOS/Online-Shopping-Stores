@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCartStore } from '../stores/cart'
 import { useCurrencyStore } from '../stores/currency'
@@ -32,10 +32,20 @@ const countries = [
   'China'
 ]
 
-const selectedItems = computed(() => cart.items.filter(i => cart.selectedIds.has(i.id)))
-const subtotal = computed(() => selectedItems.value.reduce((s, i) => s + i.price, 0))
-const tax = computed(() => (subtotal.value * 0.1))
-const discount = computed(() => cart.couponDiscount)
+// ─── Buy Now mode: only checkout this one product ───────────────────────────
+const isBuyNow = computed(() => !!cart.buyNowItem)
+
+// Items shown in checkout summary
+const checkoutItems = computed(() =>
+  isBuyNow.value
+    ? (cart.buyNowItem ? [cart.buyNowItem] : [])
+    : cart.items.filter(i => cart.selectedIds.has(i.id))
+)
+
+const subtotal = computed(() => checkoutItems.value.reduce((s, i) => s + i.price, 0))
+const tax = computed(() => subtotal.value * 0.1)
+// Coupon only applies in normal cart mode
+const discount = computed(() => isBuyNow.value ? 0 : cart.couponDiscount)
 const total = computed(() => Math.max(0, subtotal.value + tax.value - discount.value))
 
 const nextStep = () => {
@@ -58,9 +68,18 @@ const placeOrder = () => {
     return
   }
   alert(`Thank you, ${name.value}! Your order of ${currency.format(total.value)} has been placed via ${paymentMethod.value}.`)
-  cart.clear()
+  if (isBuyNow.value) {
+    cart.clearBuyNow()   // only clear the express item
+  } else {
+    cart.clear()         // clear the whole cart
+  }
   router.push('/')
 }
+
+// Clear buyNowItem if user navigates away without completing
+onBeforeUnmount(() => {
+  cart.clearBuyNow()
+})
 </script>
 
 <template>
@@ -180,9 +199,19 @@ const placeOrder = () => {
         <!-- summary -->
         <div class="bg-[var(--card-bg)] rounded-2xl shadow-2xl p-8 border border-[var(--border-color)] relative h-fit">
           <div class="absolute top-0 left-0 w-full h-1 bg-[var(--accent-color)]"></div>
+
+          <!-- Buy Now badge -->
+          <div v-if="isBuyNow" class="flex items-center gap-2 mb-4 bg-[var(--cta-color)]/10 border border-[var(--cta-color)]/30 rounded-xl px-4 py-2.5">
+            <span class="text-lg">⚡</span>
+            <div>
+              <p class="text-xs font-black text-[var(--cta-color)] uppercase tracking-widest">Express Buy Now</p>
+              <p class="text-[10px] text-[var(--text-muted)] font-medium">Checking out this item only — your cart is unchanged</p>
+            </div>
+          </div>
+
           <h2 class="text-xs font-black text-[var(--text-muted)] mb-8 uppercase tracking-[0.2em]">{{ language.translateDynamic('Purchase Details') }}</h2>
           <ul class="space-y-6">
-            <li v-for="item in selectedItems" :key="item.id" class="flex justify-between items-center gap-4">
+            <li v-for="item in checkoutItems" :key="item.id" class="flex justify-between items-center gap-4">
               <div class="flex items-center gap-3 min-w-0">
                 <div class="w-10 h-10 bg-white p-1 rounded-lg border border-[var(--border-color)] shrink-0">
                   <img :src="item.thumbnail" class="w-full h-full object-contain" />
@@ -201,7 +230,7 @@ const placeOrder = () => {
               <span>{{ language.translateDynamic('Service Tax') }}</span>
               <span class="text-[var(--text-color)]">{{ currency.format(tax) }}</span>
             </div>
-            <div v-if="discount > 0" class="flex justify-between text-xs font-bold uppercase animate-fade-in">
+            <div v-if="discount > 0 && !isBuyNow" class="flex justify-between text-xs font-bold uppercase animate-fade-in">
               <span class="text-green-500 flex items-center gap-1">🎟️ {{ language.translateDynamic('Coupon') }} ({{ cart.appliedCoupon }})</span>
               <span class="text-green-500">- {{ currency.format(discount) }}</span>
             </div>
