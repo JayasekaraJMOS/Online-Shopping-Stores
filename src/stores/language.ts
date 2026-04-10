@@ -114,7 +114,6 @@ const WORDS_DICT: Record<string, Record<string, string>> = {
   'Popular': { SI: 'ජනප්‍රිය', TA: 'பிரபலமான' },
   'Get Started': { SI: 'ආරම්භ කරන්න', TA: 'தொடங்கவும்' },
   'Starter': { SI: 'ආරම්භක', TA: 'ஸ்டார்டர்' },
-  'Pro': { SI: 'ප්‍රෝ', TA: 'ப்ரோ' },
   'Enterprise': { SI: 'ව්‍යවසාය', TA: 'நிறுவன' },
   'Live Chat': { SI: 'සජීවී කතාබස්', TA: 'நேரடி அரட்டை' },
   'Start Chat': { SI: 'කතාබස් ආරම්භ කරන්න', TA: 'அரட்டையைத் தொடங்கு' },
@@ -151,7 +150,6 @@ const WORDS_DICT: Record<string, Record<string, string>> = {
   'Keyboard': { SI: 'යතුරු පුවරුව', TA: 'விசைப்பலகை' },
   'Monitor': { SI: 'මොනිටරය', TA: 'மானிட்டர்' },
   'Desk': { SI: 'මේසය', TA: 'மேஜை' },
-  'Chair': { SI: 'පුටුව', TA: 'நாற்காலி' },
   'Bike': { SI: 'බයිසිකලය', TA: 'பைக்' },
   'Motor': { SI: 'මෝටර්', TA: 'மோட்டார்' },
   'Car': { SI: 'මෝටර් රථය', TA: 'கார்' },
@@ -160,7 +158,6 @@ const WORDS_DICT: Record<string, Record<string, string>> = {
   'Beef': { SI: 'හරක් මස්', TA: 'மாட்டிறைச்சி' },
   'Chicken': { SI: 'කුකුළු මස්', TA: 'கோழி இறைச்சி' },
   'Fish': { SI: 'මාළු', TA: 'மீன்' },
-  'Apple': { SI: 'ඇපල්', TA: 'ஆப்பிள்' },
 
   // Exact Dump API Product Titles
   'Essence Mascara Lash Princess': { SI: 'එසෙන්ස් මස්කාරා', TA: 'எசன்ஸ் மஸ்காரா லாஷ் பிரின்சஸ்' },
@@ -204,7 +201,6 @@ const WORDS_DICT: Record<string, Record<string, string>> = {
   'Order Summary': { SI: 'ඇණවුම් සාරාංශය', TA: 'ஆர்டர் சுருக்கம்' },
   'Subtotal': { SI: 'අනුපූරක එකතුව', TA: 'துணை மொத்தம்' },
   'Shipping': { SI: 'නැව් ගාස්තු', TA: 'கப்பல்' },
-  'Free': { SI: 'නොමිලේ', TA: 'இலவசம்' },
   'Total Pay': { SI: 'මුළු ගෙවීම', TA: 'மொத்த ஊதியம்' },
   'Checkout Now': { SI: 'දැන් මිලදී ගන්න', TA: 'இப்போதே வாங்குங்கள்' },
   // UI Phrases - Checkout & Process
@@ -255,36 +251,60 @@ export const useLanguageStore = defineStore('language', () => {
     return found ? found.name : 'English'
   })
 
+  // Pre-build regex map once — avoids re-creating RegExps on every call
+  const _regexCache = new Map<string, RegExp>()
+  function _getRegex(enWord: string): RegExp {
+    if (!_regexCache.has(enWord)) {
+      // Escape special regex chars in the key before building regex
+      const escaped = enWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      _regexCache.set(enWord, new RegExp(`\\b${escaped}\\b`, 'gi'))
+    }
+    return _regexCache.get(enWord)!
+  }
+
+  // Translation memo cache: { [lang]: { [originalText]: translatedText } }
+  const _translationCache = ref<Record<string, Record<string, string>>>({ EN: {}, SI: {}, TA: {} })
+
   function setLanguage(code: string) {
     if (LANGUAGES.some(l => l.code === code)) {
       selectedCode.value = code
       localStorage.setItem('language', code)
+      // Clear cache for this language so stale entries don't persist
+      _translationCache.value[code] = {}
     }
   }
 
-  const translateDynamic = computed(() => {
-    return (text: string): string => {
-      if (!text) return text;
-      if (selectedCode.value === 'EN') return text;
-      
-      // First try an exact match (useful for single word categories)
-      for (const [enWord, translations] of Object.entries(WORDS_DICT)) {
-        if (text.toLowerCase() === enWord.toLowerCase()) {
-          return (translations as Record<string, string>)[selectedCode.value] || text;
-        }
-      }
+  // Plain method (not a computed) — reactive because it reads selectedCode.value
+  function translateDynamic(text: string): string {
+    if (!text) return text
+    const lang = selectedCode.value
+    if (lang === 'EN') return text
 
-      // Then try partial replacement for product titles (case-insensitive replace)
-      let translated = text;
-      for (const [enWord, translations] of Object.entries(WORDS_DICT)) {
-        const transStr = (translations as Record<string, string>)[selectedCode.value];
-        if (transStr) {
-          translated = translated.replace(new RegExp(`\\b${enWord}\\b`, 'gi'), transStr);
-        }
+    // Return from cache if already translated
+    const cache = _translationCache.value[lang] ??= {}
+    if (Object.prototype.hasOwnProperty.call(cache, text)) return cache[text] as string
+
+    // Exact match first
+    for (const [enWord, translations] of Object.entries(WORDS_DICT)) {
+      if (text.toLowerCase() === enWord.toLowerCase()) {
+        const result = (translations as Record<string, string>)[lang] || text
+        cache[text] = result
+        return result
       }
-      return translated;
-    };
-  });
+    }
+
+    // Partial word-boundary replacement
+    let translated = text
+    for (const [enWord, translations] of Object.entries(WORDS_DICT)) {
+      const transStr = (translations as Record<string, string>)[lang]
+      if (transStr) {
+        translated = translated.replace(_getRegex(enWord), transStr)
+      }
+    }
+
+    cache[text] = translated
+    return translated
+  }
 
   const t = computed(() => (DICTIONARY[selectedCode.value] || DICTIONARY['EN']) as TranslationMap)
 
