@@ -78,15 +78,15 @@ onUnmounted(() => window.removeEventListener('click', closeOnOutside))
 
         <button @click="handleNav('/become-a-seller')" class="hover:text-blue-200 transition-colors shrink-0">{{ language.t.seller }}</button>
         <button @click="handleNav('/help')" class="hover:text-blue-200 transition-colors shrink-0">{{ language.t.help }}</button>
-        <span class="text-blue-200 uppercase shrink-0">Jayasekara J.M.O.S.</span>
+        <span class="text-blue-200 uppercase shrink-0 hidden sm:inline">Jayasekara J.M.O.S.</span>
       </div>
     </div>
 
     <!-- Main Header -->
-    <div class="max-w-7xl mx-auto px-4 py-0.5 md:py-1">
-      <div class="flex items-center justify-between gap-4">
+    <div class="max-w-7xl mx-auto px-2 sm:px-4 py-0.5 md:py-1">
+      <div class="flex items-center justify-between gap-2 sm:gap-4">
         <!-- Left: Logo + Burger -->
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2 sm:gap-4 shrink-0">
           <button @click="toggleMenu" class="md:hidden p-1 -ml-2 text-white">
             <svg v-if="!isMenuOpen" class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
             <svg v-else class="w-6 h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -94,7 +94,7 @@ onUnmounted(() => window.removeEventListener('click', closeOnOutside))
 
           <router-link to="/" class="flex items-center shrink-0 group relative z-10 transition-transform active:scale-95">
             <div 
-              class="h-14 w-44 md:h-32 md:w-[380px] bg-white"
+              class="h-10 w-28 sm:h-14 sm:w-44 md:h-32 md:w-[380px] bg-white"
               :style="`mask-image: url(${logo}); -webkit-mask-image: url(${logo}); mask-size: contain; -webkit-mask-size: contain; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat; mask-position: center; -webkit-mask-position: center; mask-mode: luminance; -webkit-mask-mode: luminance; pointer-events: none;`"
             ></div>
           </router-link>
@@ -111,11 +111,11 @@ onUnmounted(() => window.removeEventListener('click', closeOnOutside))
         </div>
 
         <!-- Right: Utils -->
-        <div class="flex items-center gap-1.5 md:gap-4 shrink-0">
+        <div class="flex items-center gap-1 sm:gap-1.5 md:gap-4 shrink-0">
           <!-- Language Dropdown Box -->
           <div class="relative shrink-0">
-            <button @click.stop="languageOpen = !languageOpen" class="flex items-center gap-1 sm:gap-1.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] sm:text-xs font-black px-1.5 sm:px-2 md:px-3 h-8 sm:h-9 rounded-lg transition-all tracking-widest uppercase">
-              <span class="text-sm sm:text-base hidden sm:inline">🌐</span>
+            <button @click.stop="languageOpen = !languageOpen" class="flex items-center gap-0.5 sm:gap-1.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[9px] sm:text-[10px] md:text-xs font-black px-1.5 sm:px-2 md:px-3 h-8 sm:h-9 rounded-lg transition-all tracking-widest uppercase truncate max-w-[50px] sm:max-w-none">
+              <span class="text-xs sm:text-base hidden sm:inline">🌐</span>
               <span class="inline">{{ language.selectedCode }}</span>
               <svg class="w-3 h-3 opacity-70 transition-transform" :class="{ 'rotate-180': languageOpen }" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
             </button>
@@ -129,8 +129,8 @@ onUnmounted(() => window.removeEventListener('click', closeOnOutside))
 
           <!-- Currency Dropdown Box -->
           <div class="relative shrink-0">
-            <button @click.stop="currencyOpen = !currencyOpen" class="flex items-center gap-1 sm:gap-1.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] sm:text-xs font-black px-1.5 sm:px-2 md:px-3 h-8 sm:h-9 rounded-lg transition-all tracking-widest uppercase">
-              <span class="text-sm sm:text-base">{{ currency.selected.flag }}</span>
+            <button @click.stop="currencyOpen = !currencyOpen" class="flex items-center gap-0.5 sm:gap-1.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[9px] sm:text-[10px] md:text-xs font-black px-1.5 sm:px-2 md:px-3 h-8 sm:h-9 rounded-lg transition-all tracking-widest uppercase truncate max-w-[55px] sm:max-w-none">
+              <span class="text-xs sm:text-base">{{ currency.selected.flag }}</span>
               <span class="inline">{{ currency.selected.code }}</span>
               <svg class="w-3 h-3 opacity-70 transition-transform" :class="{ 'rotate-180': currencyOpen }" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
             </button>

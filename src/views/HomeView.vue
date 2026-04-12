@@ -169,8 +169,8 @@ watch(() => search.query, () => {
     <section v-if="!search.query && currentCategory === 'All'" class="max-w-7xl mx-auto px-4 mt-8">
       <div class="bg-[var(--card-bg)] rounded-2xl border border-[var(--border-color)] overflow-hidden shadow-lg">
         <!-- Header -->
-        <div class="flex items-center justify-between px-5 py-3.5 border-b border-[var(--border-color)] bg-gradient-to-r from-[var(--promo-color)]/5 to-transparent">
-          <div class="flex items-center gap-5">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-5 py-3.5 border-b border-[var(--border-color)] bg-gradient-to-r from-[var(--promo-color)]/5 to-transparent gap-3 sm:gap-0">
+          <div class="flex items-center gap-3 sm:gap-5 flex-wrap">
             <h2 class="text-[var(--promo-color)] font-black uppercase text-sm tracking-widest flex items-center gap-2">
               <span class="animate-pulse">🔥</span> {{ language.t.flashSale }}
             </h2>
@@ -231,7 +231,7 @@ watch(() => search.query, () => {
 
       <!-- ── New User Bonus Banner ──────────────────────────────── -->
       <div
-        class="relative overflow-hidden rounded-2xl mb-5 px-6 py-4 flex items-center justify-between gap-4 flex-wrap shadow-xl"
+        class="relative overflow-hidden rounded-2xl mb-5 px-5 sm:px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl"
         style="background: linear-gradient(135deg, #2563EB 0%, #7C3AED 60%, #DB2777 100%);"
       >
         <!-- shimmer -->
@@ -261,7 +261,7 @@ watch(() => search.query, () => {
       </div>
 
       <!-- ── Coupon Cards ───────────────────────────────────────── -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mb-5">
         <div
           v-for="c in saveMoreCoupons"
           :key="c.id"
@@ -294,7 +294,7 @@ watch(() => search.query, () => {
       </div>
 
       <!-- ── Bundle Deals ───────────────────────────────────────── -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
         <div
           v-for="deal in bundleDeals"
           :key="deal.id"
