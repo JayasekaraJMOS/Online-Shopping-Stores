@@ -14,6 +14,14 @@ const router = useRouter()
 const products = ref<Product[]>([])
 const flashProducts = ref<Product[]>([])
 const categories = ref<string[]>(['All', 'Beauty', 'Fragrances', 'Furniture', 'Groceries', 'Laptops', 'Smartphones', 'Tops'])
+
+const getCategoryIcon = (cat: string) => {
+  const map: Record<string, string> = {
+    'All': '✨', 'Beauty': '💄', 'Fragrances': '🌸', 'Furniture': '🛋️', 
+    'Groceries': '🛒', 'Laptops': '💻', 'Smartphones': '📱', 'Tops': '👕'
+  }
+  return map[cat] || '🛍️'
+}
 const currentCategory = ref('All')
 const isLoading = ref<boolean>(true)
 const search = useSearchStore()
@@ -155,11 +163,12 @@ watch(() => search.query, () => {
           v-for="cat in categories"
           :key="cat"
           @click="selectCategory(cat)"
-          :class="['px-4 py-1.5 text-[10px] font-black rounded-full transition-all border shrink-0 uppercase tracking-widest',
+          :class="['px-5 py-2 text-[11px] font-black rounded-full transition-all border shrink-0 uppercase tracking-widest flex items-center gap-2',
             currentCategory === cat
-              ? 'bg-[var(--accent-color)] border-[var(--accent-color)] text-white shadow-md scale-105'
-              : 'bg-transparent border-[var(--border-color)] text-[var(--text-muted)] hover:text-[var(--accent-color)] hover:border-[var(--accent-color)]/40']"
+              ? 'bg-gradient-to-r from-[var(--accent-color)] to-blue-500 border-transparent text-white shadow-lg shadow-blue-500/30 scale-105 ring-2 ring-white/20'
+              : 'bg-[var(--card-bg)] border-[var(--border-color)] text-[var(--text-muted)] hover:text-[var(--accent-color)] hover:border-[var(--accent-color)]/40 hover:bg-blue-50/50 dark:hover:bg-blue-900/20']"
         >
+          <span class="text-base drop-shadow-sm group-hover:scale-110 transition-transform">{{ getCategoryIcon(cat) }}</span>
           {{ language.translateDynamic(cat).toUpperCase() }}
         </button>
       </div>
@@ -322,16 +331,16 @@ watch(() => search.query, () => {
           <span class="text-[9px] md:text-xs font-black uppercase tracking-[0.25em] mb-2 text-[var(--promo-color)] bg-[var(--promo-color)]/20 w-fit px-3 py-1 rounded-full">
             {{ language.t.limitedTimeOffer }}
           </span>
-          <h2 class="text-2xl md:text-6xl font-black mb-4 leading-none tracking-tight">
+          <h2 class="text-3xl md:text-6xl font-black mb-5 leading-tight tracking-tight drop-shadow-lg">
             {{ language.t.realSale }}<br/>
-            <span class="text-[var(--promo-color)]">{{ language.t.isFinallyHere }}</span>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--promo-color)] to-yellow-300 drop-shadow-sm">{{ language.t.isFinallyHere }}</span>
           </h2>
           <button
             @click="scrollToProducts"
-            class="group/btn w-fit px-6 md:px-10 py-3 bg-[var(--cta-color)] hover:bg-[var(--cta-hover)] text-white font-black rounded-xl transition-all shadow-xl transform active:scale-95 flex items-center gap-3 uppercase tracking-widest text-[10px] md:text-sm"
+            class="group/btn w-fit px-8 md:px-10 py-3.5 bg-gradient-to-r from-[var(--cta-color)] to-emerald-400 text-white font-black rounded-2xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)] transform active:scale-95 flex items-center gap-3 uppercase tracking-widest text-[11px] md:text-sm border border-white/20"
           >
             {{ language.t.shopNow }}
-            <span class="transition-transform group-hover/btn:translate-x-2 text-xl">→</span>
+            <span class="transition-transform duration-300 group-hover/btn:translate-x-2 text-xl">🚀</span>
           </button>
         </div>
         <!-- floating badge -->

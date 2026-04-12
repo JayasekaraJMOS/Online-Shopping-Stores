@@ -74,9 +74,9 @@ const goToDetail = () => {
 
         <button
           @click.stop="cart.add(product)"
-          class="w-full py-3 bg-[var(--cta-color)] hover:bg-[var(--cta-hover)] text-white text-xs font-black rounded-xl transition-all uppercase tracking-widest shadow-lg hover:shadow-[var(--cta-color)]/30 transform active:scale-95 flex items-center justify-center gap-2"
+          class="w-full py-3 bg-gradient-to-r from-[var(--cta-color)] to-[#047857] hover:from-[#047857] hover:to-[var(--cta-color)] text-white text-xs font-black rounded-xl transition-all uppercase tracking-widest shadow-lg hover:shadow-[var(--cta-color)]/40 transform active:scale-95 flex items-center justify-center gap-2 group/btn border border-white/10"
         >
-          <span>🛒</span>
+          <span class="text-base group-hover/btn:-translate-y-1 group-hover/btn:rotate-12 transition-transform duration-300">🛒</span>
           {{ language.t.addToCart }}
         </button>
       </div>
