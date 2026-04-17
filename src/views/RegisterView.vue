@@ -49,8 +49,8 @@ const handleRegister = async () => {
     localStorage.setItem('auth_token', fakeToken)
     localStorage.setItem('user', JSON.stringify(newUser))
     router.push('/')
-  } catch (e: any) {
-    error.value = e.message || 'Registration error'
+  } catch (e: unknown) {
+    error.value = e instanceof Error ? e.message : 'Registration error'
   } finally {
     isLoading.value = false
   }

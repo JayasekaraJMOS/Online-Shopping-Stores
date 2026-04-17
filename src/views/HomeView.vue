@@ -111,7 +111,7 @@ const fetchProducts = async () => {
     if (!flashProducts.value.length) {
       const flashRes = await fetch('https://dummyjson.com/products?limit=18&skip=10')
       const flashData = await flashRes.json()
-      flashProducts.value = flashData.products.map((p: any) => ({
+      flashProducts.value = flashData.products.map((p: Product) => ({
         ...p,
         oldPrice: (p.price * 1.5).toFixed(2),
         discount: Math.floor(Math.random() * 20) + 30
@@ -374,7 +374,13 @@ watch(() => search.query, () => {
       </div>
 
       <div v-else class="products-grid">
-        <ProductCard v-for="item in products" :key="item.id" :product="item" />
+        <ProductCard 
+          v-for="(item, index) in products" 
+          :key="item.id" 
+          :product="item" 
+          class="animate-fade-in"
+          :class="`delay-${(index % 5) * 100 + 100}`"
+        />
       </div>
 
       <!-- Empty State -->

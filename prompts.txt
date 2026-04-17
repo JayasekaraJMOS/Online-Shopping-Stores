@@ -1,59 +1,41 @@
-AI USAGE LOG - ElectroHub SPA Project
-=====================================
+The aim 01: Create responsive product card component with hover effects
+Actual prompt: Create a Vue 3 ProductCard component with Tailwind CSS that displays product image, title, price, rating, stock status, and add to cart button. Include hover effects like shadow and scale transitions.
 
-AIM 01: Create responsive product card component with hover effects
-ACTUAL PROMPT: Create a Vue 3 ProductCard component with Tailwind CSS that displays product image, title, price, rating, stock status, and add to cart button. Include hover effects like shadow and scale transitions.
-OUTCOME: ✅ Implemented ProductCard.vue with professional styling, animations, and all required fields.
+The aim 02: Build authentication store using Pinia for JWT token management
+Actual prompt: Create a Pinia store for authentication that handles login with DummyJSON /auth/login endpoint, stores JWT token in localStorage, manages user state, and provides login/logout actions with error handling.
 
-AIM 02: Build authentication store using Pinia for JWT token management
-ACTUAL PROMPT: Create a Pinia store for authentication that handles login with DummyJSON /auth/login endpoint, stores JWT token in localStorage, manages user state, and provides login/logout actions with error handling.
-OUTCOME: ✅ Implemented auth.ts store with complete JWT integration, localStorage persistence, and error states.
+The aim 03: Create dark mode toggle with Tailwind dark modifier
+Actual prompt: Build a Pinia theme store that toggles dark mode, stores preference in localStorage, applies dark: classes to all components, and respects system color scheme preference.
 
-AIM 03: Create dark mode toggle with Tailwind dark modifier
-ACTUAL PROMPT: Build a Pinia theme store that toggles dark mode, stores preference in localStorage, applies dark: classes to all components, and respects system color scheme preference.
-OUTCOME: ✅ Implemented theme.ts store with automatic DOM updates and theme persistence.
+The aim 04: Design professional login page with demo accounts
+Actual prompt: Create a Vue 3 LoginView component with a modern design, login form, error messages, and quick-select buttons for demo accounts (atuny0 and hbingley1).
 
-AIM 04: Design professional login page with demo accounts
-ACTUAL PROMPT: Create a Vue 3 LoginView component with a modern design, login form, error messages, and quick-select buttons for demo accounts (atuny0 and hbingley1).
-OUTCOME: ✅ Implemented LoginView.vue with beautiful card design, form validation, and demo account buttons.
+The aim 05: Add dark mode support to all existing views
+Actual prompt: Update HomeView, ProductDetailView, and CartView to support dark mode by adding dark: prefixed Tailwind classes for backgrounds, text, borders, and buttons.
 
-AIM 05: Add dark mode support to all existing views
-ACTUAL PROMPT: Update HomeView, ProductDetailView, and CartView to support dark mode by adding dark: prefixed Tailwind classes for backgrounds, text, borders, and buttons.
-OUTCOME: ✅ Updated all views with dark mode variants, smooth transitions, and proper contrast.
+The aim 06: Implement shopping cart with persistence
+Actual prompt: Create a Pinia cart store that adds/removes products, calculates totals, persists to localStorage, and provides getters for count and total price.
 
-AIM 06: Implement shopping cart with persistence
-ACTUAL PROMPT: Create a Pinia cart store that adds/removes products, calculates totals, persists to localStorage, and provides getters for count and total price.
-OUTCOME: ✅ Implemented cart.ts with full functionality including remove, clear, and save operations.
+The aim 07: Build professional navigation bar with auth and theme controls
+Actual prompt: Update NavBar component to show user name when logged in, add login/logout buttons, theme toggle button with sun/moon icons, and style with gradient background.
 
-AIM 07: Build professional navigation bar with auth and theme controls
-ACTUAL PROMPT: Update NavBar component to show user name when logged in, add login/logout buttons, theme toggle button with sun/moon icons, and style with gradient background.
-OUTCOME: ✅ Enhanced NavBar.vue with auth integration, dark mode button, and responsive layout.
+The aim 08: Create shopping cart view page
+Actual prompt: Build a CartView component that displays all cart items, shows item details with images, implements remove button, calculates order summary with tax, and provides checkout action.
 
-AIM 08: Create shopping cart view page
-ACTUAL PROMPT: Build a CartView component that displays all cart items, shows item details with images, implements remove button, calculates order summary with tax, and provides checkout action.
-OUTCOME: ✅ Implemented CartView.vue with complete cart management UI and order calculation.
+The aim 09: Setup TypeScript interfaces for API responses
+Actual prompt: Create Product and Review interfaces in TypeScript that match DummyJSON API response structure with optional fields for rating, stock, discount, sku, brand, and reviews.
 
-AIM 09: Setup TypeScript interfaces for API responses
-ACTUAL PROMPT: Create Product and Review interfaces in TypeScript that match DummyJSON API response structure with optional fields for rating, stock, discount, sku, brand, and reviews.
-OUTCOME: ✅ Implemented Product.ts with comprehensive type definitions for all API fields.
+The aim 10: Configure Tailwind CSS with dark mode
+Actual prompt: Update tailwind.config.js to enable class-based dark mode and configure content paths for Vue components.
 
-AIM 10: Configure Tailwind CSS with dark mode
-ACTUAL PROMPT: Update tailwind.config.js to enable class-based dark mode and configure content paths for Vue components.
-OUTCOME: ✅ Configured tailwind.config.js with darkMode: 'class' setting.
+The aim 11: Update route configuration with cart and login pages
+Actual prompt: Modify Vue Router to add routes for /login, /cart pages and set dynamic page titles using route meta.
 
-AIM 11: Update route configuration with cart and login pages
-ACTUAL PROMPT: Modify Vue Router to add routes for /login, /cart pages and set dynamic page titles using route meta.
-OUTCOME: ✅ Updated router/index.ts with all routes and dynamic title support.
+The aim 12: Enhance CSS with Tailwind directives and custom scrollbar
+Actual prompt: Add @tailwind directives to main CSS file, implement custom scrollbar styling, add smooth scrolling, and improve typography.
 
-AIM 12: Enhance CSS with Tailwind directives and custom scrollbar
-ACTUAL PROMPT: Add @tailwind directives to main CSS file, implement custom scrollbar styling, add smooth scrolling, and improve typography.
-OUTCOME: ✅ Updated style.css with Tailwind directives and custom styling.
+The aim 13: Fix TypeScript errors and restore color logo
+Actual prompt: Fix the -webkit-mask-mode TypeScript error in NavBar.vue and restore the OMAX logo to its full-color PNG version instead of a solid mask.
 
-SUMMARY:
-========
-- Total AI Prompts Used: 12
-- Features Completed: 12/12
-- Grade Objectives Met: All mandatory + all bonus features
-- Quality Level: A+ (Professional production-ready code)
-- Code Understanding: 100% - All generated code reviewed, modified, and understood
-- Best Practices Applied: Composition API, TypeScript strict mode, responsive design, accessibility
+The aim 14: Implement staggered grid animations and persistent auth initialization
+Actual prompt: Add animation delay utility classes to style.css, apply staggered delays to product cards in HomeView, and ensure all stores (auth, theme, currency) are initialized in App.vue onMounted hook to ensure persistence and 100% type safety.
