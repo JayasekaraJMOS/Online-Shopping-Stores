@@ -195,10 +195,10 @@ watch(() => search.sortBy, () => {
 <template>
   <NavBar />
 
-  <main class="min-h-screen bg-[var(--bg-color)] text-[var(--text-color)] transition-colors duration-500">
+  <main class="min-h-screen bg-(--bg-color) text-(--text-color) transition-colors duration-500">
 
     <!-- ── Categories Bar ───────────────────────────────────────── -->
-    <div class="bg-[var(--card-bg)] border-b border-[var(--border-color)] shadow-sm">
+    <div class="bg-(--card-bg) border-b border-(--border-color) shadow-sm">
       <div class="max-w-7xl mx-auto px-4 flex items-center gap-2 overflow-x-auto py-2.5 scrollbar-none">
         <button
           v-for="cat in categories"
@@ -206,8 +206,8 @@ watch(() => search.sortBy, () => {
           @click="selectCategory(cat)"
           :class="['px-5 py-2 text-[11px] font-black rounded-full transition-all border shrink-0 uppercase tracking-widest flex items-center gap-2',
             currentCategory === cat
-              ? 'bg-gradient-to-r from-[var(--accent-color)] to-blue-500 border-transparent text-white shadow-lg shadow-blue-500/30 scale-105 ring-2 ring-white/20'
-              : 'bg-[var(--card-bg)] border-[var(--border-color)] text-[var(--text-muted)] hover:text-[var(--accent-color)] hover:border-[var(--accent-color)]/40 hover:bg-blue-50/50 dark:hover:bg-blue-900/20']"
+              ? 'bg-linear-to-r from-(--accent-color) to-blue-500 border-transparent text-white shadow-lg shadow-blue-500/30 scale-105 ring-2 ring-white/20'
+              : 'bg-(--card-bg) border-(--border-color) text-(--text-muted) hover:text-(--accent-color) hover:border-(--accent-color)/40 hover:bg-blue-50/50 dark:hover:bg-blue-900/20']"
         >
           <span class="text-base drop-shadow-sm group-hover:scale-110 transition-transform">{{ getCategoryIcon(cat) }}</span>
           {{ language.translateDynamic(cat).toUpperCase() }}
@@ -217,51 +217,51 @@ watch(() => search.sortBy, () => {
 
     <!-- ── Flash Sale ───────────────────────────────────────────── -->
     <section v-if="!search.query && currentCategory === 'All'" class="max-w-7xl mx-auto px-4 mt-8">
-      <div class="bg-[var(--card-bg)] rounded-2xl border border-[var(--border-color)] overflow-hidden shadow-lg">
+      <div class="bg-(--card-bg) rounded-2xl border border-(--border-color) overflow-hidden shadow-lg">
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-5 py-3.5 border-b border-[var(--border-color)] bg-gradient-to-r from-[var(--promo-color)]/5 to-transparent gap-3 sm:gap-0">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between px-4 sm:px-5 py-3.5 border-b border-(--border-color) bg-linear-to-r from-(--promo-color)/5 to-transparent gap-3 sm:gap-0">
           <div class="flex items-center gap-3 sm:gap-5 flex-wrap">
-            <h2 class="text-[var(--promo-color)] font-black uppercase text-sm tracking-widest flex items-center gap-2">
+            <h2 class="text-(--promo-color) font-black uppercase text-sm tracking-widest flex items-center gap-2">
               <span class="animate-pulse">🔥</span> {{ language.t.flashSale }}
             </h2>
             <div class="flex items-center gap-2">
-              <span class="text-[10px] font-black uppercase text-[var(--text-muted)] tracking-tighter">{{ language.t.endingIn }}</span>
+              <span class="text-[10px] font-black uppercase text-(--text-muted) tracking-tighter">{{ language.t.endingIn }}</span>
               <div class="flex gap-1">
-                <span class="bg-[var(--promo-color)] text-white px-2 py-0.5 rounded-md shadow font-black text-xs tabular-nums">{{ String(timeLeft.hours).padStart(2, '0') }}</span>
-                <span class="text-[var(--promo-color)] font-black self-center">:</span>
-                <span class="bg-[var(--promo-color)] text-white px-2 py-0.5 rounded-md shadow font-black text-xs tabular-nums">{{ String(timeLeft.minutes).padStart(2, '0') }}</span>
-                <span class="text-[var(--promo-color)] font-black self-center">:</span>
-                <span class="bg-[var(--promo-color)] text-white px-2 py-0.5 rounded-md shadow font-black text-xs tabular-nums">{{ String(timeLeft.seconds).padStart(2, '0') }}</span>
+                <span class="bg-(--promo-color) text-white px-2 py-0.5 rounded-md shadow font-black text-xs tabular-nums">{{ String(timeLeft.hours).padStart(2, '0') }}</span>
+                <span class="text-(--promo-color) font-black self-center">:</span>
+                <span class="bg-(--promo-color) text-white px-2 py-0.5 rounded-md shadow font-black text-xs tabular-nums">{{ String(timeLeft.minutes).padStart(2, '0') }}</span>
+                <span class="text-(--promo-color) font-black self-center">:</span>
+                <span class="bg-(--promo-color) text-white px-2 py-0.5 rounded-md shadow font-black text-xs tabular-nums">{{ String(timeLeft.seconds).padStart(2, '0') }}</span>
               </div>
             </div>
           </div>
           <button
             @click="toggleFlash"
-            class="text-[var(--accent-color)] text-xs font-black uppercase border-2 border-[var(--accent-color)] px-5 py-1.5 rounded-lg transition-all hover:bg-[var(--accent-color)] hover:text-white shadow-sm hover:shadow-md"
+            class="text-(--accent-color) text-xs font-black uppercase border-2 border-(--accent-color) px-5 py-1.5 rounded-lg transition-all hover:bg-(--accent-color) hover:text-white shadow-sm hover:shadow-md"
           >
             {{ isFlashExpanded ? language.t.showLess : language.t.shopAll }}
           </button>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-[var(--border-color)]">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-(--border-color)">
           <div
             v-for="item in visibleFlashProducts"
             :key="item.id"
             @click="router.push(`/product/${item.id}`)"
-            class="bg-[var(--card-bg)] p-4 group cursor-pointer hover:shadow-xl transition-all relative animate-fade-in hover:z-10"
+            class="bg-(--card-bg) p-4 group cursor-pointer hover:shadow-xl transition-all relative animate-fade-in hover:z-10"
           >
-            <div class="absolute top-2 left-2 bg-[var(--promo-color)] text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow z-10">
+            <div class="absolute top-2 left-2 bg-(--promo-color) text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow z-10">
               -{{ item.discount }}% {{ language.t.off }}
             </div>
             <div class="aspect-square mb-3 overflow-hidden rounded-xl bg-white p-3 shadow-inner">
               <img :src="item.thumbnail" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
             </div>
-            <h4 class="text-xs font-bold text-[var(--text-color)] line-clamp-1 mb-1 truncate group-hover:text-[var(--accent-color)] transition-colors">
+            <h4 class="text-xs font-bold text-(--text-color) line-clamp-1 mb-1 truncate group-hover:text-(--accent-color) transition-colors">
               {{ language.translateDynamic(item.title) }}
             </h4>
             <div class="flex items-baseline gap-2">
-              <span class="text-base font-black text-[var(--promo-color)]">{{ currency.format(item.price) }}</span>
-              <span class="text-[10px] text-[var(--text-muted)] line-through opacity-60">{{ currency.format(Number(item.oldPrice)) }}</span>
+              <span class="text-base font-black text-(--promo-color)">{{ currency.format(item.price) }}</span>
+              <span class="text-[10px] text-(--text-muted) line-through opacity-60">{{ currency.format(Number(item.oldPrice)) }}</span>
             </div>
           </div>
         </div>
@@ -272,11 +272,11 @@ watch(() => search.sortBy, () => {
     <section v-if="!search.query && currentCategory === 'All'" class="max-w-7xl mx-auto px-4 mt-8">
       <!-- Header -->
       <div class="flex items-center gap-4 mb-5">
-        <h2 class="text-sm font-black uppercase tracking-widest text-[var(--text-color)] flex items-center gap-2 shrink-0">
+        <h2 class="text-sm font-black uppercase tracking-widest text-(--text-color) flex items-center gap-2 shrink-0">
           <span class="text-xl">🏷️</span> {{ language.t.saveMore }}
         </h2>
-        <div class="h-px flex-grow bg-[var(--border-color)]"></div>
-        <span class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-widest shrink-0">{{ language.t.exclusiveDeals }}</span>
+        <div class="h-px grow bg-(--border-color)"></div>
+        <span class="text-xs font-bold text-(--text-muted) uppercase tracking-widest shrink-0">{{ language.t.exclusiveDeals }}</span>
       </div>
 
       <!-- ── New User Bonus Banner ──────────────────────────────── -->
@@ -285,7 +285,7 @@ watch(() => search.sortBy, () => {
         style="background: linear-gradient(135deg, #2563EB 0%, #7C3AED 60%, #DB2777 100%);"
       >
         <!-- shimmer -->
-        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_infinite] pointer-events-none"></div>
+        <div class="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_3s_infinite] pointer-events-none"></div>
         <!-- decorative circles -->
         <div class="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-white/10 pointer-events-none"></div>
         <div class="absolute -right-2 top-10 w-16 h-16 rounded-full bg-white/10 pointer-events-none"></div>
@@ -322,11 +322,11 @@ watch(() => search.sortBy, () => {
             <span class="text-3xl font-black leading-none" :style="{ color: c.color }">{{ c.off }}</span>
             <div>
               <p class="text-[10px] font-black uppercase" :style="{ color: c.color }">{{ c.label }}</p>
-              <p class="text-[10px] text-[var(--text-muted)]">{{ language.t.minSpend }} ${{ c.min }}</p>
+              <p class="text-[10px] text-(--text-muted)">{{ language.t.minSpend }} ${{ c.min }}</p>
             </div>
             <!-- Notches -->
-            <div class="absolute -left-2 bottom-[-8px] w-4 h-4 rounded-full bg-[var(--bg-color)] border border-[var(--border-color)] z-10"></div>
-            <div class="absolute -right-2 bottom-[-8px] w-4 h-4 rounded-full bg-[var(--bg-color)] border border-[var(--border-color)] z-10"></div>
+            <div class="absolute -left-2 -bottom-2 w-4 h-4 rounded-full bg-(--bg-color) border border-(--border-color) z-10"></div>
+            <div class="absolute -right-2 -bottom-2 w-4 h-4 rounded-full bg-(--bg-color) border border-(--border-color) z-10"></div>
           </div>
           <div class="px-3 py-2 flex items-center justify-between">
             <code class="text-[9px] font-black tracking-widest uppercase" :style="{ color: c.color }">{{ c.code }}</code>
@@ -348,37 +348,37 @@ watch(() => search.sortBy, () => {
         <div
           v-for="deal in bundleDeals"
           :key="deal.id"
-          class="flex items-center gap-3 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-xl px-4 py-3 cursor-pointer hover:border-[var(--accent-color)] hover:shadow-md transition-all duration-300 group"
+          class="flex items-center gap-3 bg-(--card-bg) border border-(--border-color) rounded-xl px-4 py-3 cursor-pointer hover:border-(--accent-color) hover:shadow-md transition-all duration-300 group"
         >
           <span class="text-2xl group-hover:scale-110 transition-transform duration-300">{{ deal.icon }}</span>
           <div class="min-w-0">
-            <p class="text-xs font-black text-[var(--text-color)] truncate">{{ deal.title }}</p>
-            <p class="text-[10px] text-[var(--text-muted)]">{{ deal.label }} · <span class="font-black text-[var(--cta-color)]">Save {{ deal.save }}%</span></p>
+            <p class="text-xs font-black text-(--text-color) truncate">{{ deal.title }}</p>
+            <p class="text-[10px] text-(--text-muted)">{{ deal.label }} · <span class="font-black text-(--cta-color)">Save {{ deal.save }}%</span></p>
           </div>
-          <span class="ml-auto text-[var(--accent-color)] text-xs font-black opacity-0 group-hover:opacity-100 transition-opacity shrink-0">→</span>
+          <span class="ml-auto text-(--accent-color) text-xs font-black opacity-0 group-hover:opacity-100 transition-opacity shrink-0">→</span>
         </div>
       </div>
     </section>
 
     <!-- ── Hero Banner ────────────────────────────────────────── -->
     <section class="max-w-7xl mx-auto px-4 mt-8">
-      <div class="relative h-[200px] md:h-[300px] rounded-2xl overflow-hidden shadow-2xl group border border-[var(--border-color)]">
-        <div class="absolute inset-0 bg-gradient-to-r from-[#0F172A] via-[#0F172A]/50 to-transparent z-10"></div>
+      <div class="relative h-50 md:h-75 rounded-2xl overflow-hidden shadow-2xl group border border-(--border-color)">
+        <div class="absolute inset-0 bg-linear-to-r from-[#0F172A] via-[#0F172A]/50 to-transparent z-10"></div>
         <img
           src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=2000"
           class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
         />
         <div class="relative z-20 h-full flex flex-col justify-center px-6 md:px-16 text-white">
-          <span class="text-[9px] md:text-xs font-black uppercase tracking-[0.25em] mb-2 text-[var(--promo-color)] bg-[var(--promo-color)]/20 w-fit px-3 py-1 rounded-full">
+          <span class="text-[9px] md:text-xs font-black uppercase tracking-[0.25em] mb-2 text-(--promo-color) bg-(--promo-color)/20 w-fit px-3 py-1 rounded-full">
             {{ language.t.limitedTimeOffer }}
           </span>
           <h2 class="text-3xl md:text-6xl font-black mb-5 leading-tight tracking-tight drop-shadow-lg">
             {{ language.t.realSale }}<br/>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--promo-color)] to-yellow-300 drop-shadow-sm">{{ language.t.isFinallyHere }}</span>
+            <span class="text-transparent bg-clip-text bg-linear-to-r from-(--promo-color) to-yellow-300 drop-shadow-sm">{{ language.t.isFinallyHere }}</span>
           </h2>
           <button
             @click="scrollToProducts"
-            class="group/btn w-fit px-8 md:px-10 py-3.5 bg-gradient-to-r from-[var(--cta-color)] to-emerald-400 text-white font-black rounded-2xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)] transform active:scale-95 flex items-center gap-3 uppercase tracking-widest text-[11px] md:text-sm border border-white/20"
+            class="group/btn w-fit px-8 md:px-10 py-3.5 bg-linear-to-r from-(--cta-color) to-emerald-400 text-white font-black rounded-2xl transition-all shadow-[0_0_20px_rgba(16,185,129,0.4)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)] transform active:scale-95 flex items-center gap-3 uppercase tracking-widest text-[11px] md:text-sm border border-white/20"
           >
             {{ language.t.shopNow }}
             <span class="transition-transform duration-300 group-hover/btn:translate-x-2 text-xl">🚀</span>
@@ -395,23 +395,23 @@ watch(() => search.sortBy, () => {
     <section id="products-grid" class="max-w-7xl mx-auto px-4 py-10">
       <div class="flex items-center gap-4 mb-8">
         <div class="flex flex-col">
-          <h3 class="text-2xl font-black text-[var(--text-color)] uppercase tracking-tight leading-tight">
+          <h3 class="text-2xl font-black text-(--text-color) uppercase tracking-tight leading-tight">
             {{ search.query
               ? `${language.t.resultsFor} "${search.query}"`
               : currentCategory === 'All'
                 ? language.t.justForYou
                 : language.translateDynamic(currentCategory) }}
           </h3>
-          <div v-if="!isLoading" class="text-[10px] text-[var(--text-muted)] font-bold uppercase tracking-widest mt-0.5">
+          <div v-if="!isLoading" class="text-[10px] text-(--text-muted) font-bold uppercase tracking-widest mt-0.5">
             {{ products.length }} {{ language.translateDynamic('products found') }}
           </div>
         </div>
-        <div class="h-0.5 flex-grow bg-gradient-to-r from-[var(--accent-color)]/30 to-transparent rounded-full"></div>
+        <div class="h-0.5 grow bg-linear-to-r from-(--accent-color)/30 to-transparent rounded-full"></div>
       </div>
 
       <!-- Skeleton -->
       <div v-if="isLoading" class="products-grid">
-        <div v-for="i in 12" :key="i" class="aspect-[3/4] bg-[var(--card-bg)] rounded-2xl animate-pulse border border-[var(--border-color)]"></div>
+        <div v-for="i in 12" :key="i" class="aspect-3/4 bg-(--card-bg) rounded-2xl animate-pulse border border-(--border-color)"></div>
       </div>
 
       <div v-else class="products-grid">
@@ -425,9 +425,9 @@ watch(() => search.sortBy, () => {
       </div>
 
       <!-- Empty State -->
-      <div v-if="!isLoading && products.length === 0" class="text-center py-24 bg-[var(--card-bg)] rounded-2xl border border-[var(--border-color)] mt-4">
+      <div v-if="!isLoading && products.length === 0" class="text-center py-24 bg-(--card-bg) rounded-2xl border border-(--border-color) mt-4">
         <div class="text-6xl mb-4 opacity-20">🔍</div>
-        <p class="text-[var(--text-muted)] font-black uppercase tracking-widest text-sm">{{ language.t.noProductsFound }}</p>
+        <p class="text-(--text-muted) font-black uppercase tracking-widest text-sm">{{ language.t.noProductsFound }}</p>
       </div>
     </section>
   </main>
@@ -435,13 +435,13 @@ watch(() => search.sortBy, () => {
   <!-- ── Footer ────────────────────────────────────────────────── -->
   <footer class="bg-[#0F172A] text-slate-300 mt-4">
     <!-- Top accent line -->
-    <div class="h-1 w-full bg-gradient-to-r from-[#2563EB] via-[#7C3AED] to-[#DB2777]"></div>
+    <div class="h-1 w-full bg-linear-to-r from-[#2563EB] via-[#7C3AED] to-[#DB2777]"></div>
 
     <div class="max-w-7xl mx-auto px-6 pt-14 pb-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 text-sm">
       <!-- Brand -->
       <div class="space-y-4 lg:col-span-1">
         <h3 class="text-white font-black text-2xl tracking-tight">{{ language.translateDynamic('OMAX') }}</h3>
-        <p class="text-slate-400 text-xs leading-relaxed max-w-[200px]">
+        <p class="text-slate-400 text-xs leading-relaxed max-w-50">
           {{ language.translateDynamic('The smarter way to shop. Millions of products, unbeatable prices, delivered fast.') }}
         </p>
         <div class="flex gap-3">
@@ -455,20 +455,20 @@ watch(() => search.sortBy, () => {
       <div class="space-y-4">
         <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">{{ language.translateDynamic('Customer Care') }}</h4>
         <ul class="space-y-2.5 text-xs">
-          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-[var(--accent-color)]">›</span> {{ language.translateDynamic('Help Center') }}</a></li>
-          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-[var(--accent-color)]">›</span> {{ language.translateDynamic('How to Buy') }}</a></li>
-          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-[var(--accent-color)]">›</span> {{ language.translateDynamic('Returns & Refunds') }}</a></li>
-          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-[var(--accent-color)]">›</span> {{ language.translateDynamic('Track Your Order') }}</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-(--accent-color)">›</span> {{ language.translateDynamic('Help Center') }}</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-(--accent-color)">›</span> {{ language.translateDynamic('How to Buy') }}</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-(--accent-color)">›</span> {{ language.translateDynamic('Returns & Refunds') }}</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-(--accent-color)">›</span> {{ language.translateDynamic('Track Your Order') }}</a></li>
         </ul>
       </div>
 
       <div class="space-y-4">
         <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">{{ language.translateDynamic('About OMAX') }}</h4>
         <ul class="space-y-2.5 text-xs">
-          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-[var(--accent-color)]">›</span> {{ language.translateDynamic('About Us') }}</a></li>
-          <li><a @click="router.push('/become-a-seller')" href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium cursor-pointer"><span class="text-[var(--accent-color)]">›</span> {{ language.translateDynamic('Become a Seller') }}</a></li>
-          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-[var(--accent-color)]">›</span> {{ language.translateDynamic('Privacy Policy') }}</a></li>
-          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-[var(--accent-color)]">›</span> {{ language.translateDynamic('Terms of Use') }}</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-(--accent-color)">›</span> {{ language.translateDynamic('About Us') }}</a></li>
+          <li><a @click="router.push('/become-a-seller')" href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium cursor-pointer"><span class="text-(--accent-color)">›</span> {{ language.translateDynamic('Become a Seller') }}</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-(--accent-color)">›</span> {{ language.translateDynamic('Privacy Policy') }}</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-(--accent-color)">›</span> {{ language.translateDynamic('Terms of Use') }}</a></li>
         </ul>
       </div>
 
@@ -480,8 +480,8 @@ watch(() => search.sortBy, () => {
           <div class="flex items-start gap-2"><span>📞</span><a href="tel:+1234567890" class="hover:text-white transition-colors no-underline">+1 234 567 890</a></div>
         </div>
         <div class="flex gap-2 mt-3">
-          <input type="email" :placeholder="language.translateDynamic('Your email')" class="flex-1 bg-white/10 border border-white/20 text-white text-xs px-3 py-2 rounded-lg focus:outline-none focus:border-[var(--accent-color)] placeholder:text-slate-500 transition-colors" />
-          <button class="bg-[var(--accent-color)] text-white text-xs font-black px-3 py-2 rounded-lg hover:opacity-90 transition-opacity shrink-0">→</button>
+          <input type="email" :placeholder="language.translateDynamic('Your email')" class="flex-1 bg-white/10 border border-white/20 text-white text-xs px-3 py-2 rounded-lg focus:outline-none focus:border-(--accent-color) placeholder:text-slate-500 transition-colors" />
+          <button class="bg-(--accent-color) text-white text-xs font-black px-3 py-2 rounded-lg hover:opacity-90 transition-opacity shrink-0">→</button>
         </div>
       </div>
     </div>
@@ -499,3 +499,5 @@ watch(() => search.sortBy, () => {
     </div>
   </footer>
 </template>
+
+

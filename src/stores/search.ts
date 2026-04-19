@@ -25,7 +25,7 @@ export const useSearchStore = defineStore('search', {
             try {
                 const res = await fetch(`https://dummyjson.com/products/search?q=${q}&limit=5`)
                 const data = await res.json()
-                this.suggestions = data.products.map((p: any) => p.title)
+                this.suggestions = data.products.map((p: { title: string }) => p.title)
             } catch (err) {
                 console.error('Suggestion fetch error:', err)
             }

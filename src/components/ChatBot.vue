@@ -38,7 +38,7 @@ const navigateToProduct = (id: number) => {
     <div class="flex flex-col items-center gap-2">
       <button
         @click="chat.toggle"
-        class="w-16 h-16 rounded-full bg-gradient-to-br from-[#2563EB] to-[#7C3AED] shadow-[0_8px_30px_rgb(37,99,235,0.4)] flex items-center justify-center text-white transition-all hover:scale-110 active:scale-95 group relative border-4 border-white dark:border-gray-800"
+        class="w-16 h-16 rounded-full bg-linear-to-br from-[#2563EB] to-[#7C3AED] shadow-[0_8px_30px_rgb(37,99,235,0.4)] flex items-center justify-center text-white transition-all hover:scale-110 active:scale-95 group relative border-4 border-white dark:border-gray-800"
       >
         <div v-if="!chat.isOpen" class="animate-ping absolute inset-0 rounded-full bg-blue-400/20"></div>
         <svg v-if="!chat.isOpen" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -67,7 +67,7 @@ const navigateToProduct = (id: number) => {
         class="absolute bottom-20 right-0 w-[350px] sm:w-[400px] h-[550px] bg-white dark:bg-gray-900 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-gray-100 dark:border-gray-800 flex flex-col overflow-hidden"
       >
         <!-- Header -->
-        <div class="bg-gradient-to-r from-[#2563EB] to-[#7C3AED] p-5 text-white shrink-0">
+        <div class="bg-linear-to-r from-[#2563EB] to-[#7C3AED] p-5 text-white shrink-0">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-4">
               <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shadow-inner border border-white/30">
@@ -100,7 +100,7 @@ const navigateToProduct = (id: number) => {
         <!-- Messages Area -->
         <div
           ref="scrollArea"
-          class="flex-grow overflow-y-auto p-4 space-y-4 scroll-smooth bg-[var(--bg-color)]/30 backdrop-blur-sm"
+          class="grow overflow-y-auto p-4 space-y-4 scroll-smooth bg-(--bg-color)/30 backdrop-blur-sm"
         >
           <div
             v-for="msg in chat.messages"
@@ -157,7 +157,7 @@ const navigateToProduct = (id: number) => {
               :disabled="chat.isTyping"
               type="text"
               placeholder="Type your question..."
-              class="flex-grow bg-transparent border-none focus:outline-none px-3 py-2 text-sm text-gray-800 dark:text-gray-200 disabled:opacity-50"
+              class="grow bg-transparent border-none focus:outline-none px-3 py-2 text-sm text-gray-800 dark:text-gray-200 disabled:opacity-50"
             />
             <button
               @click="handleSend"
@@ -217,3 +217,4 @@ const navigateToProduct = (id: number) => {
   border-radius: 10px;
 }
 </style>
+

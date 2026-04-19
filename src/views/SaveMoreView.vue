@@ -60,7 +60,7 @@ const copyAndApply = async (code: string) => {
 
 <template>
   <NavBar />
-  <main class="min-h-screen bg-[var(--bg-color)] text-[var(--text-color)]">
+  <main class="min-h-screen bg-(--bg-color) text-(--text-color)">
 
     <!-- Hero -->
     <section class="relative overflow-hidden" style="background: linear-gradient(135deg, #1E3A8A, #2563EB, #7C3AED);">
@@ -112,8 +112,8 @@ const copyAndApply = async (code: string) => {
         <h2 class="text-sm font-black uppercase tracking-widest shrink-0 flex items-center gap-2">
           <span>🎟️</span> App-Only Coupons
         </h2>
-        <div class="h-px flex-grow bg-[var(--border-color)]"></div>
-        <span class="text-xs text-[var(--text-muted)] uppercase tracking-widest shrink-0">{{ language.translateDynamic('Use in app at checkout') }}</span>
+        <div class="h-px grow bg-(--border-color)"></div>
+        <span class="text-xs text-(--text-muted) uppercase tracking-widest shrink-0">{{ language.translateDynamic('Use in app at checkout') }}</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div
@@ -123,7 +123,7 @@ const copyAndApply = async (code: string) => {
         >
           <div class="px-5 pt-5 pb-3" :style="{ background: c.color + '12' }">
             <span class="text-4xl font-black" :style="{ color: c.color }">{{ c.off }} OFF</span>
-            <p class="text-xs text-[var(--text-muted)] mt-1">{{ c.min === 0 ? 'No minimum spend' : `Min. spend $${c.min}` }} · App only</p>
+            <p class="text-xs text-(--text-muted) mt-1">{{ c.min === 0 ? 'No minimum spend' : `Min. spend $${c.min}` }} · App only</p>
           </div>
           <div class="px-5 py-3 flex items-center justify-between border-t-2 border-dashed" :style="{ borderColor: c.color + '40' }">
             <code class="text-xs font-black uppercase tracking-widest" :style="{ color: c.color }">{{ c.code }}</code>
@@ -149,17 +149,17 @@ const copyAndApply = async (code: string) => {
         <h2 class="text-sm font-black uppercase tracking-widest shrink-0 flex items-center gap-2">
           <span>✨</span> Why Use the App?
         </h2>
-        <div class="h-px flex-grow bg-[var(--border-color)]"></div>
+        <div class="h-px grow bg-(--border-color)"></div>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <div
           v-for="f in appFeatures" :key="f.title"
-          class="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-6 flex gap-4 items-start hover:border-[var(--accent-color)] hover:shadow-lg transition-all duration-300 group"
+          class="bg-(--card-bg) border border-(--border-color) rounded-2xl p-6 flex gap-4 items-start hover:border-(--accent-color) hover:shadow-lg transition-all duration-300 group"
         >
           <span class="text-3xl group-hover:scale-110 transition-transform duration-300 shrink-0">{{ f.icon }}</span>
           <div>
             <h3 class="font-black text-sm mb-1">{{ f.title }}</h3>
-            <p class="text-xs text-[var(--text-muted)] leading-relaxed">{{ f.desc }}</p>
+            <p class="text-xs text-(--text-muted) leading-relaxed">{{ f.desc }}</p>
           </div>
         </div>
       </div>
@@ -167,3 +167,4 @@ const copyAndApply = async (code: string) => {
 
   </main>
 </template>
+

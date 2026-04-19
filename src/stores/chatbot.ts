@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { GoogleGenerativeAI } from "@google/generative-ai"
+import { GoogleGenerativeAI, type GenerativeModel } from "@google/generative-ai"
 import type { Product } from '../types/Product'
 
 export interface Message {
@@ -12,8 +12,8 @@ export interface Message {
 
 // Initialize Gemini
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY
-let genAI: any = null
-let model: any = null
+let genAI: GoogleGenerativeAI | null = null
+let model: GenerativeModel | null = null
 
 if (apiKey && apiKey !== 'your_api_key_here' && apiKey.length > 20) {
   genAI = new GoogleGenerativeAI(apiKey)
@@ -141,6 +141,7 @@ export const useChatStore = defineStore('chatbot', {
         contextString += "No specific items found in warehouse for this query.\n"
       }
 
+      if (!model) return
       const chatSession = model.startChat({ history })
       const finalPrompt = `${contextString}\nUser said: ${input}`
       

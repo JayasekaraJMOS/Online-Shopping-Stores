@@ -30,7 +30,7 @@ const plans = computed(() => [
 
 <template>
   <NavBar />
-  <main class="min-h-screen bg-[var(--bg-color)] text-[var(--text-color)]">
+  <main class="min-h-screen bg-(--bg-color) text-(--text-color)">
 
     <!-- Hero -->
     <section class="relative overflow-hidden" style="background: linear-gradient(135deg, #064E3B, #059669, #10B981);">
@@ -73,38 +73,38 @@ const plans = computed(() => [
     <section class="max-w-7xl mx-auto px-4 py-14">
       <div class="flex items-center gap-4 mb-8">
         <h2 class="text-sm font-black uppercase tracking-widest shrink-0">🗺️ {{ language.translateDynamic('How It Works') }}</h2>
-        <div class="h-px flex-grow bg-[var(--border-color)]"></div>
+        <div class="h-px grow bg-(--border-color)"></div>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div
           v-for="step in steps" :key="step.n"
-          class="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl p-6 relative overflow-hidden hover:shadow-xl transition-all duration-300 group"
+          class="bg-(--card-bg) border border-(--border-color) rounded-2xl p-6 relative overflow-hidden hover:shadow-xl transition-all duration-300 group"
         >
-          <span class="absolute top-4 right-5 text-6xl font-black text-[var(--border-color)] leading-none select-none">{{ step.n }}</span>
+          <span class="absolute top-4 right-5 text-6xl font-black text-(--border-color) leading-none select-none">{{ step.n }}</span>
           <div class="relative z-10">
-            <h3 class="font-black text-base mb-2 text-[var(--accent-color)] group-hover:underline">{{ language.translateDynamic(step.title) }}</h3>
-            <p class="text-xs text-[var(--text-muted)] leading-relaxed">{{ language.translateDynamic(step.desc) }}</p>
+            <h3 class="font-black text-base mb-2 text-(--accent-color) group-hover:underline">{{ language.translateDynamic(step.title) }}</h3>
+            <p class="text-xs text-(--text-muted) leading-relaxed">{{ language.translateDynamic(step.desc) }}</p>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Benefits -->
-    <section class="bg-[var(--card-bg)] border-y border-[var(--border-color)]">
+    <section class="bg-(--card-bg) border-y border-(--border-color)">
       <div class="max-w-7xl mx-auto px-4 py-14">
         <div class="flex items-center gap-4 mb-8">
           <h2 class="text-sm font-black uppercase tracking-widest shrink-0">✨ {{ language.translateDynamic('Seller Benefits') }}</h2>
-          <div class="h-px flex-grow bg-[var(--border-color)]"></div>
+          <div class="h-px grow bg-(--border-color)"></div>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <div
             v-for="b in benefits" :key="b.title"
-            class="flex items-start gap-4 p-5 rounded-2xl border border-[var(--border-color)] hover:border-[var(--accent-color)] hover:shadow-md transition-all duration-300 group bg-[var(--bg-color)]"
+            class="flex items-start gap-4 p-5 rounded-2xl border border-(--border-color) hover:border-(--accent-color) hover:shadow-md transition-all duration-300 group bg-(--bg-color)"
           >
             <span class="text-3xl group-hover:scale-110 transition-transform duration-300 shrink-0">{{ b.icon }}</span>
             <div>
               <h3 class="font-black text-sm mb-1">{{ language.translateDynamic(b.title) }}</h3>
-              <p class="text-xs text-[var(--text-muted)] leading-relaxed">{{ language.translateDynamic(b.desc) }}</p>
+              <p class="text-xs text-(--text-muted) leading-relaxed">{{ language.translateDynamic(b.desc) }}</p>
             </div>
           </div>
         </div>
@@ -115,7 +115,7 @@ const plans = computed(() => [
     <section class="max-w-7xl mx-auto px-4 py-14">
       <div class="flex items-center gap-4 mb-8">
         <h2 class="text-sm font-black uppercase tracking-widest shrink-0">💳 {{ language.translateDynamic('Seller Plans') }}</h2>
-        <div class="h-px flex-grow bg-[var(--border-color)]"></div>
+        <div class="h-px grow bg-(--border-color)"></div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div
@@ -130,7 +130,7 @@ const plans = computed(() => [
             </div>
             <p class="text-3xl font-black mt-2">{{ language.translateDynamic(plan.price) }}</p>
           </div>
-          <div class="px-6 py-5 bg-[var(--card-bg)]">
+          <div class="px-6 py-5 bg-(--card-bg)">
             <ul class="space-y-2 mb-6">
               <li v-for="perk in plan.perks" :key="perk" class="flex items-center gap-2 text-xs font-medium">
                 <span :style="{ color: plan.color }" class="font-black">✓</span>
@@ -148,3 +148,4 @@ const plans = computed(() => [
 
   </main>
 </template>
+

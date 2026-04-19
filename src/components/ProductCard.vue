@@ -21,7 +21,7 @@ const goToDetail = () => {
 
 <template>
   <div
-    class="group bg-[var(--card-bg)] border border-[var(--border-color)] rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 cursor-pointer flex flex-col h-full"
+    class="group bg-(--card-bg) border border-(--border-color) rounded-2xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 cursor-pointer flex flex-col h-full"
     @click="goToDetail"
   >
     <!-- Image -->
@@ -35,7 +35,7 @@ const goToDetail = () => {
       <!-- Discount badge -->
       <div
         v-if="product.discountPercentage && product.discountPercentage >= 5"
-        class="absolute top-2 right-2 bg-[var(--promo-color)] text-white text-[10px] font-black px-2 py-1 rounded-lg shadow-lg"
+        class="absolute top-2 right-2 bg-(--promo-color) text-white text-[10px] font-black px-2 py-1 rounded-lg shadow-lg"
       >
         -{{ Math.round(product.discountPercentage) }}%
       </div>
@@ -48,33 +48,33 @@ const goToDetail = () => {
     </div>
 
     <!-- Info -->
-    <div class="p-4 flex flex-col flex-grow">
+    <div class="p-4 flex flex-col grow">
       <!-- Rating bar -->
       <div class="flex items-center gap-1.5 mb-2">
         <div class="flex gap-0.5">
           <span v-for="s in 5" :key="s" class="text-[10px]" :class="s <= Math.round(product.rating || 0) ? 'text-amber-400' : 'text-slate-300 dark:text-slate-600'">★</span>
         </div>
-        <span class="text-[9px] text-[var(--text-muted)] font-bold">{{ product.rating?.toFixed(1) }}</span>
+        <span class="text-[9px] text-(--text-muted) font-bold">{{ product.rating?.toFixed(1) }}</span>
       </div>
 
-      <h4 class="text-sm font-bold text-[var(--text-color)] line-clamp-2 min-h-[40px] mb-3 group-hover:text-[var(--accent-color)] transition-colors leading-snug">
+      <h4 class="text-sm font-bold text-(--text-color) line-clamp-2 min-h-[40px] mb-3 group-hover:text-(--accent-color) transition-colors leading-snug">
         {{ language.translateDynamic(product.title) }}
       </h4>
 
       <div class="mt-auto space-y-3">
         <div class="flex items-end justify-between">
           <div class="flex flex-col">
-            <span class="text-xl font-black text-[var(--promo-color)] tracking-tight">{{ currency.format(product.price) }}</span>
-            <span v-if="product.discountPercentage && product.discountPercentage >= 5" class="text-[10px] text-[var(--text-muted)] line-through">
+            <span class="text-xl font-black text-(--promo-color) tracking-tight">{{ currency.format(product.price) }}</span>
+            <span v-if="product.discountPercentage && product.discountPercentage >= 5" class="text-[10px] text-(--text-muted) line-through">
               {{ currency.format(product.price / (1 - product.discountPercentage / 100)) }}
             </span>
           </div>
-          <span class="text-[9px] text-[var(--text-muted)] font-bold uppercase tracking-tighter">{{ language.t.rating }}</span>
+          <span class="text-[9px] text-(--text-muted) font-bold uppercase tracking-tighter">{{ language.t.rating }}</span>
         </div>
 
         <button
           @click.stop="cart.add(product)"
-          class="w-full py-3 bg-gradient-to-r from-[var(--cta-color)] to-[#047857] hover:from-[#047857] hover:to-[var(--cta-color)] text-white text-xs font-black rounded-xl transition-all uppercase tracking-widest shadow-lg hover:shadow-[var(--cta-color)]/40 transform active:scale-95 flex items-center justify-center gap-2 group/btn border border-white/10"
+          class="w-full py-3 bg-linear-to-r from-(--cta-color) to-[#047857] hover:from-[#047857] hover:to-(--cta-color) text-white text-xs font-black rounded-xl transition-all uppercase tracking-widest shadow-lg hover:shadow-(--cta-color)/40 transform active:scale-95 flex items-center justify-center gap-2 group/btn border border-white/10"
         >
           <span class="text-base group-hover/btn:-translate-y-1 group-hover/btn:rotate-12 transition-transform duration-300">🛒</span>
           {{ language.t.addToCart }}
@@ -83,3 +83,4 @@ const goToDetail = () => {
     </div>
   </div>
 </template>
+

@@ -114,13 +114,13 @@ onUnmounted(() => window.removeEventListener('click', closeOnOutside))
           <router-link to="/" class="flex items-center shrink-0 group relative z-10 transition-transform active:scale-95">
             <div 
               class="h-10 w-28 sm:h-14 sm:w-44 md:h-32 md:w-[380px] bg-white"
-              :style="`mask-image: url(${logo}); -webkit-mask-image: url(${logo}); mask-size: contain; -webkit-mask-size: contain; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat; mask-position: center; -webkit-mask-position: center; mask-mode: luminance; -webkit-mask-mode: luminance; pointer-events: none;`"
+              :style="(`mask-image: url(${logo}); -webkit-mask-image: url(${logo}); mask-size: contain; -webkit-mask-size: contain; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat; mask-position: center; -webkit-mask-position: center; mask-mode: luminance; -webkit-mask-mode: luminance; pointer-events: none;` as any)"
             ></div>
           </router-link>
         </div>
 
         <!-- Middle: Search Bar (Desktop) -->
-        <div class="hidden md:flex flex-grow max-w-3xl ml-3 mr-6 items-center gap-2">
+        <div class="hidden md:flex grow max-w-3xl ml-3 mr-6 items-center gap-2">
           <!-- Sort By Icon Button -->
           <div class="relative shrink-0" @click.stop>
             <button
@@ -160,8 +160,8 @@ onUnmounted(() => window.removeEventListener('click', closeOnOutside))
           </div>
 
           <!-- Search Input -->
-          <div class="flex-grow relative" @click.stop>
-            <div class="flex bg-white dark:bg-gray-800 rounded-lg overflow-hidden h-10 shadow-inner border border-transparent focus-within:border-[var(--accent-color)]/50 transition-all">
+          <div class="grow relative" @click.stop>
+            <div class="flex bg-white dark:bg-gray-800 rounded-lg overflow-hidden h-10 shadow-inner border border-transparent focus-within:border-(--accent-color)/50 transition-all">
               <input 
                 v-model="search.query" 
                 @focus="searchOpen = true"
@@ -242,7 +242,7 @@ onUnmounted(() => window.removeEventListener('click', closeOnOutside))
             <div v-if="languageOpen" @click.stop class="absolute top-[calc(100%+8px)] right-0 z-50 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden w-32 py-1">
               <button v-for="l in language.LANGUAGES" :key="l.code" @click="selectLanguage(l.code)" class="w-full flex items-center gap-3 px-4 py-2.5 text-[10px] sm:text-xs hover:bg-blue-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold" :class="l.code === language.selectedCode ? 'bg-blue-50 dark:bg-gray-700 text-blue-600' : ''">
                 <span>{{ l.code }}</span>
-                <span class="flex-grow text-left opacity-70">{{ l.name }}</span>
+                <span class="grow text-left opacity-70">{{ l.name }}</span>
               </button>
             </div>
           </div>
@@ -257,7 +257,7 @@ onUnmounted(() => window.removeEventListener('click', closeOnOutside))
             <div v-if="currencyOpen" @click.stop class="absolute top-[calc(100%+8px)] right-0 z-50 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden w-32 sm:w-40 py-1">
               <button v-for="c in currency.CURRENCIES" :key="c.code" @click="selectCurrency(c.code)" class="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-2.5 text-[10px] sm:text-xs hover:bg-blue-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold" :class="c.code === currency.selectedCode ? 'bg-blue-50 dark:bg-gray-700 text-blue-600' : ''">
                 <span>{{ c.flag }}</span>
-                <span class="flex-grow text-left">{{ c.code }}</span>
+                <span class="grow text-left">{{ c.code }}</span>
               </button>
             </div>
           </div>
@@ -325,7 +325,7 @@ onUnmounted(() => window.removeEventListener('click', closeOnOutside))
         </div>
 
         <!-- Mobile Search Input -->
-        <div class="flex-grow flex bg-white dark:bg-gray-800 rounded-lg overflow-hidden h-10 shadow-inner border border-white/10">
+        <div class="grow flex bg-white dark:bg-gray-800 rounded-lg overflow-hidden h-10 shadow-inner border border-white/10">
           <input v-model="search.query" type="text" :placeholder="language.t.search" class="w-full py-2 px-4 text-[13px] text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 focus:outline-none font-medium">
           <button class="bg-[#F1F5F9] dark:bg-gray-700 px-4">
             <svg class="h-4 w-4 text-[#2563EB]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
@@ -367,3 +367,4 @@ onUnmounted(() => window.removeEventListener('click', closeOnOutside))
     </transition>
   </header>
 </template>
+
