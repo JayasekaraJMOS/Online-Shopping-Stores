@@ -433,7 +433,7 @@ export const useLanguageStore = defineStore('language', () => {
       const isPhrase = enWord.includes(' ') || enWord.includes('-')
       const pattern = isPhrase
         ? new RegExp(enWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi')
-        : new RegExp(`(?<![\\w\\u0D80-\\u0DFF\\u0B80-\\u0BFF])${enWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\w\\u0D80-\\u0DFF\\u0B80-\\u0BFF])`, 'gi')
+        : new RegExp('\\b' + enWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'gi')
       out = out.replace(pattern, trans)
     }
 

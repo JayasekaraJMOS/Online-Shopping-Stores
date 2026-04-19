@@ -153,14 +153,16 @@ const navigateToProduct = (id: number) => {
           <div class="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 rounded-2xl p-1.5 border border-gray-100 dark:border-gray-700 shadow-inner">
             <input
               v-model="input"
-              @keyup.enter="handleSend"
+              @keyup.enter="!chat.isTyping && handleSend()"
+              :disabled="chat.isTyping"
               type="text"
               placeholder="Type your question..."
-              class="flex-grow bg-transparent border-none focus:outline-none px-3 py-2 text-sm text-gray-800 dark:text-gray-200"
+              class="flex-grow bg-transparent border-none focus:outline-none px-3 py-2 text-sm text-gray-800 dark:text-gray-200 disabled:opacity-50"
             />
             <button
               @click="handleSend"
-              class="w-10 h-10 rounded-xl bg-[#2563EB] text-white flex items-center justify-center shadow-lg transition-transform active:scale-90 hover:opacity-90"
+              :disabled="chat.isTyping"
+              class="w-10 h-10 rounded-xl bg-[#2563EB] text-white flex items-center justify-center shadow-lg transition-transform active:scale-90 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg class="w-5 h-5 transform rotate-90" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
@@ -170,25 +172,29 @@ const navigateToProduct = (id: number) => {
           <div class="flex flex-wrap gap-2 mt-4">
             <button 
               @click="chat.sendMessage('Where is my order?')"
-              class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-gray-500 hover:border-[#2563EB] hover:text-[#2563EB] transition-all"
+              :disabled="chat.isTyping"
+              class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-gray-500 hover:border-[#2563EB] hover:text-[#2563EB] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               📦 Track Order
             </button>
             <button 
               @click="chat.sendMessage('Show me smartphones')"
-              class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-gray-500 hover:border-[#2563EB] hover:text-[#2563EB] transition-all"
+              :disabled="chat.isTyping"
+              class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-gray-500 hover:border-[#2563EB] hover:text-[#2563EB] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               🛍️ View Products
             </button>
             <button 
               @click="chat.sendMessage('How do I return an item?')"
-              class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-gray-500 hover:border-[#2563EB] hover:text-[#2563EB] transition-all"
+              :disabled="chat.isTyping"
+              class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-gray-500 hover:border-[#2563EB] hover:text-[#2563EB] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               🔄 Return Item
             </button>
             <button 
               @click="chat.sendMessage('Talk to a human')"
-              class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-purple-200 bg-purple-50 text-purple-600 hover:bg-purple-100 transition-all flex items-center"
+              :disabled="chat.isTyping"
+              class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-purple-200 bg-purple-50 text-purple-600 hover:bg-purple-100 transition-all flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
             >
               🎧 Talk to Human
             </button>
