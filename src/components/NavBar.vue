@@ -24,6 +24,26 @@ const appDropOpen = ref(false)
 const languageOpen = ref(false)
 const sortOpen = ref(false)
 const searchOpen = ref(false)
+const isScrolled = ref(false)
+
+const handleScroll = () => {
+  const scrollPos = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+  isScrolled.value = scrollPos > 20
+}
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+onMounted(() => {
+  window.addEventListener('click', closeOnOutside)
+  window.addEventListener('scroll', handleScroll, { passive: true })
+  handleScroll() // Initial check
+})
+onUnmounted(() => {
+  window.removeEventListener('click', closeOnOutside)
+  window.removeEventListener('scroll', handleScroll)
+})
 
 const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: 'best',       label: 'Best Match' },
@@ -68,14 +88,12 @@ const closeOnOutside = () => {
   sortOpen.value = false
   searchOpen.value = false
 }
-onMounted(() => window.addEventListener('click', closeOnOutside))
-onUnmounted(() => window.removeEventListener('click', closeOnOutside))
 </script>
 
 <template>
-  <header class="sticky top-0 z-50 bg-[#2563EB] text-white shadow-md font-sans">
+  <header class="sticky top-0 w-full z-50 bg-[#2563EB]/95 backdrop-blur-md text-white shadow-md font-sans smooth-transition">
     <!-- Top Utility Bar (Universal) -->
-    <div class="bg-[#1E3A8A] text-[9px] sm:text-[12px] py-2 md:py-1.5 border-b border-white/10">
+    <div class="bg-[#1E3A8A] text-[9px] sm:text-[12px] border-b border-white/10 smooth-transition" :class="isScrolled ? 'py-0.5 md:py-1' : 'py-2 md:py-1.5'">
       <div class="max-w-7xl mx-auto px-2 flex flex-wrap items-center justify-center md:justify-end gap-x-4 sm:gap-x-6 gap-y-2 uppercase font-bold tracking-wider opacity-90 w-full">
         <!-- Save More on App trigger -->
         <div class="relative shrink-0 z-[60]">
@@ -102,7 +120,7 @@ onUnmounted(() => window.removeEventListener('click', closeOnOutside))
     </div>
 
     <!-- Main Header -->
-    <div class="max-w-7xl mx-auto px-2 sm:px-4 py-0.5 md:py-1">
+    <div class="max-w-7xl mx-auto px-2 sm:px-4 smooth-transition" :class="isScrolled ? 'py-0.5 md:py-0.5' : 'py-1.5 md:py-4'">
       <div class="flex items-center justify-between gap-2 sm:gap-4">
         <!-- Left: Logo + Burger -->
         <div class="flex items-center gap-2 sm:gap-4 shrink-0">
@@ -113,7 +131,8 @@ onUnmounted(() => window.removeEventListener('click', closeOnOutside))
 
           <router-link to="/" class="flex items-center shrink-0 group relative z-10 transition-transform active:scale-95">
             <div 
-              class="h-10 w-28 sm:h-14 sm:w-44 md:h-32 md:w-[380px] bg-white"
+              class="h-10 w-28 sm:h-14 sm:w-44 md:h-20 md:w-[240px] bg-white smooth-transition origin-left"
+              :class="isScrolled ? 'scale-75' : 'scale-100'"
               :style="(`mask-image: url(${logo}); -webkit-mask-image: url(${logo}); mask-size: contain; -webkit-mask-size: contain; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat; mask-position: center; -webkit-mask-position: center; mask-mode: luminance; -webkit-mask-mode: luminance; pointer-events: none;` as any)"
             ></div>
           </router-link>
@@ -365,6 +384,6 @@ onUnmounted(() => window.removeEventListener('click', closeOnOutside))
         </div>
       </div>
     </transition>
+    
   </header>
 </template>
-

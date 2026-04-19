@@ -438,14 +438,14 @@ export const useLanguageStore = defineStore('language', () => {
         params: { q: text, langpair: `en|${targetLang}` }
       })
       const translated = response.data.responseData.translatedText
-      
+
       // Filter out garbage/suspicious results like 'mboxImp' or code-like strings
       const isGarbage = (t: string) => {
         if (!t) return true
         if (t === text) return true
         if (t.includes('MYMEMORY WARNING')) return true
         // Check for suspicious camelCase usually representing code IDs instead of language
-        if (/[a-z]+[A-Z][a-z]+/.test(t) && !t.includes(' ')) return true 
+        if (/[a-z]+[A-Z][a-z]+/.test(t) && !t.includes(' ')) return true
         return false
       }
 
@@ -485,7 +485,7 @@ export const useLanguageStore = defineStore('language', () => {
     // It will reactively update the UI when finished.
     const hasEnglishLetters = /[a-zA-Z]/.test(out)
     if (hasEnglishLetters) {
-       translateWithAPIBackground(text, lang)
+      translateWithAPIBackground(text, lang)
     }
 
     return out
@@ -511,9 +511,9 @@ export const useLanguageStore = defineStore('language', () => {
           langpair: `en|${targetLang}`
         }
       })
-      
+
       const translated = response.data.responseData.translatedText
-      
+
       if (translated && translated !== text && translated.trim() !== '' && !translated.includes('MYMEMORY WARNING')) {
         if (!_cache[lang]) _cache[lang] = {}
         _cache[lang]![text] = translated
