@@ -56,7 +56,7 @@ const createDemoAccount = async () => {
               <input
                 v-model="username"
                 type="text"
-                placeholder="Omindu"
+                :placeholder="language.translateDynamic('Username')"
                 class="w-full border-2 border-(--border-color) bg-(--card-bg) px-5 py-3 text-sm rounded-xl outline-none focus:border-(--accent-color) transition-all dark:text-white shadow-inner"
                 required
               />
@@ -70,7 +70,7 @@ const createDemoAccount = async () => {
               <input
                 v-model="password"
                 :type="showPassword ? 'text' : 'password'"
-                placeholder="••••••••"
+                :placeholder="language.translateDynamic('Password')"
                 class="w-full border-2 border-(--border-color) bg-(--card-bg) px-5 py-3 text-sm rounded-xl outline-none focus:border-(--accent-color) transition-all dark:text-white shadow-inner"
                 required
               />

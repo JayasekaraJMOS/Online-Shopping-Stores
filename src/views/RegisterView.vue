@@ -79,7 +79,7 @@ const handleRegister = async () => {
                 <input
                   v-model="firstName"
                   type="text"
-                  placeholder="John"
+                  :placeholder="language.translateDynamic('First Name')"
                   class="w-full border-2 border-(--border-color) bg-(--card-bg) px-5 py-3 text-sm rounded-xl outline-none focus:border-(--accent-color) transition-all dark:text-white shadow-inner"
                   required
                 />
@@ -89,7 +89,7 @@ const handleRegister = async () => {
                 <input
                   v-model="lastName"
                   type="text"
-                  placeholder="Doe"
+                  :placeholder="language.translateDynamic('Last Name')"
                   class="w-full border-2 border-(--border-color) bg-(--card-bg) px-5 py-3 text-sm rounded-xl outline-none focus:border-(--accent-color) transition-all dark:text-white shadow-inner"
                   required
                 />
@@ -101,7 +101,7 @@ const handleRegister = async () => {
               <input
                 v-model="username"
                 type="text"
-                placeholder="johndoe123"
+                :placeholder="language.translateDynamic('Username')"
                 class="w-full border-2 border-(--border-color) bg-(--card-bg) px-5 py-3 text-sm rounded-xl outline-none focus:border-(--accent-color) transition-all dark:text-white shadow-inner"
                 required
               />
@@ -112,7 +112,7 @@ const handleRegister = async () => {
               <input
                 v-model="email"
                 type="email"
-                placeholder="john@example.com"
+                :placeholder="language.translateDynamic('Email')"
                 class="w-full border-2 border-(--border-color) bg-(--card-bg) px-5 py-3 text-sm rounded-xl outline-none focus:border-(--accent-color) transition-all dark:text-white shadow-inner"
                 required
               />
@@ -123,7 +123,7 @@ const handleRegister = async () => {
               <input
                 v-model="password"
                 type="password"
-                placeholder="••••••••"
+                :placeholder="language.translateDynamic('Password')"
                 class="w-full border-2 border-(--border-color) bg-(--card-bg) px-5 py-3 text-sm rounded-xl outline-none focus:border-(--accent-color) transition-all dark:text-white shadow-inner"
                 required
               />

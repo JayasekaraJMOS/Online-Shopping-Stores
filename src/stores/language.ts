@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import axios from 'axios'
 
 type TranslationMap = {
@@ -131,6 +131,26 @@ const WORDS_DICT_RAW: Array<[string, Record<string, string>]> = [
   ['Get it on', { SI: 'ලබා ගන්න', TA: 'பெறுங்கள்' }],
   ['Search help articles...', { SI: 'සහාය ලිපි සොයන්න...', TA: 'உதவி கட்டுரைகளைத் தேடுங்கள்...' }],
   ['Your email', { SI: 'ඔබේ විද්‍යුත් තැපෑල', TA: 'உங்கள் மின்னஞ்சல்' }],
+  ['Your full name', { SI: 'ඔබේ සම්පූර්ණ නම', TA: 'உங்கள் முழு பெயர்' }],
+  ['you@email.com', { SI: 'ඔබේ@විද්‍යුත්.තැපෑල', TA: 'மின்னஞ்சல்' }],
+  ["What's this about?", { SI: 'මෙය කුමක් ගැනද?', TA: 'இது எதைப் பற்றியது?' }],
+  ['Describe your issue in detail...', { SI: 'ඔබේ ගැටලුව විස්තර කරන්න...', TA: 'உங்கள் சிக்கலை விளக்குங்கள்...' }],
+  ['Subject', { SI: 'විෂය', TA: 'பொருள்' }],
+  ['Email *', { SI: 'විද්‍යුත් තැපෑල *', TA: 'மின்னஞ்சல் *' }],
+  ['Name *', { SI: 'නම *', TA: 'பெயர் *' }],
+  ['Message *', { SI: 'පණිවිඩය *', TA: 'செய்தி *' }],
+  ['Tissue Paper Box', { SI: 'ටීෂූ පේපර් පෙට්ටිය', TA: 'திசு காகித பெட்டி' }],
+  ['Family Tree Photo Frame', { SI: 'ඡායාරූප රාමුව', TA: 'புகைப்பட சட்டகம்' }],
+  ['House Showpiece Plant', { SI: 'සැරසිලි පැළෑටිය', TA: 'வீட்டு அலங்கார ஆலை' }],
+  ['Plant Pot', { SI: 'පැල පෝච්චිය', TA: 'செடிப் பானை' }],
+  ['Bamboo Spatula', { SI: 'උණ බම්බු හැන්ද', TA: 'மூங்கில் ஸ்பேட்டூலா' }],
+  ['Black Aluminium Cup', { SI: 'කළු ඇලුමිනියම් කෝප්පය', TA: 'கருப்பு அலுமினிய கோப்பை' }],
+  ['Black Whisk', { SI: 'කළු විස්කර්', TA: 'கருப்பு துடைப்பம்' }],
+  ['Decoration Swing', { SI: 'සැරසිලි ඔක්කව', TA: 'அலங்கார ஊஞ்சல்' }],
+  ['Knitted Beanie', { SI: 'නිපන් තොප්පිය', TA: 'பின்னப்பட்ட பீனி' }],
+  ['Handmade Candle', { SI: 'අතින් සාදන ලද ඉටිපන්දම', TA: 'கையால் செய்யப்பட்ட மெழுகுவர்த்தி' }],
+  ['Leather Wallet', { SI: 'සම් පසුම්බිය', TA: 'தோல் பணப்பை' }],
+  ['Wooden Toys', { SI: 'ලී සෙල්ලම් බඩු', TA: 'மர பொம்மைகள்' }],
 
   // ── Seller / Help page phrases ──
   ['Grow Your Business', { SI: 'ඔබේ ව්‍යාපාරය වර්ධනය කරන්න', TA: 'உங்கள் வணிகத்தை வளர்க்கவும்' }],
@@ -396,13 +416,46 @@ export const useLanguageStore = defineStore('language', () => {
   })
 
   // Simple translation cache — cleared when language changes.
-  const _cache: Record<string, Record<string, string>> = { EN: {}, SI: {}, TA: {} }
+  const _cache = reactive<Record<string, Record<string, string>>>({ EN: {}, SI: {}, TA: {} })
 
   function setLanguage(code: string) {
     if (LANGUAGES.some(l => l.code === code)) {
       selectedCode.value = code
       localStorage.setItem('language', code)
       _cache[code] = {}
+    }
+  }
+
+  let _pendingRequests = new Set<string>() // prevent duplicate inflight requests
+
+  async function translateWithAPIBackground(text: string, lang: string) {
+    const key = `${lang}|${text}`
+    if (_pendingRequests.has(key)) return
+    _pendingRequests.add(key)
+    try {
+      const targetLang = lang === 'SI' ? 'si' : lang === 'TA' ? 'ta' : 'en'
+      const response = await axios.get('https://api.mymemory.translated.net/get', {
+        params: { q: text, langpair: `en|${targetLang}` }
+      })
+      const translated = response.data.responseData.translatedText
+      
+      // Filter out garbage/suspicious results like 'mboxImp' or code-like strings
+      const isGarbage = (t: string) => {
+        if (!t) return true
+        if (t === text) return true
+        if (t.includes('MYMEMORY WARNING')) return true
+        // Check for suspicious camelCase usually representing code IDs instead of language
+        if (/[a-z]+[A-Z][a-z]+/.test(t) && !t.includes(' ')) return true 
+        return false
+      }
+
+      if (!isGarbage(translated)) {
+        _cache[lang]![text] = translated // Triggers reactive update
+      }
+    } catch (e) {
+      // Silently ignore background errors
+    } finally {
+      setTimeout(() => _pendingRequests.delete(key), 5000)
     }
   }
 
@@ -413,24 +466,11 @@ export const useLanguageStore = defineStore('language', () => {
 
     if (_cache[lang]?.[text] !== undefined) return _cache[lang]![text]!
 
-    // 1. Full exact match (case-insensitive).
-    for (const [enWord, translations] of WORDS_DICT) {
-      if (text.trim().toLowerCase() === enWord.toLowerCase()) {
-        const result = translations[lang] ?? text
-        if (!_cache[lang]) _cache[lang] = {}
-        _cache[lang]![text] = result
-        return result
-      }
-    }
-
-    // 2. Word-by-word substitution using simple case-insensitive global replace.
-    //    We use \b only for ASCII words; for multi-word phrases we use a plain
-    //    case-insensitive string replace which is far more reliable.
+    // 1. Word-by-word substitution using simple case-insensitive global replace.
     let out = text
     for (const [enWord, translations] of WORDS_DICT) {
       const trans = translations[lang]
       if (!trans) continue
-      // Build a regex: word boundary aware for single words, plain for phrases
       const isPhrase = enWord.includes(' ') || enWord.includes('-')
       const pattern = isPhrase
         ? new RegExp(enWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi')
@@ -440,6 +480,14 @@ export const useLanguageStore = defineStore('language', () => {
 
     if (!_cache[lang]) _cache[lang] = {}
     _cache[lang]![text] = out
+
+    // 2. If it's a product name (or similar) that wasn't fully translated, call the API in background.
+    // It will reactively update the UI when finished.
+    const hasEnglishLetters = /[a-zA-Z]/.test(out)
+    if (hasEnglishLetters) {
+       translateWithAPIBackground(text, lang)
+    }
+
     return out
   }
 
@@ -447,14 +495,16 @@ export const useLanguageStore = defineStore('language', () => {
 
   async function translateWithAPI(text: string): Promise<string> {
     if (!text || selectedCode.value === 'EN') return text
+    const lang = selectedCode.value
 
-    // First try the existing dictionary
-    const dictTranslation = translateDynamic(text)
-    if (dictTranslation !== text) return dictTranslation
+    // Check cache first
+    if (_cache[lang]?.[text] !== undefined) {
+      const cached = _cache[lang]![text]!
+      if (!/[a-zA-Z]/.test(cached)) return cached
+    }
 
-    // If not found, use MyMemory API for translation (free, no key required)
     try {
-      const targetLang = selectedCode.value === 'SI' ? 'si' : selectedCode.value === 'TA' ? 'ta' : 'en'
+      const targetLang = lang === 'SI' ? 'si' : lang === 'TA' ? 'ta' : 'en'
       const response = await axios.get('https://api.mymemory.translated.net/get', {
         params: {
           q: text,
@@ -464,20 +514,15 @@ export const useLanguageStore = defineStore('language', () => {
       
       const translated = response.data.responseData.translatedText
       
-      // MyMemory sometimes returns the original if no translation found
-      if (translated && translated !== text && translated.trim() !== '') {
-        // Cache it
-        if (!_cache[selectedCode.value]) _cache[selectedCode.value] = {}
-        _cache[selectedCode.value]![text] = translated
+      if (translated && translated !== text && translated.trim() !== '' && !translated.includes('MYMEMORY WARNING')) {
+        if (!_cache[lang]) _cache[lang] = {}
+        _cache[lang]![text] = translated
         return translated
-      } else {
-        // If no translation, return original
-        return text
       }
     } catch (error) {
       console.error('Translation API error:', error)
-      return text // fallback to original
     }
+    return translateDynamic(text) // Fallback local logic
   }
 
   return { selectedCode, selectedTitle, LANGUAGES, setLanguage, t, translateDynamic, translateWithAPI }

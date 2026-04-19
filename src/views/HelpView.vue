@@ -134,23 +134,23 @@ const channels = computed(() => [
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label class="text-xs font-black uppercase tracking-widest text-(--text-muted) block mb-2">{{ language.translateDynamic('Name *') }}</label>
-            <input v-model="contactForm.name" type="text" required placeholder="Your full name"
+            <input v-model="contactForm.name" type="text" required :placeholder="language.translateDynamic('Your full name')"
               class="w-full bg-(--bg-color) border border-(--border-color) rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-(--accent-color) transition-colors" />
           </div>
           <div>
             <label class="text-xs font-black uppercase tracking-widest text-(--text-muted) block mb-2">{{ language.translateDynamic('Email *') }}</label>
-            <input v-model="contactForm.email" type="email" required placeholder="you@email.com"
+            <input v-model="contactForm.email" type="email" required :placeholder="language.translateDynamic('you@email.com')"
               class="w-full bg-(--bg-color) border border-(--border-color) rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-(--accent-color) transition-colors" />
           </div>
         </div>
         <div>
           <label class="text-xs font-black uppercase tracking-widest text-(--text-muted) block mb-2">{{ language.translateDynamic('Subject') }}</label>
-          <input v-model="contactForm.subject" type="text" placeholder="What's this about?"
+          <input v-model="contactForm.subject" type="text" :placeholder="language.translateDynamic('What\'s this about?')"
             class="w-full bg-(--bg-color) border border-(--border-color) rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-(--accent-color) transition-colors" />
         </div>
         <div>
           <label class="text-xs font-black uppercase tracking-widest text-(--text-muted) block mb-2">{{ language.translateDynamic('Message *') }}</label>
-          <textarea v-model="contactForm.message" required rows="5" placeholder="Describe your issue in detail..."
+          <textarea v-model="contactForm.message" required rows="5" :placeholder="language.translateDynamic('Describe your issue in detail...')"
             class="w-full bg-(--bg-color) border border-(--border-color) rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-(--accent-color) transition-colors resize-none"></textarea>
         </div>
         <button type="submit"

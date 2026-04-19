@@ -4,8 +4,11 @@ import { useChatStore } from '../stores/chatbot'
 import { useCurrencyStore } from '../stores/currency'
 import { useRouter } from 'vue-router'
 
+import { useLanguageStore } from '../stores/language'
+
 const chat = useChatStore()
 const currency = useCurrencyStore()
+const language = useLanguageStore()
 const router = useRouter()
 const input = ref('')
 const scrollArea = ref<HTMLElement | null>(null)
@@ -49,7 +52,7 @@ const navigateToProduct = (id: number) => {
         </svg>
       </button>
       <span v-if="!chat.isOpen" class="text-[10px] font-black uppercase tracking-widest text-[#2563EB] dark:text-blue-400 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm px-2 py-0.5 rounded-full shadow-sm border border-blue-100 dark:border-blue-900/30">
-        Ask me
+        {{ language.translateDynamic('Ask me') }}
       </span>
     </div>
 
@@ -74,10 +77,10 @@ const navigateToProduct = (id: number) => {
                 🤖
               </div>
               <div>
-                <h3 class="font-black text-lg tracking-tight">Omaxy AI</h3>
+                <h3 class="font-black text-lg tracking-tight">{{ language.translateDynamic('Omaxy AI') }}</h3>
                 <p class="text-xs text-blue-100/80 font-bold uppercase tracking-widest flex items-center gap-1.5">
                   <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                  Smart Assistant
+                  {{ language.translateDynamic('Smart Assistant') }}
                 </p>
               </div>
             </div>
@@ -88,7 +91,7 @@ const navigateToProduct = (id: number) => {
                 class="p-2 hover:bg-white/10 rounded-lg transition-colors text-[10px] font-black uppercase tracking-widest"
                 title="Clear Conversation"
               >
-                Clear
+                {{ language.translateDynamic('Clear') }}
               </button>
               <button @click="chat.isOpen = false" class="p-1.5 hover:bg-white/10 rounded-full transition-colors" title="Minimize">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
@@ -127,7 +130,7 @@ const navigateToProduct = (id: number) => {
                 >
                   <img :src="p.thumbnail" class="w-12 h-12 object-cover rounded-lg bg-white" />
                   <div class="min-w-0">
-                    <p class="text-xs font-bold truncate">{{ p.title }}</p>
+                    <p class="text-xs font-bold truncate">{{ language.translateDynamic(p.title) }}</p>
                     <p class="text-xs font-black text-[#2563EB]">{{ currency.format(p.price) }}</p>
                   </div>
                   <span class="ml-auto opacity-0 group-hover:opacity-100 text-[#2563EB] shrink-0">→</span>
@@ -156,7 +159,7 @@ const navigateToProduct = (id: number) => {
               @keyup.enter="!chat.isTyping && handleSend()"
               :disabled="chat.isTyping"
               type="text"
-              placeholder="Type your question..."
+              :placeholder="language.translateDynamic('Type your question...')"
               class="grow bg-transparent border-none focus:outline-none px-3 py-2 text-sm text-gray-800 dark:text-gray-200 disabled:opacity-50"
             />
             <button
@@ -175,28 +178,28 @@ const navigateToProduct = (id: number) => {
               :disabled="chat.isTyping"
               class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-gray-500 hover:border-[#2563EB] hover:text-[#2563EB] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              📦 Track Order
+              📦 {{ language.translateDynamic('Track Order') }}
             </button>
             <button 
               @click="chat.sendMessage('Show me smartphones')"
               :disabled="chat.isTyping"
               class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-gray-500 hover:border-[#2563EB] hover:text-[#2563EB] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              🛍️ View Products
+              🛍️ {{ language.translateDynamic('View Products') }}
             </button>
             <button 
               @click="chat.sendMessage('How do I return an item?')"
               :disabled="chat.isTyping"
               class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 text-gray-500 hover:border-[#2563EB] hover:text-[#2563EB] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              🔄 Return Item
+              🔄 {{ language.translateDynamic('Return Item') }}
             </button>
             <button 
               @click="chat.sendMessage('Talk to a human')"
               :disabled="chat.isTyping"
               class="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-purple-200 bg-purple-50 text-purple-600 hover:bg-purple-100 transition-all flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              🎧 Talk to Human
+              🎧 {{ language.translateDynamic('Talk to Human') }}
             </button>
           </div>
         </div>

@@ -113,27 +113,27 @@ onBeforeUnmount(() => {
             <h2 class="text-2xl font-black text-gray-900 dark:text-white">{{ language.translateDynamic('Shipping Details') }}</h2>
             <div>
               <label class="block text-xs font-black uppercase text-(--text-muted) mb-2 tracking-widest">{{ language.translateDynamic('Full Name') }}</label>
-              <input v-model="name" type="text" class="w-full px-5 py-3 border-2 border-(--border-color) bg-(--card-bg) rounded-xl focus:outline-none focus:border-(--accent-color) transition-all shadow-inner" placeholder="John Doe" required />
+              <input v-model="name" type="text" class="w-full px-5 py-3 border-2 border-(--border-color) bg-(--card-bg) rounded-xl focus:outline-none focus:border-(--accent-color) transition-all shadow-inner" :placeholder="language.translateDynamic('Full Name')" required />
             </div>
             <div>
               <label class="block text-xs font-black uppercase text-(--text-muted) mb-2 tracking-widest">{{ language.translateDynamic('Shipping Address') }}</label>
-              <input v-model="address" type="text" class="w-full px-5 py-3 border-2 border-(--border-color) bg-(--card-bg) rounded-xl focus:outline-none focus:border-(--accent-color) transition-all shadow-inner" placeholder="123 Street Name" required />
+              <input v-model="address" type="text" class="w-full px-5 py-3 border-2 border-(--border-color) bg-(--card-bg) rounded-xl focus:outline-none focus:border-(--accent-color) transition-all shadow-inner" :placeholder="language.translateDynamic('Shipping Address')" required />
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="block text-xs font-black uppercase text-(--text-muted) mb-2 tracking-widest">{{ language.translateDynamic('City') }}</label>
-                <input v-model="city" type="text" class="w-full px-5 py-3 border-2 border-(--border-color) bg-(--card-bg) rounded-xl focus:outline-none focus:border-(--accent-color) transition-all shadow-inner" placeholder="Colombo" />
+                <input v-model="city" type="text" class="w-full px-5 py-3 border-2 border-(--border-color) bg-(--card-bg) rounded-xl focus:outline-none focus:border-(--accent-color) transition-all shadow-inner" :placeholder="language.translateDynamic('City')" />
               </div>
               <div>
                 <label class="block text-xs font-black uppercase text-(--text-muted) mb-2 tracking-widest">{{ language.translateDynamic('Zip Code') }}</label>
-                <input v-model="postal" type="text" class="w-full px-5 py-3 border-2 border-(--border-color) bg-(--card-bg) rounded-xl focus:outline-none focus:border-(--accent-color) transition-all shadow-inner" placeholder="10115" />
+                <input v-model="postal" type="text" class="w-full px-5 py-3 border-2 border-(--border-color) bg-(--card-bg) rounded-xl focus:outline-none focus:border-(--accent-color) transition-all shadow-inner" :placeholder="language.translateDynamic('Zip Code')" />
               </div>
             </div>
             <div>
               <label class="block text-xs font-black uppercase text-(--text-muted) mb-2 tracking-widest">{{ language.translateDynamic('Country') }}</label>
               <select v-model="country" class="w-full px-5 py-3 border-2 border-(--border-color) bg-(--card-bg) rounded-xl focus:outline-none focus:border-(--accent-color) transition-all bg-(--card-bg) text-(--text-color) shadow-inner font-bold" required>
                 <option value="" disabled>{{ language.translateDynamic('Select your country') }}</option>
-                <option v-for="c in countries" :key="c" :value="c">{{ c }}</option>
+                <option v-for="c in countries" :key="c" :value="c">{{ language.translateDynamic(c) }}</option>
               </select>
             </div>
             <button
