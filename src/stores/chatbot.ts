@@ -258,7 +258,7 @@ export const useChatStore = defineStore('chatbot', {
       // 2. Intent Matching (check longest phrases first for accuracy)
       let matchedIntent = ''
       for (const [intent, keywords] of Object.entries(INTENT_KEYWORDS)) {
-        if (keywords.some(kw => raw.includes(kw))) {
+        if (keywords.some(kw => new RegExp(`\\b${kw}\\b`, 'i').test(raw))) {
           matchedIntent = intent
           break
         }
@@ -326,7 +326,7 @@ export const useChatStore = defineStore('chatbot', {
           'lap', 'phone', 'detail', 'describe', 'info', 'is it', 'should i',
           'quality', 'recommend', 'opinion', 'thoughts', 'what do you think'
         ]
-        if (productKeywords.some(kw => raw.includes(kw))) {
+        if (productKeywords.some(kw => new RegExp(`\\b${kw}\\b`, 'i').test(raw))) {
           this.addBotMessage(
             `You're viewing the **${p.title}** 🛍️\n\n📝 ${p.description}\n\n💰 Price: **$${p.price}**${p.discountPercentage ? ` (${Math.round(p.discountPercentage)}% OFF!)` : ''}\n⭐ Rating: **${p.rating ?? 'N/A'}**/5${p.brand ? `\n🏷️ Brand: **${p.brand}**` : ''}\n\nWould you like to add it to your cart, or shall I find something similar?`
           )
@@ -341,13 +341,41 @@ export const useChatStore = defineStore('chatbot', {
 
       let mappedCategory = ''
       for (const [cat, keywords] of Object.entries(CATEGORY_MAP)) {
-        if (keywords.some(kw => raw.includes(kw))) {
+        if (keywords.some(kw => new RegExp(`\\b${kw}\\b`, 'i').test(raw))) {
           mappedCategory = cat
           break
         }
       }
 
       if (!searchTerm && !mappedCategory) {
+        // Ultimate Free Conversational Fallback!
+        try {
+          const chatHistory = this.messages.slice(-6).map(m => ({
+            role: m.role === 'bot' ? 'assistant' : 'user',
+            content: m.text
+          }))
+          
+          const systemMsg = {
+            role: 'system',
+            content: 'You are Omaxy, a friendly, concise shopping assistant for OMAX Online Store. Use emojis. Keep answers very short and charming. Do not invent products without warning. The user is talking to you in a chat window on the shopping site.'
+          }
+
+          const response = await fetch('https://text.pollinations.ai', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages: [systemMsg, ...chatHistory] })
+          })
+          
+          const text = await response.text()
+          if (text) {
+             this.addBotMessage(text)
+             return
+          }
+        } catch (e) {
+          console.error("Free API fallback failed", e)
+        }
+
+        // Failsafe if Free API is down
         const unanswered = JSON.parse(localStorage.getItem('omax_unanswered_logs') || '[]')
         unanswered.push({ input, date: new Date() })
         localStorage.setItem('omax_unanswered_logs', JSON.stringify(unanswered))
