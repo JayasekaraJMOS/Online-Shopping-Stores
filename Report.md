@@ -41,6 +41,9 @@ ElectroHub is a modern Single Page Application (SPA) that simulates an e-commerc
 | Shopping Cart | Pinia store with localStorage persistence | ✅ Complete |
 | Dynamic Routing | Vue Router with `/product/:id` and `/cart` | ✅ Complete |
 | Dark Mode | Tailwind `dark:` modifier toggle | ✅ Complete |
+| Sort & Search | Icon-based Sort By filter (Price, Rating, Newest) | ✅ Complete |
+| AI Chatbot | Omaxy AI with multi-turn memory and inventory context | ✅ Complete |
+| Smart Rewards | Automatic coupon application upon copying | ✅ Complete |
 
 ---
 

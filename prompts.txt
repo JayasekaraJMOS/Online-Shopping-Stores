@@ -39,3 +39,12 @@ Actual prompt: Fix the -webkit-mask-mode TypeScript error in NavBar.vue and rest
 
 The aim 14: Implement staggered grid animations and persistent auth initialization
 Actual prompt: Add animation delay utility classes to style.css, apply staggered delays to product cards in HomeView, and ensure all stores (auth, theme, currency) are initialized in App.vue onMounted hook to ensure persistence and 100% type safety.
+
+The aim 15: Implement Sort By filter in Navigation Bar
+Actual prompt: Add a compact, icon-based 'Sort By' dropdown to the left of the search bar in NavBar.vue. Update the search store to handle sort state and implement reactive sorting (price, rating, newest) in HomeView.vue using a computed property.
+
+The aim 16: Enhance Omaxy Chatbot with memory and inventory context
+Actual prompt: Update chatbot.ts to use model.startChat() for multi-turn conversations. Implement RAG-lite by fetching relevant products before AI response and injecting them into the prompt for accuracy. Add localStorage persistence to chat messages.
+
+The aim 17: Implement automatic coupon application
+Actual prompt: Update HomeView.vue to automatically call cart.applyCoupon() when a coupon code is copied/claimed, ensuring a seamless rewards experience.

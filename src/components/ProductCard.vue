@@ -42,7 +42,7 @@ const goToDetail = () => {
       <!-- Quick view on hover -->
       <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
         <span class="text-white text-[10px] font-black uppercase tracking-widest bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/30">
-          Quick View
+          {{ language.translateDynamic('Quick View') }}
         </span>
       </div>
     </div>

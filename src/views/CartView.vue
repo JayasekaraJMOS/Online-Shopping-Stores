@@ -119,9 +119,9 @@ const removeCoupon = () => {
                 <span class="text-[var(--border-color)]">|</span>
                 <button v-if="!showClearConfirm" @click="handleClearCart" class="text-red-500 hover:underline">{{ language.translateDynamic('Clear All') }}</button>
                 <div v-else class="flex items-center gap-2 bg-red-50 dark:bg-red-900/20 px-3 py-1.5 rounded-xl border border-red-100 dark:border-red-900/40 shadow-sm animate-fade-in">
-                  <span class="text-red-600 dark:text-red-400 font-black">Clear?</span>
-                  <button @click="confirmClear" class="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700 transition font-black">YES</button>
-                  <button @click="cancelClear" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-black">NO</button>
+                  <span class="text-red-600 dark:text-red-400 font-black">{{ language.translateDynamic('Clear?') }}</span>
+                  <button @click="confirmClear" class="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700 transition font-black">{{ language.translateDynamic('YES') }}</button>
+                  <button @click="cancelClear" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-black">{{ language.translateDynamic('NO') }}</button>
                 </div>
               </div>
             </div>
@@ -198,7 +198,7 @@ const removeCoupon = () => {
                   <button
                     @click="applyCoupon"
                     class="px-4 py-2.5 bg-[var(--accent-color)] text-white rounded-xl text-xs font-black uppercase tracking-tight hover:opacity-90 active:scale-95 transition-all shadow-md"
-                  >Apply</button>
+                  >{{ language.translateDynamic('Apply') }}</button>
                 </div>
                 <p v-if="couponError" class="text-[10px] text-red-500 font-bold">{{ couponError }}</p>
               </div>
@@ -207,7 +207,7 @@ const removeCoupon = () => {
                 <span class="text-xs font-black text-green-600 dark:text-green-400 uppercase tracking-widest flex items-center gap-2">
                   ✅ {{ cart.appliedCoupon }}
                 </span>
-                <button @click="removeCoupon" class="text-[10px] text-red-400 hover:text-red-600 font-black uppercase tracking-tight transition-colors">Remove</button>
+                <button @click="removeCoupon" class="text-[10px] text-red-400 hover:text-red-600 font-black uppercase tracking-tight transition-colors">{{ language.translateDynamic('Remove') }}</button>
               </div>
             </div>
 

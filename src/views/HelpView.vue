@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useLanguageStore } from '../stores/language'
 import NavBar from '../components/NavBar.vue'
 
 const language = useLanguageStore()
 
-const faqs = [
-  { q: 'How do I track my order?', a: 'Go to your profile and click "My Orders". Each order shows a real-time tracking status. You\'ll also receive email updates at each stage of delivery.' },
-  { q: 'What is the return policy?', a: 'We offer a 15-day hassle-free return policy on most items. The product must be unused, in its original packaging. Initiate returns from your order history.' },
-  { q: 'How long does delivery take?', a: 'Standard delivery takes 3–7 business days. Express delivery (available at checkout) delivers within 1–2 business days for most locations.' },
-  { q: 'Can I change or cancel my order?', a: 'Yes, you can cancel or modify orders within 1 hour of placing them. After that, please contact our support team for assistance.' },
-  { q: 'What payment methods are accepted?', a: 'We accept all major credit/debit cards, PayPal, bank transfers, and OMAX Wallet. Cash on delivery is available in select regions.' },
-  { q: 'How do I contact a seller directly?', a: 'On any product page, scroll down to find the "Contact Seller" button. Messages are responded to within 24 hours.' },
-]
+const faqs = computed(() => [
+  { q: language.translateDynamic('How do I track my order?'), a: language.translateDynamic('Go to your profile and click "My Orders". Each order shows a real-time tracking status. You\'ll also receive email updates at each stage of delivery.') },
+  { q: language.translateDynamic('What is the return policy?'), a: language.translateDynamic('We offer a 15-day hassle-free return policy on most items. The product must be unused, in its original packaging. Initiate returns from your order history.') },
+  { q: language.translateDynamic('How long does delivery take?'), a: language.translateDynamic('Standard delivery takes 3–7 business days. Express delivery (available at checkout) delivers within 1–2 business days for most locations.') },
+  { q: language.translateDynamic('Can I change or cancel my order?'), a: language.translateDynamic('Yes, you can cancel or modify orders within 1 hour of placing them. After that, please contact our support team for assistance.') },
+  { q: language.translateDynamic('What payment methods are accepted?'), a: language.translateDynamic('We accept all major credit/debit cards, PayPal, bank transfers, and OMAX Wallet. Cash on delivery is available in select regions.') },
+  { q: language.translateDynamic('How do I contact a seller directly?'), a: language.translateDynamic('On any product page, scroll down to find the "Contact Seller" button. Messages are responded to within 24 hours.') },
+])
 
 const openFaq = ref<number | null>(null)
 const toggleFaq = (i: number) => { openFaq.value = openFaq.value === i ? null : i }
@@ -29,12 +29,12 @@ const submitForm = async () => {
   submitted.value = true
 }
 
-const channels = [
-  { icon: '💬', title: 'Live Chat', desc: 'Chat with a support agent in real time.', action: 'Start Chat', available: true },
-  { icon: '📧', title: 'Email Support', desc: 'support@omax.store · Reply within 24h', action: 'Send Email', available: true },
-  { icon: '📞', title: 'Phone', desc: '+1 234 567 890 · Mon–Fri, 9am–6pm', action: 'Call Now', available: true },
-  { icon: '🤖', title: 'AI Assistant', desc: 'Get instant answers 24/7 from our bot.', action: 'Ask Bot', available: true },
-]
+const channels = computed(() => [
+  { icon: '💬', title: language.translateDynamic('Live Chat'), desc: language.translateDynamic('Chat with a support agent in real time.'), action: language.translateDynamic('Start Chat'), available: true },
+  { icon: '📧', title: language.translateDynamic('Email Support'), desc: 'support@omax.store · Reply within 24h', action: language.translateDynamic('Send Email'), available: true },
+  { icon: '📞', title: language.translateDynamic('Phone'), desc: '+1 234 567 890 · Mon–Fri, 9am–6pm', action: language.translateDynamic('Call Now'), available: true },
+  { icon: '🤖', title: language.translateDynamic('AI Assistant'), desc: language.translateDynamic('Get instant answers 24/7 from our bot.'), action: language.translateDynamic('Ask Bot'), available: true },
+])
 </script>
 
 <template>
@@ -51,11 +51,11 @@ const channels = [
           {{ language.translateDynamic('How Can We') }}<br/>
           <span class="text-[#F59E0B]">{{ language.translateDynamic('Help You?') }}</span>
         </h1>
-        <p class="text-white/70 text-lg max-w-lg mx-auto mb-8">Our team is here 24/7 to make sure your OMAX experience is seamless.</p>
+        <p class="text-white/70 text-lg max-w-lg mx-auto mb-8">{{ language.translateDynamic('Our team is here 24/7 to make sure your OMAX experience is seamless.') }}</p>
         <!-- Quick search -->
         <div class="max-w-xl mx-auto flex bg-white/10 border border-white/20 rounded-xl overflow-hidden backdrop-blur-sm">
-          <input type="text" placeholder="Search help articles..." class="flex-grow bg-transparent text-white placeholder:text-white/50 px-5 py-3 focus:outline-none text-sm font-medium" />
-          <button class="bg-[var(--accent-color)] px-6 py-3 font-black text-sm text-white hover:opacity-90 transition-opacity">Search</button>
+          <input type="text" :placeholder="language.translateDynamic('Search help articles...')" class="flex-grow bg-transparent text-white placeholder:text-white/50 px-5 py-3 focus:outline-none text-sm font-medium" />
+          <button class="bg-[var(--accent-color)] px-6 py-3 font-black text-sm text-white hover:opacity-90 transition-opacity">{{ language.translateDynamic('Search') }}</button>
         </div>
       </div>
     </section>
@@ -158,7 +158,7 @@ const channels = [
           :disabled="submitting"
         >
           <span v-if="submitting" class="animate-spin">⏳</span>
-          <span>{{ submitting ? 'Sending...' : language.translateDynamic('Send Message') }}</span>
+          <span>{{ submitting ? language.translateDynamic('Sending...') : language.translateDynamic('Send Message') }}</span>
         </button>
       </form>
     </section>

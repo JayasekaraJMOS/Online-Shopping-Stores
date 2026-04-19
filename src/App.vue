@@ -5,6 +5,7 @@ import { useAuthStore } from './stores/auth'
 import { useThemeStore } from './stores/theme'
 import { useCurrencyStore } from './stores/currency'
 import ToastNotification from './components/ToastNotification.vue'
+import ChatBot from './components/ChatBot.vue'
 
 const cart = useCartStore()
 const auth = useAuthStore()
@@ -21,5 +22,6 @@ onMounted(() => {
 
 <template>
   <ToastNotification />
+  <ChatBot />
   <router-view />
 </template>

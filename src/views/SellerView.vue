@@ -1,30 +1,31 @@
 <script setup lang="ts">
 import NavBar from '../components/NavBar.vue'
 import { useLanguageStore } from '../stores/language'
+import { computed } from 'vue'
 
 const language = useLanguageStore()
 
-const benefits = [
-  { icon: '💰', title: 'Zero Listing Fees', desc: 'List your first 100 products for free. No upfront costs, no hidden charges.' },
-  { icon: '🌍', title: 'Reach Millions', desc: 'Tap into OMAX\'s growing customer base across the country.' },
-  { icon: '📊', title: 'Seller Dashboard', desc: 'Real-time analytics, inventory management, and revenue tracking in one place.' },
-  { icon: '🛡️', title: 'Seller Protection', desc: 'Secure payouts, fraud prevention, and dedicated dispute resolution support.' },
-  { icon: '📦', title: 'Logistics Support', desc: 'Integrated shipping partners with discounted rates for OMAX sellers.' },
-  { icon: '📣', title: 'Marketing Tools', desc: 'Run voucher campaigns, sponsored listings, and flash sale slots.' },
-]
+const benefits = computed(() => [
+  { icon: '💰', title: language.translateDynamic('Zero Listing Fees'), desc: language.translateDynamic('List your first 100 products for free. No upfront costs, no hidden charges.') },
+  { icon: '🌍', title: language.translateDynamic('Reach Millions'), desc: language.translateDynamic("Tap into OMAX's growing customer base across the country.") },
+  { icon: '📊', title: language.translateDynamic('Seller Dashboard'), desc: language.translateDynamic('Real-time analytics, inventory management, and revenue tracking in one place.') },
+  { icon: '🛡️', title: language.translateDynamic('Seller Protection'), desc: language.translateDynamic('Secure payouts, fraud prevention, and dedicated dispute resolution support.') },
+  { icon: '📦', title: language.translateDynamic('Logistics Support'), desc: language.translateDynamic('Integrated shipping partners with discounted rates for OMAX sellers.') },
+  { icon: '📣', title: language.translateDynamic('Marketing Tools'), desc: language.translateDynamic('Run voucher campaigns, sponsored listings, and flash sale slots.') },
+])
 
-const steps = [
-  { n: '01', title: 'Register', desc: 'Create your seller account with basic business details in minutes.' },
-  { n: '02', title: 'List Products', desc: 'Upload your inventory with photos, descriptions, and pricing.' },
-  { n: '03', title: 'Start Selling', desc: 'Go live and start receiving orders from customers nationwide.' },
-  { n: '04', title: 'Get Paid', desc: 'Receive weekly automated payouts directly to your bank account.' },
-]
+const steps = computed(() => [
+  { n: '01', title: language.translateDynamic('Register'), desc: language.translateDynamic('Create your seller account with basic business details in minutes.') },
+  { n: '02', title: language.translateDynamic('List Products'), desc: language.translateDynamic('Upload your inventory with photos, descriptions, and pricing.') },
+  { n: '03', title: language.translateDynamic('Start Selling'), desc: language.translateDynamic('Go live and start receiving orders from customers nationwide.') },
+  { n: '04', title: language.translateDynamic('Get Paid'), desc: language.translateDynamic('Receive weekly automated payouts directly to your bank account.') },
+])
 
-const plans = [
-  { name: 'Starter', price: 'Free', color: '#059669', perks: ['100 free listings', 'Basic analytics', 'Standard support', 'Commission: 8%'] },
-  { name: 'Pro', price: '$29/mo', color: '#2563EB', perks: ['Unlimited listings', 'Advanced analytics', 'Priority support', 'Commission: 5%', 'Flash sale access'] },
-  { name: 'Enterprise', price: 'Custom', color: '#7C3AED', perks: ['Dedicated manager', 'API access', '24/7 support', 'Commission: 3%', 'Custom storefront'] },
-]
+const plans = computed(() => [
+  { name: language.translateDynamic('Starter'), price: language.translateDynamic('Free'), color: '#059669', perks: [language.translateDynamic('100 free listings'), language.translateDynamic('Basic analytics'), language.translateDynamic('Standard support'), language.translateDynamic('Commission: 8%')] },
+  { name: language.translateDynamic('Pro'), price: '$29/mo', color: '#2563EB', perks: [language.translateDynamic('Unlimited listings'), language.translateDynamic('Advanced analytics'), language.translateDynamic('Priority support'), language.translateDynamic('Commission: 5%'), language.translateDynamic('Flash sale access')] },
+  { name: language.translateDynamic('Enterprise'), price: language.translateDynamic('Custom'), color: '#7C3AED', perks: [language.translateDynamic('Dedicated manager'), language.translateDynamic('API access'), language.translateDynamic('24/7 support'), language.translateDynamic('Commission: 3%'), language.translateDynamic('Custom storefront')] },
+])
 </script>
 
 <template>

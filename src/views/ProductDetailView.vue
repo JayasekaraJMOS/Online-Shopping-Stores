@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useCartStore } from '../stores/cart'
 import { useCurrencyStore } from '../stores/currency'
 import { useLanguageStore } from '../stores/language'
+import { useChatStore } from '../stores/chatbot'
 import NavBar from '../components/NavBar.vue'
 import type { Product } from '../types/Product'
 
@@ -12,6 +13,7 @@ const router = useRouter()
 const cart = useCartStore()
 const currency = useCurrencyStore()
 const language = useLanguageStore()
+const chat = useChatStore()
 const product = ref<Product | null>(null)
 const isLoading = ref(true)
 
@@ -20,7 +22,9 @@ onMounted(async () => {
     const response = await fetch(
       `https://dummyjson.com/products/${route.params.id}`
     )
-    product.value = await response.json()
+    const data = await response.json()
+    product.value = data
+    chat.setContextProduct(data)
   } finally {
     isLoading.value = false
   }
@@ -108,14 +112,14 @@ const buyNow = () => {
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
              <button
                @click="addToCart"
-               class="bg-[var(--accent-color)] hover:bg-[#1D4ED8] text-white py-5 font-black rounded-xl shadow-lg transition-all active:scale-95 uppercase tracking-widest text-sm flex items-center justify-center gap-2 group"
+               class="bg-[var(--accent-color)] hover:bg-[#1D4ED8] text-white py-5 font-black rounded-xl shadow-lg transition-all active:scale-95 uppercase tracking-widest text-sm flex items-center justify-center gap-3"
              >
+               <span class="text-xl">🛒</span>
                {{ language.t.addToCart }}
-               <span class="opacity-0 group-hover:opacity-100 transition-opacity">🛒</span>
              </button>
-             <button @click="buyNow" class="bg-[var(--cta-color)] hover:bg-[var(--cta-hover)] text-white py-5 font-black rounded-xl shadow-lg transition-all active:scale-95 uppercase tracking-widest text-sm flex items-center justify-center gap-2 group">
+             <button @click="buyNow" class="bg-[var(--cta-color)] hover:bg-[var(--cta-hover)] text-white py-5 font-black rounded-xl shadow-lg transition-all active:scale-95 uppercase tracking-widest text-sm flex items-center justify-center gap-3">
+               <span class="text-xl animate-pulse">⚡</span>
                {{ language.translateDynamic('Buy Now') }}
-               <span class="animate-bounce">⚡</span>
              </button>
           </div>
         </div>

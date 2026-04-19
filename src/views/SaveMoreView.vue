@@ -1,20 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import NavBar from '../components/NavBar.vue'
 import { useCartStore } from '../stores/cart'
 import { useNotificationStore } from '../stores/notification'
+import { useLanguageStore } from '../stores/language'
 
 const cart = useCartStore()
 const notification = useNotificationStore()
+const language = useLanguageStore()
 
-const appFeatures = [
-  { icon: '⚡', title: 'Flash Deals First', desc: 'App users get 30-min early access to all Flash Sale items before anyone else.' },
-  { icon: '🔔', title: 'Instant Alerts', desc: 'Push notifications for price drops on your wishlist and restocked favourites.' },
-  { icon: '💳', title: 'App-Only Coupons', desc: 'Exclusive discount codes only redeemable through the mobile app.' },
-  { icon: '🚀', title: 'Faster Checkout', desc: 'One-tap checkout with saved addresses and payment methods.' },
-  { icon: '📦', title: 'Live Order Tracking', desc: 'Real-time parcel updates and live map tracking right in the app.' },
-  { icon: '🎁', title: 'Coins & Rewards', desc: 'Earn OMAX Coins on every purchase and redeem them for free shipping.' },
-]
+const appFeatures = computed(() => [
+  { icon: '⚡', title: language.translateDynamic('Flash Deals First'), desc: language.translateDynamic('App users get 30-min early access to all Flash Sale items before anyone else.') },
+  { icon: '🔔', title: language.translateDynamic('Instant Alerts'), desc: language.translateDynamic('Push notifications for price drops on your wishlist and restocked favourites.') },
+  { icon: '💳', title: language.translateDynamic('App-Only Coupons'), desc: language.translateDynamic('Exclusive discount codes only redeemable through the mobile app.') },
+  { icon: '🚀', title: language.translateDynamic('Faster Checkout'), desc: language.translateDynamic('One-tap checkout with saved addresses and payment methods.') },
+  { icon: '📦', title: language.translateDynamic('Live Order Tracking'), desc: language.translateDynamic('Real-time parcel updates and live map tracking right in the app.') },
+  { icon: '🎁', title: language.translateDynamic('Coins & Rewards'), desc: language.translateDynamic('Earn OMAX Coins on every purchase and redeem them for free shipping.') },
+])
 
 const appCoupons = [
   { code: 'APP10',     off: '10%', min: 0,  color: '#2563EB' },
@@ -66,39 +68,39 @@ const copyAndApply = async (code: string) => {
         style="background-image: radial-gradient(circle at 20% 50%, white 1px, transparent 1px); background-size: 40px 40px;"></div>
       <div class="max-w-7xl mx-auto px-4 py-20 flex flex-col md:flex-row items-center gap-12 relative z-10">
         <div class="flex-1 text-white text-center md:text-left">
-          <span class="text-xs font-black uppercase tracking-[0.2em] bg-white/20 px-3 py-1 rounded-full mb-4 inline-block">📱 Mobile Exclusive</span>
+          <span class="text-xs font-black uppercase tracking-[0.2em] bg-white/20 px-3 py-1 rounded-full mb-4 inline-block">📱 {{ language.translateDynamic('Mobile Exclusive') }}</span>
           <h1 class="text-4xl md:text-6xl font-black leading-tight mt-4 mb-4">
-            Save More<br/><span class="text-yellow-300">On The App</span>
+            {{ language.translateDynamic('Save More') }}<br/><span class="text-yellow-300">{{ language.translateDynamic('On The App') }}</span>
           </h1>
-          <p class="text-white/80 text-lg mb-8 max-w-md">Shop smarter with exclusive app-only deals, early Flash Sale access, and real-time alerts.</p>
+          <p class="text-white/80 text-lg mb-8 max-w-md">{{ language.translateDynamic('Shop smarter with exclusive app-only deals, early Flash Sale access, and real-time alerts.') }}</p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
             <a href="#" class="flex items-center gap-3 bg-black text-white px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform shadow-xl">
               <span class="text-2xl">🍎</span>
               <div class="text-left">
-                <p class="text-[10px] opacity-70 uppercase tracking-widest">Available on the</p>
-                <p class="text-sm font-black">App Store</p>
+                <p class="text-[10px] opacity-70 uppercase tracking-widest">{{ language.translateDynamic('Available on the') }}</p>
+                <p class="text-sm font-black">{{ language.translateDynamic('App Store') }}</p>
               </div>
             </a>
             <a href="#" class="flex items-center gap-3 bg-black text-white px-6 py-3 rounded-xl font-bold hover:scale-105 transition-transform shadow-xl">
               <span class="text-2xl">▶️</span>
               <div class="text-left">
-                <p class="text-[10px] opacity-70 uppercase tracking-widest">Get it on</p>
-                <p class="text-sm font-black">Google Play</p>
+                <p class="text-[10px] opacity-70 uppercase tracking-widest">{{ language.translateDynamic('Get it on') }}</p>
+                <p class="text-sm font-black">{{ language.translateDynamic('Google Play') }}</p>
               </div>
             </a>
           </div>
         </div>
         <!-- QR Card -->
         <div class="shrink-0 bg-white rounded-3xl p-8 shadow-2xl text-center flex flex-col items-center gap-3">
-          <p class="text-gray-500 text-xs font-black uppercase tracking-widest mb-1">Scan to Download</p>
+          <p class="text-gray-500 text-xs font-black uppercase tracking-widest mb-1">{{ language.translateDynamic('Scan to Download') }}</p>
           <img
             src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://omax.store/app&bgcolor=FFFFFF&color=000000&margin=2"
             alt="Scan to download OMAX App"
             class="w-36 h-36 rounded-xl border border-gray-100"
           />
-          <p class="text-xs text-gray-400 font-medium">Point your camera at the code</p>
+          <p class="text-xs text-gray-400 font-medium">{{ language.translateDynamic('Point your camera at the code') }}</p>
           <div class="flex items-center gap-1 text-[10px] text-[#059669] font-black uppercase">
-            <span>✓</span> Free — No ads
+            <span>✓</span> {{ language.translateDynamic('Free — No ads') }}
           </div>
         </div>
       </div>
@@ -111,7 +113,7 @@ const copyAndApply = async (code: string) => {
           <span>🎟️</span> App-Only Coupons
         </h2>
         <div class="h-px flex-grow bg-[var(--border-color)]"></div>
-        <span class="text-xs text-[var(--text-muted)] uppercase tracking-widest shrink-0">Use in app at checkout</span>
+        <span class="text-xs text-[var(--text-muted)] uppercase tracking-widest shrink-0">{{ language.translateDynamic('Use in app at checkout') }}</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div

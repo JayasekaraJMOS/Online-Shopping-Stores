@@ -8,8 +8,12 @@ import { useSearchStore } from '../stores/search'
 import { useCurrencyStore } from '../stores/currency'
 import { useLanguageStore } from '../stores/language'
 import { useNotificationStore } from '../stores/notification'
+import { useChatStore } from '../stores/chatbot'
+import { useCartStore } from '../stores/cart'
 
 const router = useRouter()
+const chat = useChatStore()
+const cart = useCartStore()
 
 const products = ref<Product[]>([])
 const flashProducts = ref<Product[]>([])
@@ -35,6 +39,7 @@ const bonusClaimed = ref(localStorage.getItem('bonus_claimed') === 'true')
 const copiedCoupon = ref<string | null>(null)
 
 async function copyToClipboard(code: string) {
+  // 1. Copy to clipboard
   try {
     await navigator.clipboard.writeText(code)
   } catch {
@@ -45,6 +50,19 @@ async function copyToClipboard(code: string) {
     document.execCommand('copy')
     document.body.removeChild(el)
   }
+  
+  // 2. Auto-apply to cart
+  if (cart.appliedCoupon === code) {
+    notification.add(`✅ Coupon ${code} is already applied!`, 'info')
+  } else {
+    const result = cart.applyCoupon(code)
+    if (result.success) {
+      notification.add(`🎉 Coupon ${code} applied! ${result.message}`, 'success', 5000)
+    } else {
+      notification.add(`📋 Copied ${code} — ${result.message}`, 'warning', 4000)
+    }
+  }
+
   copiedCoupon.value = code
   setTimeout(() => { copiedCoupon.value = null }, 2500)
 }
@@ -57,7 +75,6 @@ const claimBonus = async () => {
   await copyToClipboard('NEWUSER10')
   bonusClaimed.value = true
   localStorage.setItem('bonus_claimed', 'true')
-  notification.add('🎉 Bonus claimed! Code NEWUSER10 copied — $10 OFF your first order!', 'success', 5000)
 }
 
 // ─── Coupons ─────────────────────────────────────────────────────────────────
@@ -98,15 +115,23 @@ const updateTimer = () => {
 const fetchProducts = async () => {
   isLoading.value = true
   try {
-    let url = 'https://dummyjson.com/products?limit=50'
+    let url = 'https://dummyjson.com/products?limit=100' // Increased limit for better local filtering
     if (search.query) {
-      url = `https://dummyjson.com/products/search?q=${search.query}`
+      url = `https://dummyjson.com/products/search?q=${search.query}&limit=100`
     } else if (currentCategory.value !== 'All') {
       url = `https://dummyjson.com/products/category/${currentCategory.value.toLowerCase()}`
     }
     const res = await fetch(url)
     const data = await res.json()
-    products.value = data.products
+    
+    // Local filter if category is selected during search
+    if (search.query && currentCategory.value !== 'All') {
+      products.value = data.products.filter((p: Product) => 
+        p.category.toLowerCase() === currentCategory.value.toLowerCase()
+      )
+    } else {
+      products.value = data.products
+    }
 
     if (!flashProducts.value.length) {
       const flashRes = await fetch('https://dummyjson.com/products?limit=18&skip=10')
@@ -140,15 +165,31 @@ const visibleFlashProducts = computed(() =>
   isFlashExpanded.value ? flashProducts.value : flashProducts.value.slice(0, 6)
 )
 
+const sortedProducts = computed(() => {
+  const list = [...products.value]
+  switch (search.sortBy) {
+    case 'price_asc':  return list.sort((a, b) => a.price - b.price)
+    case 'price_desc': return list.sort((a, b) => b.price - a.price)
+    case 'rating':     return list.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))
+    case 'newest':     return list.sort((a, b) => b.id - a.id)
+    default:           return list
+  }
+})
+
 onMounted(() => {
   fetchProducts()
   updateTimer()
+  chat.setContextProduct(null)
 })
 
 watch(() => search.query, () => {
-  if (search.query) currentCategory.value = 'All'
   fetchProducts()
 })
+
+watch(() => search.sortBy, () => {
+  // sortedProducts is computed — no refetch needed
+})
+
 </script>
 
 <template>
@@ -265,7 +306,7 @@ watch(() => search.query, () => {
           class="relative bg-white font-black text-xs uppercase tracking-widest px-6 py-2.5 rounded-xl shadow-lg transition-all shrink-0 disabled:opacity-70 disabled:cursor-not-allowed"
           :class="bonusClaimed ? 'text-green-600' : 'text-[#2563EB] hover:scale-105 active:scale-95'"
         >
-          {{ bonusClaimed ? '✅ Claimed!' : language.t.claimNow }}
+          {{ bonusClaimed ? language.translateDynamic('✅ Claimed!') : language.t.claimNow }}
         </button>
       </div>
 
@@ -296,7 +337,7 @@ watch(() => search.query, () => {
                 ? { backgroundColor: '#16a34a', borderColor: '#16a34a', color: 'white' }
                 : { borderColor: c.color, color: c.color }"
             >
-              {{ copiedCoupon === c.code ? '✓ Copied' : language.t.copy }}
+              {{ copiedCoupon === c.code ? language.translateDynamic('✓ Copied') : language.t.copy }}
             </button>
           </div>
         </div>
@@ -345,7 +386,7 @@ watch(() => search.query, () => {
         </div>
         <!-- floating badge -->
         <div class="absolute top-4 right-4 z-20 bg-red-500 text-white text-[10px] font-black px-3 py-1.5 rounded-full shadow-lg animate-bounce">
-          UP TO 50% OFF
+          {{ language.translateDynamic('UP TO 50% OFF') }}
         </div>
       </div>
     </section>
@@ -362,7 +403,7 @@ watch(() => search.query, () => {
                 : language.translateDynamic(currentCategory) }}
           </h3>
           <div v-if="!isLoading" class="text-[10px] text-[var(--text-muted)] font-bold uppercase tracking-widest mt-0.5">
-            {{ products.length }} products found
+            {{ products.length }} {{ language.translateDynamic('products found') }}
           </div>
         </div>
         <div class="h-0.5 flex-grow bg-gradient-to-r from-[var(--accent-color)]/30 to-transparent rounded-full"></div>
@@ -375,7 +416,7 @@ watch(() => search.query, () => {
 
       <div v-else class="products-grid">
         <ProductCard 
-          v-for="(item, index) in products" 
+          v-for="(item, index) in sortedProducts" 
           :key="item.id" 
           :product="item" 
           class="animate-fade-in"
@@ -399,51 +440,47 @@ watch(() => search.query, () => {
     <div class="max-w-7xl mx-auto px-6 pt-14 pb-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 text-sm">
       <!-- Brand -->
       <div class="space-y-4 lg:col-span-1">
-        <h3 class="text-white font-black text-2xl tracking-tight">OMAX</h3>
+        <h3 class="text-white font-black text-2xl tracking-tight">{{ language.translateDynamic('OMAX') }}</h3>
         <p class="text-slate-400 text-xs leading-relaxed max-w-[200px]">
-          The smarter way to shop. Millions of products, unbeatable prices, delivered fast.
+          {{ language.translateDynamic('The smarter way to shop. Millions of products, unbeatable prices, delivered fast.') }}
         </p>
         <div class="flex gap-3">
-          <a href="#" class="w-9 h-9 bg-white/10 hover:bg-[#2563EB] rounded-lg flex items-center justify-center text-sm transition-colors">🔵</a>
-          <a href="#" class="w-9 h-9 bg-white/10 hover:bg-sky-500 rounded-lg flex items-center justify-center text-sm transition-colors">🐦</a>
-          <a href="#" class="w-9 h-9 bg-white/10 hover:bg-pink-600 rounded-lg flex items-center justify-center text-sm transition-colors">📸</a>
-          <a href="#" class="w-9 h-9 bg-white/10 hover:bg-red-600 rounded-lg flex items-center justify-center text-sm transition-colors">📺</a>
+          <a href="#" class="w-9 h-9 bg-white/10 hover:bg-[#2563EB] rounded-lg flex items-center justify-center text-sm transition-colors text-white no-underline">🔵</a>
+          <a href="#" class="w-9 h-9 bg-white/10 hover:bg-sky-500 rounded-lg flex items-center justify-center text-sm transition-colors text-white no-underline">🐦</a>
+          <a href="#" class="w-9 h-9 bg-white/10 hover:bg-pink-600 rounded-lg flex items-center justify-center text-sm transition-colors text-white no-underline">📸</a>
+          <a href="#" class="w-9 h-9 bg-white/10 hover:bg-red-600 rounded-lg flex items-center justify-center text-sm transition-colors text-white no-underline">📺</a>
         </div>
       </div>
 
-      <!-- Customer Care -->
       <div class="space-y-4">
-        <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">Customer Care</h4>
+        <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">{{ language.translateDynamic('Customer Care') }}</h4>
         <ul class="space-y-2.5 text-xs">
-          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2"><span class="text-[var(--accent-color)]">›</span> Help Center</a></li>
-          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2"><span class="text-[var(--accent-color)]">›</span> How to Buy</a></li>
-          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2"><span class="text-[var(--accent-color)]">›</span> Returns & Refunds</a></li>
-          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2"><span class="text-[var(--accent-color)]">›</span> Track Your Order</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-[var(--accent-color)]">›</span> {{ language.translateDynamic('Help Center') }}</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-[var(--accent-color)]">›</span> {{ language.translateDynamic('How to Buy') }}</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-[var(--accent-color)]">›</span> {{ language.translateDynamic('Returns & Refunds') }}</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-[var(--accent-color)]">›</span> {{ language.translateDynamic('Track Your Order') }}</a></li>
         </ul>
       </div>
 
-      <!-- OMAX -->
       <div class="space-y-4">
-        <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">About OMAX</h4>
+        <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">{{ language.translateDynamic('About OMAX') }}</h4>
         <ul class="space-y-2.5 text-xs">
-          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2"><span class="text-[var(--accent-color)]">›</span> About Us</a></li>
-          <li><a @click="router.push('/become-a-seller')" href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2"><span class="text-[var(--accent-color)]">›</span> Become a Seller</a></li>
-          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2"><span class="text-[var(--accent-color)]">›</span> Privacy Policy</a></li>
-          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2"><span class="text-[var(--accent-color)]">›</span> Terms of Use</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-[var(--accent-color)]">›</span> {{ language.translateDynamic('About Us') }}</a></li>
+          <li><a @click="router.push('/become-a-seller')" href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium cursor-pointer"><span class="text-[var(--accent-color)]">›</span> {{ language.translateDynamic('Become a Seller') }}</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-[var(--accent-color)]">›</span> {{ language.translateDynamic('Privacy Policy') }}</a></li>
+          <li><a href="#" class="text-slate-400 hover:text-white transition-colors flex items-center gap-2 no-underline font-medium"><span class="text-[var(--accent-color)]">›</span> {{ language.translateDynamic('Terms of Use') }}</a></li>
         </ul>
       </div>
 
-      <!-- Contact -->
       <div class="space-y-4">
-        <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">Get in Touch</h4>
+        <h4 class="text-white font-black text-xs uppercase tracking-[0.2em]">{{ language.translateDynamic('Get in Touch') }}</h4>
         <div class="space-y-3 text-xs text-slate-400">
-          <div class="flex items-start gap-2"><span>📍</span><span>123 Commerce Way, Tech City</span></div>
-          <div class="flex items-start gap-2"><span>✉️</span><a href="mailto:support@omax.store" class="hover:text-white transition-colors">support@omax.store</a></div>
-          <div class="flex items-start gap-2"><span>📞</span><a href="tel:+1234567890" class="hover:text-white transition-colors">+1 234 567 890</a></div>
+          <div class="flex items-start gap-2"><span>📍</span><span>{{ language.translateDynamic('123 Commerce Way, Tech City') }}</span></div>
+          <div class="flex items-start gap-2"><span>✉️</span><a href="mailto:support@omax.store" class="hover:text-white transition-colors no-underline">support@omax.store</a></div>
+          <div class="flex items-start gap-2"><span>📞</span><a href="tel:+1234567890" class="hover:text-white transition-colors no-underline">+1 234 567 890</a></div>
         </div>
-        <!-- Newsletter mini -->
         <div class="flex gap-2 mt-3">
-          <input type="email" placeholder="Your email" class="flex-1 bg-white/10 border border-white/20 text-white text-xs px-3 py-2 rounded-lg focus:outline-none focus:border-[var(--accent-color)] placeholder:text-slate-500 transition-colors" />
+          <input type="email" :placeholder="language.translateDynamic('Your email')" class="flex-1 bg-white/10 border border-white/20 text-white text-xs px-3 py-2 rounded-lg focus:outline-none focus:border-[var(--accent-color)] placeholder:text-slate-500 transition-colors" />
           <button class="bg-[var(--accent-color)] text-white text-xs font-black px-3 py-2 rounded-lg hover:opacity-90 transition-opacity shrink-0">→</button>
         </div>
       </div>

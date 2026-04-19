@@ -132,7 +132,7 @@ onBeforeUnmount(() => {
             <div>
               <label class="block text-xs font-black uppercase text-[var(--text-muted)] mb-2 tracking-widest">{{ language.translateDynamic('Country') }}</label>
               <select v-model="country" class="w-full px-5 py-3 border-2 border-[var(--border-color)] bg-[var(--card-bg)] rounded-xl focus:outline-none focus:border-[var(--accent-color)] transition-all bg-[var(--card-bg)] text-[var(--text-color)] shadow-inner font-bold" required>
-                <option value="" disabled>Select your country</option>
+                <option value="" disabled>{{ language.translateDynamic('Select your country') }}</option>
                 <option v-for="c in countries" :key="c" :value="c">{{ c }}</option>
               </select>
             </div>
@@ -204,8 +204,8 @@ onBeforeUnmount(() => {
           <div v-if="isBuyNow" class="flex items-center gap-2 mb-4 bg-[var(--cta-color)]/10 border border-[var(--cta-color)]/30 rounded-xl px-4 py-2.5">
             <span class="text-lg">⚡</span>
             <div>
-              <p class="text-xs font-black text-[var(--cta-color)] uppercase tracking-widest">Express Buy Now</p>
-              <p class="text-[10px] text-[var(--text-muted)] font-medium">Checking out this item only — your cart is unchanged</p>
+              <p class="text-xs font-black text-[var(--cta-color)] uppercase tracking-widest">{{ language.translateDynamic('Express Buy Now') }}</p>
+              <p class="text-[10px] text-[var(--text-muted)] font-medium">{{ language.translateDynamic('Checking out this item only — your cart is unchanged') }}</p>
             </div>
           </div>
 
