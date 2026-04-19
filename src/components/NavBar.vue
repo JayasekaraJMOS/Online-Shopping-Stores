@@ -31,9 +31,7 @@ const handleScroll = () => {
   isScrolled.value = scrollPos > 20
 }
 
-const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-}
+
 
 onMounted(() => {
   window.addEventListener('click', closeOnOutside)

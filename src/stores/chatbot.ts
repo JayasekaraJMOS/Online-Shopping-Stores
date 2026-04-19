@@ -74,7 +74,6 @@ const INTENT_KEYWORDS: Record<string, string[]> = {
 }
 
 // Rich, varied Smart Local responses
-const BOT_PERSONA = "👋 Hi! I'm **Omaxy**, your smart shopping concierge at OMAX!"
 
 const GREET_RESPONSES = [
   "👋 Hello! I'm Omaxy, your smart shopping assistant at OMAX. I can help you find products, track orders, handle returns, and more. What can I do for you today?",
@@ -149,7 +148,7 @@ export const useChatStore = defineStore('chatbot', {
     toggle() {
       this.isOpen = !this.isOpen
       if (this.messages.length === 0) {
-        this.addBotMessage(GREET_RESPONSES[0])
+        this.addBotMessage(GREET_RESPONSES[0]!)
       }
     },
     setContextProduct(p: Product | null) {
@@ -266,7 +265,7 @@ export const useChatStore = defineStore('chatbot', {
 
       if (matchedIntent === 'greetings') {
         const r = GREET_RESPONSES[Math.floor(Math.random() * GREET_RESPONSES.length)]
-        this.addBotMessage(r || GREET_RESPONSES[0])
+        this.addBotMessage(r || GREET_RESPONSES[0]!)
         return
       }
       if (matchedIntent === 'help') {
@@ -411,7 +410,7 @@ export const useChatStore = defineStore('chatbot', {
     clearConversation() {
       this.messages = []
       localStorage.removeItem('omax_chat_history')
-      this.addBotMessage(GREET_RESPONSES[0])
+      this.addBotMessage(GREET_RESPONSES[0]!)
     },
     save() {
       localStorage.setItem('omax_chat_history', JSON.stringify(this.messages))

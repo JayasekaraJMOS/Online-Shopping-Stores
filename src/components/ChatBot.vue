@@ -3,11 +3,9 @@ import { ref, watch, nextTick, onMounted, onUnmounted, reactive } from 'vue'
 import { useChatStore } from '../stores/chatbot'
 import { useCurrencyStore } from '../stores/currency'
 import { useRouter } from 'vue-router'
-import { useLanguageStore } from '../stores/language'
 
 const chat = useChatStore()
 const currency = useCurrencyStore()
-const language = useLanguageStore()
 const router = useRouter()
 const input = ref('')
 const scrollArea = ref<HTMLElement | null>(null)
@@ -51,7 +49,7 @@ const typeMessage = (id: number, fullText: string) => {
   let i = 0
   const interval = setInterval(() => {
     if (i < fullText.length) {
-      displayedText[id] += fullText[i++]
+      displayedText[id] = (displayedText[id] || '') + (fullText[i++] || '')
       scrollToBottom()
     } else {
       clearInterval(interval)
@@ -148,7 +146,7 @@ const navigateToProduct = (id: number) => {
                 🤖
               </div>
               <div>
-                <h3 class="font-black text-base tracking-tight leading-tight">Omaxy AI</h3>
+                <h3 class="font-black text-xl tracking-tight leading-tight text-white">Omaxy AI</h3>
                 <div class="flex items-center gap-2 mt-0.5">
                   <span class="text-[9px] text-blue-100/90 font-bold uppercase tracking-widest flex items-center gap-1">
                     <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
